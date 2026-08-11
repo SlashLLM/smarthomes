@@ -505,7 +505,7 @@ button { font: inherit; cursor: pointer; }
 /* projection chart */
 .proj { padding: 20px; background: #fff; border: 1px solid var(--line-hard); border-radius: var(--r-md); }
 .proj header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
-.proj h4 { margin: 0; font-family: var(--serif); font-size: 20px; font-weight: 500; }
+.proj h3, .proj h4 { margin: 0; font-family: var(--serif); font-size: 20px; font-weight: 500; }
 .legend { font-family: var(--mono); font-size: 11px; color: var(--muted); display: flex; gap: 14px; align-items: center; }
 .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 6px; vertical-align: middle; }
 .sw--str { background: var(--accent); }
@@ -682,9 +682,35 @@ blockquote {
   transition: transform .25s ease, box-shadow .25s ease;
 }
 .case-card:hover { transform: translateY(-4px); box-shadow: 0 24px 40px -24px rgba(20,34,24,0.25); }
-.case-card__body { padding: 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-.case-card__body p { font-style: italic; font-family: var(--serif); margin: 0 0 8px; color: var(--ink); }
-.case-card .case__by { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); }
+.case-card__body h3, .case-card__body h4 {
+  font-family: var(--serif); font-weight: 500; font-size: 20px;
+  line-height: 1.25; margin: 0; color: var(--ink);
+}
+
+/* Real image containers & aspect ratios for zero CLS */
+.case__img-wrapper, .case-card__img-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+}
+.case-card__img-wrapper {
+  border-radius: 0;
+  aspect-ratio: 4/3;
+}
+.case--feature .case__img-wrapper {
+  aspect-ratio: 5/4;
+}
+.case__img, .case-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .35s ease;
+}
+.case-card:hover .case-card__img {
+  transform: scale(1.04);
+}
 
 /* photo placeholders — stylized so this looks like a populated demo */
 .ph {
@@ -702,10 +728,11 @@ blockquote {
   font-family: var(--mono); font-size: 10px;
   letter-spacing: 0.1em;
   color: rgba(255,255,255,0.92);
-  background: rgba(20,34,24,0.55);
+  background: rgba(20,34,24,0.65);
   padding: 5px 9px;
   border-radius: var(--r-pill);
   backdrop-filter: blur(6px);
+  z-index: 2;
 }
 /* Each variation uses a different layered gradient + texture, no real photos required */
 .ph--1 {
@@ -1055,10 +1082,10 @@ blockquote {
 .foot__brand p { max-width: 36ch; font-size: 14px; line-height: 1.6; margin: 16px 0 24px; }
 .foot__contact { display: flex; flex-direction: column; gap: 6px; font-family: var(--mono); font-size: 12px; color: rgba(246,241,230,0.55); }
 .foot__cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-.foot__cols h5 {
+.foot__cols h3, .foot__cols h5 {
   font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
   text-transform: uppercase; color: rgba(246,241,230, 0.5);
-  margin: 0 0 16px;
+  margin: 0 0 16px; font-weight: normal;
 }
 .foot__cols a {
   display: block; padding: 4px 0;
