@@ -228,7 +228,7 @@
     <span class="brand__type">SmartHomes</span>
     <span class="brand__tld">.co.nz</span>
   </a>
-  <nav class="nav__links" aria-label="Primary">
+  <nav class="nav__links" id="nav-links" aria-label="Primary navigation">
     <a href="#calculator">Calculator</a>
     <a href="#how">How it works</a>
     <a href="#results">Results</a>
@@ -239,6 +239,13 @@
     <a class="ghost" href="#dashboard">Sign in</a>
     <a class="btn btn--primary" href="#assess">Free assessment <span aria-hidden="true">→</span></a>
   </div>
+  <button class="nav__toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line class="line-1" x1="4" y1="6" x2="20" y2="6"></line>
+      <line class="line-2" x1="4" y1="12" x2="20" y2="12"></line>
+      <line class="line-3" x1="4" y1="18" x2="20" y2="18"></line>
+    </svg>
+  </button>
 </header>
 
 <main id="top">
@@ -422,7 +429,7 @@
         </div>
       </div>
 
-      <div class="field-row">
+      <div class="field-row field-row--steppers">
         <div class="field">
           <label>Bedrooms</label>
           <div class="stepper" data-stepper>

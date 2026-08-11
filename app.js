@@ -144,8 +144,34 @@
   $$("#features button")[2].classList.add("on");
   recalcFull();
 
-  // ---------- Smooth-scroll active link ----------
-  // (browser already smooth-scrolls; nothing else needed)
+  // ---------- Mobile Navigation Drawer ----------
+  const navToggle = $("#nav-toggle");
+  const navLinksContainer = $("#nav-links");
+
+  if (navToggle && navLinksContainer) {
+    function toggleNav(show) {
+      const isOpen = show !== undefined ? show : !navLinksContainer.classList.contains("is-open");
+      navLinksContainer.classList.toggle("is-open", isOpen);
+      navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+
+    navToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleNav();
+    });
+
+    // Close when clicking nav link
+    $$("a", navLinksContainer).forEach((link) => {
+      link.addEventListener("click", () => toggleNav(false));
+    });
+
+    // Close when clicking outside header
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("#nav")) {
+        toggleNav(false);
+      }
+    });
+  }
 
   // ---------- Mark current section in nav ----------
   const navLinks = $$(".nav__links a");
