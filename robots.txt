@@ -1,0 +1,5 @@
+# robots.txt for SmartHomes NZ
+User-agent: *
+Allow: /
+
+Sitemap: https://smarthomes.co.nz/sitemap.xml

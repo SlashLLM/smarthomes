@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://smarthomes.co.nz/</loc>
+    <lastmod>2026-08-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://smarthomes.co.nz/og-image.png</image:loc>
+      <image:title>SmartHomes Short-Term Rental Management NZ</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://smarthomes.co.nz/assets/case-mt-maunganui.png</image:loc>
+      <image:title>Mount Maunganui 3BR Beach House</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://smarthomes.co.nz/assets/case-queenstown.png</image:loc>
+      <image:title>Queenstown 2BR Alpine Apartment</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://smarthomes.co.nz/assets/case-hahei.png</image:loc>
+      <image:title>Hahei 4BR Coastal Bach</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://smarthomes.co.nz/assets/case-ponsonby.png</image:loc>
+      <image:title>Ponsonby 3BR Restored Villa</image:title>
+    </image:image>
+  </url>
+</urlset>
