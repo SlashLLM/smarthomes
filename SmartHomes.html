@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SmartHomes — Short-Term Rental Management, Aotearoa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,400&family=Geist:wght@300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- =========================================================
+     NAV
+========================================================= -->
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="SmartHomes home">
+    <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+      <path d="M6 20 L20 7 L34 20 L34 33 L24 33 L24 24 L16 24 L16 33 L6 33 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle cx="29" cy="14" r="2.2" fill="currentColor"/>
+    </svg>
+    <span class="brand__type">SmartHomes</span>
+    <span class="brand__tld">.co.nz</span>
+  </a>
+  <nav class="nav__links" aria-label="Primary">
+    <a href="#calculator">Calculator</a>
+    <a href="#how">How it works</a>
+    <a href="#results">Results</a>
+    <a href="#faq">FAQ</a>
+    <a href="#dashboard">Owner Portal</a>
+  </nav>
+  <div class="nav__cta">
+    <a class="ghost" href="#dashboard">Sign in</a>
+    <a class="btn btn--primary" href="#assess">Free assessment <span aria-hidden="true">→</span></a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+<section class="hero">
+  <div class="hero__bg" aria-hidden="true"></div>
+
+  <div class="hero__grid">
+    <div class="hero__copy">
+      <div class="eyebrow">
+        <span class="dot"></span> Now managing 247 properties across Aotearoa
+      </div>
+      <h1 class="display">
+        Your property could be earning <em>2&times; more.</em>
+      </h1>
+      <p class="lede">
+        SmartHomes turns Kiwi homes into high-performing short-stay rentals. Professionally listed, dynamically priced, fully managed — you keep the keys and the upside.
+      </p>
+      <div class="hero__ctas">
+        <a class="btn btn--primary btn--lg" href="#calculator">Run the numbers <span aria-hidden="true">→</span></a>
+        <a class="btn btn--ghost btn--lg" href="#assess">Book a free assessment</a>
+      </div>
+      <ul class="hero__chips">
+        <li>No setup fees</li>
+        <li>30-day exit clause</li>
+        <li>Average payout in 4 days</li>
+      </ul>
+    </div>
+
+    <!-- Calculator preview card (sticks visually with the calc below) -->
+    <aside class="hero__calc" aria-label="Income calculator preview">
+      <div class="calc-card">
+        <header>
+          <span class="calc-card__tag">LIVE ESTIMATE</span>
+          <h3>Property Income Calculator</h3>
+        </header>
+
+        <div class="calc-card__row">
+          <label>Suburb</label>
+          <div class="select">
+            <select id="hero-suburb">
+              <option>Mount Maunganui, Tauranga</option>
+              <option>Queenstown CBD</option>
+              <option>Ponsonby, Auckland</option>
+              <option>Wānaka</option>
+              <option>Oriental Bay, Wellington</option>
+              <option>Hahei, Coromandel</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="calc-card__row calc-card__row--split">
+          <div>
+            <label>Bedrooms</label>
+            <div class="stepper" data-stepper>
+              <button type="button" data-step="-1" aria-label="Decrease">−</button>
+              <input id="hero-beds" type="text" value="3" inputmode="numeric" />
+              <button type="button" data-step="1" aria-label="Increase">+</button>
+            </div>
+          </div>
+          <div>
+            <label>Current weekly rent</label>
+            <div class="input input--prefix">
+              <span>$</span>
+              <input id="hero-rent" type="text" value="780" inputmode="numeric" />
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-card__result">
+          <div>
+            <span class="muted">Estimated STR income / yr</span>
+            <strong class="num" id="hero-str">$108,420</strong>
+          </div>
+          <div class="vs">vs</div>
+          <div>
+            <span class="muted">Long-term rental / yr</span>
+            <strong class="num num--dim" id="hero-ltr">$40,560</strong>
+          </div>
+        </div>
+
+        <div class="calc-card__delta">
+          <span>You could earn</span>
+          <strong id="hero-delta">+$67,860</strong>
+          <span class="pct" id="hero-pct">+167%</span>
+        </div>
+
+        <a class="btn btn--primary btn--block" href="#calculator">See full 5-year projection →</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ticker -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker__track">
+      <span>★ 4.92 average guest rating</span><span>•</span>
+      <span>$14.2M paid to landlords in 2025</span><span>•</span>
+      <span>83% average annual occupancy</span><span>•</span>
+      <span>Featured in NZ Herald, Stuff &amp; The Spinoff</span><span>•</span>
+      <span>247 properties under management</span><span>•</span>
+      <span>★ 4.92 average guest rating</span><span>•</span>
+      <span>$14.2M paid to landlords in 2025</span><span>•</span>
+      <span>83% average annual occupancy</span><span>•</span>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     TRUST SIGNALS
+========================================================= -->
+<section class="trust">
+  <div class="trust__item">
+    <div class="trust__num"><span class="num">247</span></div>
+    <p>Properties managed across NZ — from Kerikeri baches to Queenstown chalets.</p>
+  </div>
+  <div class="trust__item">
+    <div class="trust__num"><span class="num">$14.2M</span></div>
+    <p>Paid out to landlords in 2025 — up 38% on last year and climbing.</p>
+  </div>
+  <div class="trust__item">
+    <div class="trust__num"><span class="num">+167%</span></div>
+    <p>Average uplift on income versus a comparable long-term tenancy.</p>
+  </div>
+</section>
+
+<!-- =========================================================
+     CALCULATOR (full)
+========================================================= -->
+<section class="section section--cream" id="calculator">
+  <div class="section__head">
+    <span class="eyebrow"><span class="dot"></span> The flagship tool</span>
+    <h2 class="display display--md">How much could <em>your</em> property earn?</h2>
+    <p class="lede lede--center">
+      Two minutes, real comparables, no jargon. We pull from 18 months of booking data across 247 properties so your estimate is grounded in what's actually happening on the ground.
+    </p>
+  </div>
+
+  <div class="calc-full">
+    <!-- INPUT COLUMN -->
+    <div class="calc-full__inputs">
+      <ol class="calc-steps">
+        <li><span>1</span> Property</li>
+        <li><span>2</span> Specs</li>
+        <li><span>3</span> See results</li>
+      </ol>
+
+      <div class="field">
+        <label>Property address or suburb</label>
+        <div class="input input--icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-7.5-7-12a7 7 0 1 1 14 0c0 4.5-7 12-7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <input id="addr" type="text" value="14 Marine Parade, Mount Maunganui" />
+        </div>
+        <div class="hint">We support all of Aotearoa. Bach, townhouse, apartment, lifestyle block — any of it.</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Suburb tier</label>
+          <div class="select">
+            <select id="tier">
+              <option value="1.35">Tier 1 — Coastal / Resort</option>
+              <option value="1.15" selected>Tier 1 — Coastal / Resort (Mt Maunganui)</option>
+              <option value="1.05">Tier 2 — Major Metro</option>
+              <option value="0.92">Tier 3 — Regional</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Property type</label>
+          <div class="select">
+            <select id="ptype">
+              <option value="1">House</option>
+              <option value="0.92">Apartment</option>
+              <option value="1.08">Bach / Holiday home</option>
+              <option value="1.18">Luxury / Architectural</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Bedrooms</label>
+          <div class="stepper" data-stepper>
+            <button type="button" data-step="-1">−</button>
+            <input id="beds" type="text" value="3" />
+            <button type="button" data-step="1">+</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Bathrooms</label>
+          <div class="stepper" data-stepper>
+            <button type="button" data-step="-1">−</button>
+            <input id="baths" type="text" value="2" />
+            <button type="button" data-step="1">+</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Sleeps</label>
+          <div class="stepper" data-stepper>
+            <button type="button" data-step="-1">−</button>
+            <input id="sleeps" type="text" value="6" />
+            <button type="button" data-step="1">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Current weekly long-term rent (NZD)</label>
+        <div class="input input--prefix">
+          <span>$</span>
+          <input id="rent" type="text" value="780" inputmode="numeric" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Standout features <span class="muted">(optional, pick any)</span></label>
+        <div class="chips" id="features">
+          <button type="button" data-bonus="0.06">Sea view</button>
+          <button type="button" data-bonus="0.04">Spa pool</button>
+          <button type="button" data-bonus="0.05">Walk to beach</button>
+          <button type="button" data-bonus="0.03">Pet friendly</button>
+          <button type="button" data-bonus="0.04">EV charger</button>
+          <button type="button" data-bonus="0.05">Architectural</button>
+        </div>
+      </div>
+
+      <!-- gated reveal -->
+      <div class="gated">
+        <div class="gated__head">
+          <strong>Unlock full 5-year projection</strong>
+          <span>We'll email a PDF report and a comparables breakdown.</span>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Name</label><div class="input"><input type="text" placeholder="Sam Te Aroha" /></div></div>
+          <div class="field"><label>Email</label><div class="input"><input type="email" placeholder="sam@example.co.nz" /></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Mobile</label><div class="input"><input type="tel" placeholder="021 555 0192" /></div></div>
+          <div class="field"><label>Best time to call</label>
+            <div class="select"><select><option>Anytime</option><option>Mornings</option><option>Lunch</option><option>Evenings</option></select></div>
+          </div>
+        </div>
+        <button class="btn btn--primary btn--block btn--lg" type="button">Send me the full report</button>
+        <p class="micro">By submitting you agree to be contacted about your property. No spam, no list-sharing — we hate that too.</p>
+      </div>
+    </div>
+
+    <!-- OUTPUT COLUMN -->
+    <aside class="calc-full__output">
+      <div class="card-stat">
+        <span class="muted">Estimated STR income — Year 1</span>
+        <strong class="num num--xl" id="out-str">$108,420</strong>
+        <div class="badge badge--good"><span>+167%</span> vs long-term</div>
+      </div>
+
+      <div class="split">
+        <div>
+          <span class="muted">Long-term rental income</span>
+          <strong class="num num--md" id="out-ltr">$40,560</strong>
+        </div>
+        <div>
+          <span class="muted">Average nightly rate</span>
+          <strong class="num num--md" id="out-adr">$358</strong>
+        </div>
+        <div>
+          <span class="muted">Projected occupancy</span>
+          <strong class="num num--md" id="out-occ">83%</strong>
+        </div>
+        <div>
+          <span class="muted">SmartHomes fee</span>
+          <strong class="num num--md">18%</strong>
+        </div>
+      </div>
+
+      <!-- 5 year projection -->
+      <div class="proj">
+        <header>
+          <h4>5-year projection</h4>
+          <div class="legend"><span class="sw sw--str"></span> STR <span class="sw sw--ltr"></span> Long-term</div>
+        </header>
+        <div class="proj__chart" id="chart" aria-hidden="true"></div>
+        <div class="proj__totals">
+          <div>
+            <span class="muted">5yr STR total</span>
+            <strong class="num num--md" id="out-5str">$556,210</strong>
+          </div>
+          <div>
+            <span class="muted">5yr long-term total</span>
+            <strong class="num num--md num--dim" id="out-5ltr">$208,170</strong>
+          </div>
+          <div>
+            <span class="muted">5yr difference</span>
+            <strong class="num num--md num--accent" id="out-5diff">+$348,040</strong>
+          </div>
+        </div>
+      </div>
+
+      <p class="micro">Estimates blend live bookings from 247 NZ properties with seasonal demand curves. Actual results vary; the assessment will give you a fixed-fee guarantee within ±8%.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- =========================================================
+     HOW IT WORKS
+========================================================= -->
+<section class="section section--ink" id="how">
+  <div class="section__head section__head--light">
+    <span class="eyebrow eyebrow--light"><span class="dot"></span> The Process</span>
+    <h2 class="display display--md">From keys handed over to first payout — in 14 days.</h2>
+  </div>
+
+  <ol class="steps">
+    <li>
+      <div class="steps__num">01</div>
+      <h3>Free Assessment</h3>
+      <p>A specialist visits your property, photographs the space, models the income, and walks you through the proposal. No obligation, no surprise charges.</p>
+      <ul>
+        <li>On-site or video walkthrough</li>
+        <li>Fixed-fee guarantee within ±8%</li>
+        <li>72-hour turnaround on the report</li>
+      </ul>
+    </li>
+    <li>
+      <div class="steps__num">02</div>
+      <h3>Property Setup</h3>
+      <p>Professional photography, copywriting, smart-lock install, linen pack and a deep clean. Listed across 6+ platforms within 7 days.</p>
+      <ul>
+        <li>Architectural &amp; twilight photography</li>
+        <li>August smart-lock or equivalent</li>
+        <li>Hotel-grade linen &amp; toiletries pack</li>
+      </ul>
+    </li>
+    <li>
+      <div class="steps__num">03</div>
+      <h3>We Manage Everything</h3>
+      <p>Pricing, guest comms, cleaning, restocking, maintenance, compliance. You don't lift a finger unless you want to.</p>
+      <ul>
+        <li>24/7 guest support, NZ-based team</li>
+        <li>Dynamic pricing engine, updated daily</li>
+        <li>Quarterly maintenance inspections</li>
+      </ul>
+    </li>
+    <li>
+      <div class="steps__num">04</div>
+      <h3>You Get Paid</h3>
+      <p>Monthly payouts on the 5th, with a transparent statement and a real-time Owner Portal. Block your own dates whenever you like.</p>
+      <ul>
+        <li>Direct deposit, 4-day average clearance</li>
+        <li>Live dashboard with occupancy &amp; revenue</li>
+        <li>End-of-year tax summary included</li>
+      </ul>
+    </li>
+  </ol>
+</section>
+
+<!-- =========================================================
+     CASE STUDIES
+========================================================= -->
+<section class="section" id="results">
+  <div class="section__head">
+    <span class="eyebrow"><span class="dot"></span> Real properties · real numbers</span>
+    <h2 class="display display--md">What the spreadsheet looks like, twelve months in.</h2>
+  </div>
+
+  <article class="case case--feature">
+    <div class="case__photo">
+      <div class="ph ph--1">
+        <span class="ph__tag">[ MT MAUNGANUI · 3BR BEACH HOUSE ]</span>
+      </div>
+      <div class="case__tags">
+        <span>3 bed</span><span>2 bath</span><span>Sleeps 6</span><span>Sea view</span>
+      </div>
+    </div>
+    <div class="case__body">
+      <div class="case__loc">Mount Maunganui · Bay of Plenty</div>
+      <h3>"It paid off our mortgage four years early."</h3>
+      <div class="case__nums">
+        <div>
+          <span class="muted">Before · long-term</span>
+          <strong class="num num--md">$40,560/yr</strong>
+        </div>
+        <div>
+          <span class="muted">After · SmartHomes</span>
+          <strong class="num num--md num--accent">$118,940/yr</strong>
+        </div>
+        <div>
+          <span class="muted">Increase</span>
+          <strong class="num num--md">+193%</strong>
+        </div>
+        <div>
+          <span class="muted">Occupancy</span>
+          <strong class="num num--md">87%</strong>
+        </div>
+      </div>
+      <blockquote>
+        "We were dreading another tenancy cycle. SmartHomes took it over, sent us photos a week later, and the first payout landed before we'd even told the neighbours. We genuinely forget it's happening."
+      </blockquote>
+      <div class="case__by">
+        <div class="avatar">PT</div>
+        <div>
+          <strong>Pania &amp; Tama H.</strong>
+          <span class="muted">Owners since March 2024</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="case-grid">
+
+    <article class="case-card">
+      <div class="ph ph--2"><span class="ph__tag">[ QUEENSTOWN · 2BR APARTMENT ]</span></div>
+      <div class="case-card__body">
+        <div class="case__loc">Queenstown CBD · Otago</div>
+        <h4>The ski-season unlock</h4>
+        <div class="case__nums case__nums--tight">
+          <div><span class="muted">Before</span><strong>$31,200</strong></div>
+          <div><span class="muted">After</span><strong class="num--accent">$94,180</strong></div>
+          <div><span class="muted">Δ</span><strong>+202%</strong></div>
+        </div>
+        <p class="muted">"July and August now pay for the whole year. We use it ourselves in shoulder season — best of both."</p>
+        <div class="case__by">
+          <div class="avatar avatar--b">JM</div>
+          <div><strong>James M.</strong><span class="muted">Owner · Frankton</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="case-card">
+      <div class="ph ph--3"><span class="ph__tag">[ HAHEI · 4BR BACH ]</span></div>
+      <div class="case-card__body">
+        <div class="case__loc">Hahei · Coromandel</div>
+        <h4>Family bach, working harder</h4>
+        <div class="case__nums case__nums--tight">
+          <div><span class="muted">Before</span><strong>$0 (vacant)</strong></div>
+          <div><span class="muted">After</span><strong class="num--accent">$76,420</strong></div>
+          <div><span class="muted">Δ</span><strong>—</strong></div>
+        </div>
+        <p class="muted">"It used to sit empty 40 weeks a year. Now it earns through every shoulder season and we still get our two weeks at Christmas."</p>
+        <div class="case__by">
+          <div class="avatar avatar--c">RW</div>
+          <div><strong>Rachel W.</strong><span class="muted">Owner · Auckland-based</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="case-card">
+      <div class="ph ph--4"><span class="ph__tag">[ PONSONBY · 3BR VILLA ]</span></div>
+      <div class="case-card__body">
+        <div class="case__loc">Ponsonby · Tāmaki Makaurau</div>
+        <h4>From flat-mates to four-star</h4>
+        <div class="case__nums case__nums--tight">
+          <div><span class="muted">Before</span><strong>$52,000</strong></div>
+          <div><span class="muted">After</span><strong class="num--accent">$103,640</strong></div>
+          <div><span class="muted">Δ</span><strong>+99%</strong></div>
+        </div>
+        <p class="muted">"We sold the idea of a long-term tenancy to ourselves for years. The switch was the easiest decision of 2025."</p>
+        <div class="case__by">
+          <div class="avatar avatar--d">AK</div>
+          <div><strong>Aroha K.</strong><span class="muted">Owner · Grey Lynn</span></div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="results-strip">
+    <div><strong class="num">$14.2M</strong><span>paid to landlords in 2025</span></div>
+    <div><strong class="num">4.92★</strong><span>average guest rating across 11,400 stays</span></div>
+    <div><strong class="num">83%</strong><span>average annual occupancy</span></div>
+    <div><strong class="num">11 days</strong><span>average listing-to-first-booking</span></div>
+  </div>
+</section>
+
+<!-- =========================================================
+     FAQ
+========================================================= -->
+<section class="section section--cream" id="faq">
+  <div class="section__head">
+    <span class="eyebrow"><span class="dot"></span> For landlords</span>
+    <h2 class="display display--md">The honest answers to the things that keep you up at night.</h2>
+  </div>
+
+  <div class="faq" id="faq-list">
+    <details open>
+      <summary>What about regulations? Council, Healthy Homes, the lot.</summary>
+      <div>
+        <p>We handle the complete compliance stack: council STR registration where required (Auckland, Queenstown-Lakes, Rotorua, Christchurch), Healthy Homes warrant of fitness, smoke alarm + carbon monoxide testing, and meth-contamination baseline testing. We're a registered operator with every council we work in, and we keep your paperwork in your Owner Portal.</p>
+        <ul>
+          <li>Council STR registration filed within 7 days of onboarding</li>
+          <li>Healthy Homes WoF refreshed annually</li>
+          <li>Baseline + post-tenancy meth tests at our cost</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>What about wear and tear? Guests can be hard on a place.</summary>
+      <div>
+        <p>Every stay ends with a professional clean and a checklist inspection. Linens are hotel-grade and rotated, and any damage is logged with photos before the next guest arrives. We carry $5M public liability and a $2,500 per-stay guest damage policy — and a $1,000 SmartHomes top-up on every booking.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>What about vacancy? Won't it just sit empty in winter?</summary>
+      <div>
+        <p>Our pricing engine adjusts every 24 hours across six platforms (Airbnb, Booking, Bookabach, VRBO, Expedia, Google Vacation Rentals). Average annual occupancy across our portfolio is 83%; in shoulder seasons we lean into mid-stay corporate and relocation guests to keep the lights on.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Can I still use my own property?</summary>
+      <div>
+        <p>Absolutely. Block any dates from your Owner Portal — instant, no questions. Most owners reserve 4–8 weeks a year for themselves and friends. If you let us know early we can usually slot you into a low-demand window with zero income impact.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>What are the fees, really?</summary>
+      <div>
+        <p>A flat 18% of nights booked. No setup fee, no listing fee, no monthly minimum. Cleaning, linen and consumables are passed through at cost and billed to the guest. You see the math line by line on your monthly statement.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>How do I get paid, and when?</summary>
+      <div>
+        <p>Direct deposit on the 5th of every month, in NZD, to any NZ or Australian bank account. We can split payouts across multiple accounts (handy for trusts and co-ownership). Average clearance is 4 days from guest checkout.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>What happens if I want to leave?</summary>
+      <div>
+        <p>Thirty days written notice, full stop. We hand back the photography, the calendar, the guest reviews — all yours. We'd rather you stay because we're earning it, not because we've trapped you.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Is my property right for SmartHomes?</summary>
+      <div>
+        <p>Generally yes if it's a self-contained whole home (not a room in a shared house), within 90 minutes of an airport or visitor centre, and free of body-corp short-stay restrictions. The free assessment is the fastest way to know — we'll tell you straight if it isn't a fit.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- =========================================================
+     OWNER DASHBOARD PREVIEW
+========================================================= -->
+<section class="section section--ink section--tight" id="dashboard">
+  <div class="section__head section__head--light">
+    <span class="eyebrow eyebrow--light"><span class="dot"></span> Owner Portal · preview</span>
+    <h2 class="display display--md">The same view we look at every morning.</h2>
+    <p class="lede lede--center lede--light">
+      Real-time bookings, cashflow, cleaning, reviews and occupancy — for every property you own. No more emailing the property manager to ask "how's it going?"
+    </p>
+  </div>
+
+  <div class="dash" id="dash"></div>
+</section>
+
+<!-- =========================================================
+     ASSESSMENT CTA
+========================================================= -->
+<section class="cta" id="assess">
+  <div class="cta__inner">
+    <span class="eyebrow"><span class="dot"></span> Free, on-site, no obligation</span>
+    <h2 class="display display--lg">Let's run the numbers on <em>your</em> place.</h2>
+    <p class="lede lede--center">
+      A 45-minute visit, a fixed-fee guarantee, and a yes-or-no by the end of the week. If it's not a fit, we'll tell you — and recommend who is.
+    </p>
+
+    <form class="cta__form" onsubmit="event.preventDefault(); this.querySelector('.cta__done').hidden=false; this.querySelector('.cta__fields').hidden=true;">
+      <div class="cta__fields">
+        <div class="field"><label>Property address</label><div class="input"><input required type="text" placeholder="14 Marine Parade, Mount Maunganui" /></div></div>
+        <div class="field-row">
+          <div class="field"><label>Your name</label><div class="input"><input required type="text" placeholder="Sam Te Aroha" /></div></div>
+          <div class="field"><label>Mobile</label><div class="input"><input required type="tel" placeholder="021 555 0192" /></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Email</label><div class="input"><input required type="email" placeholder="sam@example.co.nz" /></div></div>
+          <div class="field"><label>Preferred time</label>
+            <div class="select"><select><option>This week</option><option>Next week</option><option>I'm flexible</option></select></div>
+          </div>
+        </div>
+        <button class="btn btn--primary btn--lg btn--block" type="submit">Book my free assessment →</button>
+      </div>
+      <div class="cta__done" hidden>
+        <div class="tick">✓</div>
+        <h3>Booked. We'll be in touch within 24 hours.</h3>
+        <p>A specialist will phone you on the number above to confirm the visit. In the meantime, you'll get a confirmation email with what to expect.</p>
+      </div>
+    </form>
+
+    <ul class="cta__assure">
+      <li>No setup fees, ever</li>
+      <li>30-day exit clause</li>
+      <li>Fixed-fee guarantee ±8%</li>
+      <li>NZ-owned &amp; NZ-based team</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+<footer class="foot">
+  <div class="foot__top">
+    <div class="foot__brand">
+      <a class="brand brand--foot" href="#top">
+        <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+          <path d="M6 20 L20 7 L34 20 L34 33 L24 33 L24 24 L16 24 L16 33 L6 33 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle cx="29" cy="14" r="2.2" fill="currentColor"/>
+        </svg>
+        <span class="brand__type">SmartHomes</span>
+      </a>
+      <p>Aotearoa's most trusted short-stay management partner. Built in Tauranga, working from Kerikeri to Bluff.</p>
+      <div class="foot__contact">
+        <span>0800 SMART HOMES</span>
+        <span>kiaora@smarthomes.co.nz</span>
+        <span>Level 3 / 42 The Strand, Tauranga</span>
+      </div>
+    </div>
+    <div class="foot__cols">
+      <div>
+        <h5>Product</h5>
+        <a href="#calculator">Income calculator</a>
+        <a href="#how">How it works</a>
+        <a href="#results">Case studies</a>
+        <a href="#dashboard">Owner Portal</a>
+      </div>
+      <div>
+        <h5>Resources</h5>
+        <a href="#faq">For landlords</a>
+        <a href="#">Compliance guide</a>
+        <a href="#">2026 market report</a>
+        <a href="#">Tax for STR owners</a>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <a href="#">About</a>
+        <a href="#">Careers · we're hiring</a>
+        <a href="#">Press</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot__bot">
+    <span>© 2026 SmartHomes Property Management Ltd. NZBN 9429 0481 1234.</span>
+    <span>Privacy · Terms · Trust &amp; Safety</span>
+  </div>
+</footer>
+
+<!-- App scripts -->
+<script src="dashboard.js"></script>
+<script src="app.js"></script>
+
+<!-- Tweaks: React + Babel + tweaks-panel -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="tweaks.jsx"></script>
+
+</body>
+</html>
