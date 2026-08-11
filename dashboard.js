@@ -140,10 +140,12 @@
             <h5>${p.name}</h5>
             <div class="prop__loc">${p.loc} · ${p.beds}BR</div>
           </div>
-          <div class="prop__col"><span>Occupancy</span><strong>${p.occ}%</strong></div>
-          <div class="prop__col"><span>Revenue MTD</span><strong>$${p.mtd.toLocaleString('en-NZ')}</strong></div>
-          <div class="prop__col"><span>Rating</span><strong>${p.rating}★</strong></div>
-          <div class="prop__col"><span>Status</span><strong style="color:var(--good)">● Live</strong></div>
+          <div class="prop__metrics">
+            <div class="prop__col"><span>Occupancy</span><strong>${p.occ}%</strong></div>
+            <div class="prop__col"><span>Revenue MTD</span><strong>$${p.mtd.toLocaleString('en-NZ')}</strong></div>
+            <div class="prop__col"><span>Rating</span><strong>${p.rating}★</strong></div>
+            <div class="prop__col"><span>Status</span><strong style="color:var(--good)">● Live</strong></div>
+          </div>
         </div>
       `).join("")}
       <div class="prop" style="opacity:.7;border-style:dashed;">
@@ -152,10 +154,12 @@
           <h5>Kerikeri Cliffside (onboarding)</h5>
           <div class="prop__loc">Bay of Islands · 5BR</div>
         </div>
-        <div class="prop__col"><span>Photo shoot</span><strong>Jun 4</strong></div>
-        <div class="prop__col"><span>Go-live</span><strong>Jun 12</strong></div>
-        <div class="prop__col"><span>Forecast/yr</span><strong>$142,000</strong></div>
-        <div class="prop__col"><span>Status</span><strong style="color:var(--accent)">● Onboarding</strong></div>
+        <div class="prop__metrics">
+          <div class="prop__col"><span>Photo shoot</span><strong>Jun 4</strong></div>
+          <div class="prop__col"><span>Go-live</span><strong>Jun 12</strong></div>
+          <div class="prop__col"><span>Forecast/yr</span><strong>$142,000</strong></div>
+          <div class="prop__col"><span>Status</span><strong style="color:var(--accent)">● Onboarding</strong></div>
+        </div>
       </div>
     </div>`;
   }
@@ -179,13 +183,13 @@
           const bg = booked ? 'var(--ink)' : blocked ? 'var(--accent)' : turnover ? 'var(--paper-2)' : '#fff';
           const co = booked || blocked ? 'var(--paper)' : 'var(--ink)';
           const tag = booked ? 'BOOKED' : blocked ? 'YOU' : turnover ? 'CLEAN' : '';
-          return `<div style="background:${bg};color:${co};aspect-ratio:1;border-radius:8px;padding:8px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid var(--line);font-family:var(--mono);">
-            <strong style="font-size:13px;">${d}</strong>
-            <span style="font-size:9px;letter-spacing:.08em;opacity:.75;">${tag}</span>
+          return `<div style="background:${bg};color:${co};aspect-ratio:1;border-radius:8px;padding:4px 6px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid var(--line);font-family:var(--mono);min-width:0;">
+            <strong style="font-size:12px;">${d}</strong>
+            <span style="font-size:8px;letter-spacing:.04em;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${tag}</span>
           </div>`;
         }).join("")}
       </div>
-      <div style="display:flex;gap:18px;margin-top:16px;font-family:var(--mono);font-size:11px;color:var(--muted);">
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:16px;font-family:var(--mono);font-size:11px;color:var(--muted);">
         <span><span style="display:inline-block;width:10px;height:10px;background:var(--ink);border-radius:2px;vertical-align:middle;margin-right:6px;"></span>Booked · 18 nights</span>
         <span><span style="display:inline-block;width:10px;height:10px;background:var(--accent);border-radius:2px;vertical-align:middle;margin-right:6px;"></span>Owner block · 2 nights</span>
         <span><span style="display:inline-block;width:10px;height:10px;background:var(--paper-2);border-radius:2px;vertical-align:middle;margin-right:6px;"></span>Turnover clean · 4</span>
@@ -213,22 +217,24 @@
       <div class="kpi"><span>2026 forecast</span><strong>$402K</strong><em>+18%</em></div>
     </div>
     <div class="widget">
-      <table style="width:100%;border-collapse:collapse;font-size:13px;">
-        <thead>
-          <tr style="text-align:left;color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;">
-            <th style="padding:10px 0;">Date</th><th>Period</th><th>Amount</th><th>Account</th><th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${payouts.map(p => `<tr style="border-top:1px solid var(--line);">
-            <td style="padding:14px 0;font-family:var(--mono);">${p[0]}</td>
-            <td>${p[1]}</td>
-            <td style="font-family:var(--mono);font-weight:500;">${p[2]}</td>
-            <td style="font-family:var(--mono);color:var(--muted);">${p[3]}</td>
-            <td><span style="background:rgba(47,123,79,.10);color:var(--good);padding:2px 8px;border-radius:999px;font-family:var(--mono);font-size:11px;">● ${p[4]}</span></td>
-          </tr>`).join("")}
-        </tbody>
-      </table>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <table style="width:100%;min-width:540px;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="text-align:left;color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;">
+              <th style="padding:10px 0;">Date</th><th>Period</th><th>Amount</th><th>Account</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${payouts.map(p => `<tr style="border-top:1px solid var(--line);">
+              <td style="padding:14px 0;font-family:var(--mono);">${p[0]}</td>
+              <td>${p[1]}</td>
+              <td style="font-family:var(--mono);font-weight:500;">${p[2]}</td>
+              <td style="font-family:var(--mono);color:var(--muted);">${p[3]}</td>
+              <td><span style="background:rgba(47,123,79,.10);color:var(--good);padding:2px 8px;border-radius:999px;font-family:var(--mono);font-size:11px;">● ${p[4]}</span></td>
+            </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>
     </div>`;
   }
 
