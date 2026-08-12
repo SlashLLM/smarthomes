@@ -218,18 +218,42 @@ button { font: inherit; cursor: pointer; }
 /* ====================== Hero ====================== */
 .hero {
   position: relative;
-  padding: clamp(40px, 7vw, 96px) var(--pad) 0;
+  padding: clamp(60px, 8vw, 110px) var(--pad) clamp(40px, 6vw, 80px);
   overflow: hidden;
+  color: #F7F3E9;
 }
 .hero__bg {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(60% 50% at 80% 10%, rgba(196,100,56,0.10), transparent 60%),
-    radial-gradient(50% 50% at 0% 30%, rgba(31,58,42,0.06), transparent 70%);
-  z-index: -1;
+  z-index: 0;
+  overflow: hidden;
+}
+.hero__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11, 11, 10, 0.50) 0%, rgba(11, 11, 10, 0.35) 45%, rgba(11, 11, 10, 0.92) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+.hero__bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: kenburns 26s ease-in-out infinite alternate;
+  will-change: transform;
+  display: block;
+}
+@keyframes kenburns {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__bg-img { animation: none; }
 }
 .hero__grid {
+  position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: clamp(32px, 5vw, 64px);
@@ -238,16 +262,22 @@ button { font: inherit; cursor: pointer; }
   margin: 0 auto;
 }
 .hero__copy { padding: 16px 0 40px; }
+.hero .eyebrow { color: #D8B978; }
+.hero .display { color: #F7F3E9; }
+.hero .display em { color: #D8B978; }
+.hero .lede { color: rgba(247, 243, 233, 0.85); }
+.hero .btn--ghost { color: #F7F3E9; border-color: rgba(216, 185, 120, 0.45); }
+.hero .btn--ghost:hover { background: rgba(216, 185, 120, 0.15); border-color: #D8B978; color: #F7F3E9; }
 .hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
 .hero__chips {
   list-style: none; padding: 0; margin: 0;
   display: flex; gap: 20px; flex-wrap: wrap;
-  font-size: 13px; color: var(--ink-soft);
+  font-size: 13px; color: rgba(247, 243, 233, 0.8);
 }
 .hero__chips li { display: flex; align-items: center; gap: 8px; }
 .hero__chips li::before {
   content: ""; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--good);
+  background: #D8B978;
 }
 
 /* hero calculator */
