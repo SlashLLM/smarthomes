@@ -936,8 +936,9 @@
 
 <!-- Smooth Scroll Engine (Lenis) -->
 <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
-<script src="scrub-engine.js"></script>
-<script>
+<script type="module">
+  import { mountScrollWorld } from './scrub-engine.js';
+
   // Initialize Lenis Smooth Scrolling (disabled on touch for 1:1 mobile responsiveness)
   const lenis = new Lenis({
     duration: 1.2,
