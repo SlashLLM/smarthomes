@@ -63,7 +63,7 @@
    NOT depend on HTTP byte-range support.
    ========================================================================== */
 
-function mountScrollWorld(container, config) {
+export function mountScrollWorld(container, config) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // Phone detection. `coarse` is captured once (input type doesn't change mid-session);
   // the ≤860px query is read live via isMobile() so a desktop resize/DevTools toggle
@@ -453,3 +453,4 @@ function injectCSS() {
 // Expose for module + global use.
 if (typeof module !== 'undefined' && module.exports) module.exports = { mountScrollWorld };
 if (typeof window !== 'undefined') window.mountScrollWorld = mountScrollWorld;
+export default mountScrollWorld;
