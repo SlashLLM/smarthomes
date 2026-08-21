@@ -30,7 +30,27 @@
   --r-md: 14px;
   --r-lg: 22px;
   --r-pill: 999px;
+
+  /* scroll-world engine */
+  --sw-bg: #F6F1E6;
+  --sw-ink: #14241B;
+  --sw-ink-soft: #2A3A30;
+  --sw-accent: #C46438;
+  --sw-font-display: var(--serif);
+  --sw-font-body: var(--sans);
+  
+  /* scrub-engine */
+  --se-bg: var(--paper);
+  --se-ink: var(--ink);
+  --se-accent: var(--accent);
 }
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -215,10 +235,15 @@ button { font: inherit; cursor: pointer; }
 }
 .btn--ghost:hover { background: var(--ink); color: var(--paper); }
 
-/* ====================== Hero ====================== */
+/* =========================================================
+   HERO
+========================================================= */
 .hero {
   position: relative;
+  z-index: 20;
   padding: clamp(60px, 8vw, 110px) var(--pad) clamp(40px, 6vw, 80px);
+  min-height: max(90vh, 700px);
+  display: flex;
   overflow: hidden;
   color: #F7F3E9;
 }
