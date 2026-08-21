@@ -43,6 +43,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,400&amp;family=Geist:wght@300..700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
+<link rel="preload" as="image" href="assets/posters/property.webp" type="image/webp" />
 
 <!-- JSON-LD Structured Data Schema -->
 <script type="application/ld+json">
@@ -937,7 +938,7 @@
 <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
 <script src="scrub-engine.js"></script>
 <script>
-  // Initialize Lenis Smooth Scrolling for 60fps/120fps video scrubbing
+  // Initialize Lenis Smooth Scrolling (disabled on touch for 1:1 mobile responsiveness)
   const lenis = new Lenis({
     duration: 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -945,7 +946,9 @@
     gestureOrientation: 'vertical',
     smoothWheel: true,
     wheelMultiplier: 1.0,
-    touchMultiplier: 1.5,
+    touchMultiplier: 1.0,
+    smoothTouch: false,
+    syncTouch: false,
     infinite: false
   });
 

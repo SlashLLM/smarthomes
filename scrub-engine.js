@@ -196,9 +196,10 @@ function mountScrollWorld(container, config) {
   }
 
   function loadClip(s) {
-    // Under prefers-reduced-motion we never load the clips at all — the stills stay up
-    // and simply cross-dissolve as you scroll. No scrubbed video motion, no decode cost.
-    if (reduce || s.loading || !s.clip) return;
+    // Under prefers-reduced-motion or Data-Saver we never load the clips — the stills stay up
+    // and simply cross-dissolve as you scroll. No scrubbed video motion, zero decode/data cost.
+    const saveData = (typeof navigator !== 'undefined' && navigator.connection && navigator.connection.saveData);
+    if (reduce || saveData || s.loading || !s.clip) return;
     s.loading = true;
     // Serve the lighter mobile encode on phones when one was provided.
     const url = (isMobile() && s.clipM) ? s.clipM : s.clip;
@@ -271,13 +272,14 @@ function mountScrollWorld(container, config) {
   }
 
   function raf() {
-    const eps = isMobile() ? 0.01 : 0.003;   // finer seek step with tight-GOP video clips
+    const eps = isMobile() ? 0.008 : 0.003;   // finer seek step with tight-GOP video clips
+    const lerp = reduce ? 1 : (isMobile() ? 0.36 : 0.28);
     for (let i = 0; i < NSEG; i++) {
       const s = SEGMENTS[i];
       if (!s.hasClip || !s.ready || !s.video) continue;
       if (s.video.seeking) continue;
       if (!s.visible && Math.abs(s.cur - s.target) < 0.001) continue;
-      s.cur += (s.target - s.cur) * (reduce ? 1 : 0.28);
+      s.cur += (s.target - s.cur) * lerp;
       const dur = s.video.duration || 1;
       const t = clamp(s.cur, 0, 0.999) * dur;
       if (Math.abs(s.video.currentTime - t) > eps) {
