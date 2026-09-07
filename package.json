@@ -9,6 +9,12 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "dotenv": "^17.4.2",
     "vite": "^5.4.11"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.115.0",
+    "openai": "^7.10.0",
+    "resend": "^6.26.0"
   }
 }
