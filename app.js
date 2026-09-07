@@ -6,57 +6,48 @@
   const fmt = (n) => "$" + Math.round(n).toLocaleString("en-NZ");
   const pct = (n) => (n >= 0 ? "+" : "") + Math.round(n) + "%";
 
-  // ---------- Mock address database (stand-in for Google Places + AI rent model) ----------
-  const ADDRESS_DB = [
-    { addr: "14 Marine Parade, Mount Maunganui", suburb: "Mount Maunganui", tier: 1.15, adr: 358, aiLTR: 920, occ: 0.83 },
-    { addr: "22 Marine Parade, Mount Maunganui", suburb: "Mount Maunganui", tier: 1.15, adr: 345, aiLTR: 890, occ: 0.82 },
-    { addr: "8 Beach Road, Mount Maunganui",     suburb: "Mount Maunganui", tier: 1.12, adr: 330, aiLTR: 860, occ: 0.81 },
-    { addr: "5 Church Street, Queenstown",       suburb: "Queenstown CBD", tier: 1.30, adr: 412, aiLTR: 980, occ: 0.81 },
-    { addr: "101 Shotover Street, Queenstown",   suburb: "Queenstown CBD", tier: 1.28, adr: 398, aiLTR: 950, occ: 0.80 },
-    { addr: "45 Ponsonby Road, Auckland",        suburb: "Ponsonby, Auckland", tier: 1.05, adr: 305, aiLTR: 870, occ: 0.78 },
-    { addr: "12 Jervois Road, Ponsonby, Auckland", suburb: "Ponsonby, Auckland", tier: 1.06, adr: 312, aiLTR: 880, occ: 0.78 },
-    { addr: "3 Ardmore Street, Wānaka",           suburb: "Wānaka", tier: 1.18, adr: 385, aiLTR: 900, occ: 0.79 },
-    { addr: "18 Roberts Street, Wānaka",          suburb: "Wānaka", tier: 1.16, adr: 372, aiLTR: 880, occ: 0.78 },
-    { addr: "27 Oriental Parade, Wellington",     suburb: "Oriental Bay, Wellington", tier: 1.02, adr: 295, aiLTR: 820, occ: 0.74 },
-    { addr: "9 Hahei Beach Road, Coromandel",     suburb: "Hahei, Coromandel", tier: 0.95, adr: 340, aiLTR: 760, occ: 0.71 },
-  ];
-
-  function filterAddresses(q) {
-    q = q.trim().toLowerCase();
-    if (!q) return [];
-    return ADDRESS_DB.filter(
-      (a) => a.addr.toLowerCase().includes(q) || a.suburb.toLowerCase().includes(q)
-    ).slice(0, 5);
-  }
+  /* Mirrors api/_lib/config.js — keep the two in step. The server owns these for
+     the estimate; the browser needs them for the projection maths. */
+  const CALC = {
+    STR_NET_FACTOR: 0.82, // owner's share of gross short-stay revenue after costs
+    MAX_OCCUPANCY: 0.92,
+    STR_GROWTH: 1.06,
+    LTR_GROWTH: 1.025,
+  };
 
   // ---------- Steppers ----------
   $$("[data-stepper]").forEach((stp) => {
+    const min = Number(stp.dataset.min ?? 0);
+    const max = Number(stp.dataset.max ?? Infinity);
     stp.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-step]");
       if (!btn) return;
       const input = stp.querySelector("input");
-      const cur = parseInt(input.value, 10) || 0;
+      const cur = parseInt(input.value, 10) || min;
       const delta = parseInt(btn.dataset.step, 10);
-      input.value = Math.max(0, cur + delta);
+      input.value = Math.min(max, Math.max(min, cur + delta));
       input.dispatchEvent(new Event("input", { bubbles: true }));
     });
   });
 
   // ================================================================
-  // Calculator factory — address lookup, AI market scan, projection
+  // Calculator — Places autocomplete, AI estimate, projection
   // ================================================================
   function createCalculator(p, opts) {
     // p = id prefix, e.g. "fc"
     const els = {
       scenarioGroup: document.querySelector(`[data-scenario-group="${p}"]`),
+      dwellingGroup: document.querySelector(`[data-dwelling-group="${p}"]`),
       addr: $(`#${p}-addr`),
       addrList: $(`#${p}-addr-list`),
+      addrHint: $(`#${p}-addr-hint`),
+      beds: $(`#${p}-beds`),
       rentWrap: $(`#${p}-rent-wrap`),
       rent: $(`#${p}-rent`),
-      aiRow: $(`#${p}-ai-row`),
       scanBtn: $(`#${p}-scan-btn`),
       scanBtnLabel: $(`#${p}-scan-btn-label`),
       rescanBtn: $(`#${p}-rescan-btn`),
+      retryBtn: $(`#${p}-retry-btn`),
       aiLoading: $(`#${p}-ai-loading`),
       aiStep: $(`#${p}-ai-step`),
       aiBar: $(`#${p}-ai-bar`),
@@ -65,13 +56,20 @@
       aiValue: $(`#${p}-ai-value`),
       aiConfidence: $(`#${p}-ai-confidence`),
       aiDelta: $(`#${p}-ai-delta`),
+      aiRationale: $(`#${p}-ai-rationale`),
+      aiSources: $(`#${p}-ai-sources`),
+      aiFreshness: $(`#${p}-ai-freshness`),
+      aiError: $(`#${p}-ai-error`),
+      aiErrorMsg: $(`#${p}-ai-error-msg`),
     };
-    if (!els.addr) return null;
+    // Bail unless the whole control set is present, rather than failing partway
+    // through wiring up listeners on markup that doesn't have them.
+    if (!els.addr || !els.beds || !els.scanBtn || !els.scenarioGroup) return null;
 
     const STEPS = {
       rented: [
         "Pulling comparable listings nearby…",
-        "Cross-referencing 6 booking platforms…",
+        "Cross-referencing booking platforms…",
         "Modelling seasonal demand for this address…",
         "Finalising your market estimate…",
       ],
@@ -82,204 +80,513 @@
         "Finalising your rent estimate…",
       ],
     };
-    const STEP_MS = 550;
+
+    // A real web-grounded call runs ~5-20s, so the copy moves slowly rather than
+    // racing to the end of the list and sitting there.
+    const STEP_MS = 3500;
+    // Requests that beat this are cache hits — show the answer, skip the theatre.
+    const LOADING_REVEAL_MS = 400;
+    const DEBOUNCE_MS = 250;
+    const MIN_QUERY = 3;
 
     let scenario = "rented"; // "rented" | "new"
-    let selected = null; // chosen address record
-    let aiRent = null; // resolved AI rent estimate (weekly)
-    let aiTimer = null;
+    let dwellingType = "house";
+    let selected = null; // resolved Google place
+    let estimate = null; // validated API response
     let scanning = false;
 
+    let sessionToken = null;
+    let suggestions = [];
+    let activeIndex = -1;
+
+    let suggestController = null;
+    let estimateController = null;
+    let debounceTimer = null;
+    let stepTimer = null;
+    let progressTimer = null;
+    let revealTimer = null;
+
+    const bedrooms = () => {
+      const n = parseInt(els.beds.value, 10);
+      return Number.isFinite(n) ? Math.min(8, Math.max(1, n)) : 3;
+    };
+
+    // ---- scenario tabs ----
     function setScenario(s) {
       scenario = s;
       els.scenarioGroup.querySelectorAll("button").forEach((b) =>
         b.classList.toggle("on", b.dataset.scenario === s)
       );
       if (els.rentWrap) els.rentWrap.hidden = s === "new";
-      els.scanBtnLabel.textContent = s === "rented" ? "Get AI market rent" : "Get potential rent estimate";
-      resetScan();
-      if (opts.onResultsClear) opts.onResultsClear();
+      els.scanBtnLabel.textContent =
+        s === "rented" ? "Get AI market rent" : "Get potential rent estimate";
+
+      // The estimate itself doesn't depend on the scenario, so a completed one
+      // survives the switch — only the presentation changes.
+      if (estimate) {
+        renderEstimate(estimate);
+        recalc();
+      } else {
+        resetScan();
+        if (opts.onResultsClear) opts.onResultsClear();
+      }
       updateScanButton();
     }
 
     els.scenarioGroup.addEventListener("click", (e) => {
       const b = e.target.closest("button[data-scenario]");
-      if (!b) return;
-      setScenario(b.dataset.scenario);
+      if (b) setScenario(b.dataset.scenario);
     });
 
+    // ---- dwelling type ----
+    if (els.dwellingGroup) {
+      els.dwellingGroup.addEventListener("click", (e) => {
+        const b = e.target.closest("button[data-dwelling]");
+        if (!b || b.dataset.dwelling === dwellingType) return;
+        dwellingType = b.dataset.dwelling;
+        els.dwellingGroup.querySelectorAll("button").forEach((x) =>
+          x.classList.toggle("on", x.dataset.dwelling === dwellingType)
+        );
+        invalidate(); // changes the cache key — the shown figure no longer applies
+      });
+    }
+
+    els.beds.addEventListener("input", invalidate);
+    if (els.rent) els.rent.addEventListener("input", invalidate);
+
+    /* Any input change makes a displayed estimate stale, so drop it rather than
+       letting the number disagree with the visible form. */
+    function invalidate() {
+      resetScan();
+      if (opts.onResultsClear) opts.onResultsClear();
+      updateScanButton();
+    }
+
     function resetScan() {
-      clearTimeout(aiTimer);
+      clearTimeout(stepTimer);
+      clearTimeout(revealTimer);
+      clearInterval(progressTimer);
+      if (estimateController) estimateController.abort();
+      estimateController = null;
       scanning = false;
-      aiRent = null;
+      estimate = null;
       els.scanBtn.hidden = false;
       els.aiLoading.hidden = true;
       els.aiResult.hidden = true;
+      if (els.aiError) els.aiError.hidden = true;
       els.aiBar.style.transition = "none";
       els.aiBar.style.width = "0%";
     }
 
     function updateScanButton() {
-      const ready = !!selected && (scenario === "new" || parseInt(els.rent.value, 10) > 0);
+      const ready =
+        !!selected && (scenario === "new" || parseInt(els.rent.value, 10) > 0);
       els.scanBtn.disabled = !ready || scanning;
     }
 
-    // ---- autocomplete ----
-    els.addr.addEventListener("input", () => {
-      selected = null;
-      resetScan();
-      if (opts.onResultsClear) opts.onResultsClear();
-      updateScanButton();
-      const matches = filterAddresses(els.addr.value);
-      if (!matches.length) {
-        els.addrList.classList.remove("open");
-        els.addrList.innerHTML = "";
-        return;
-      }
-      els.addrList.innerHTML = matches
-        .map(
-          (m, i) =>
-            `<div class="autocomplete__item" data-idx="${i}"><strong>${m.addr}</strong><span>${m.suburb}</span></div>`
-        )
-        .join("");
-      els.addrList.classList.add("open");
-      els.addrList.querySelectorAll(".autocomplete__item").forEach((item, i) => {
-        item.addEventListener("click", () => {
-          selected = matches[i];
-          els.addr.value = selected.addr;
-          els.addrList.classList.remove("open");
-          resetScan();
-          updateScanButton();
-        });
-      });
-    });
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(`#${p}-addr-list`) && e.target !== els.addr) {
-        els.addrList.classList.remove("open");
-      }
-    });
-
-    if (els.rent) {
-      els.rent.addEventListener("input", () => {
-        resetScan();
-        updateScanButton();
-      });
+    function setHint(text, isError) {
+      if (!els.addrHint) return;
+      els.addrHint.textContent = text || "";
+      els.addrHint.hidden = !text;
+      els.addrHint.classList.toggle("calc-card__hint--error", !!isError);
     }
 
+    // ================= address autocomplete =================
+
+    function closeList() {
+      els.addrList.classList.remove("open");
+      els.addr.setAttribute("aria-expanded", "false");
+      activeIndex = -1;
+    }
+
+    function renderSuggestions() {
+      els.addrList.textContent = "";
+
+      if (!suggestions.length) {
+        const empty = document.createElement("div");
+        empty.className = "autocomplete__empty";
+        empty.textContent = "No matching addresses";
+        els.addrList.append(empty);
+      } else {
+        suggestions.forEach((s, i) => {
+          const item = document.createElement("div");
+          item.className = "autocomplete__item";
+          item.dataset.idx = String(i);
+          item.setAttribute("role", "option");
+          item.id = `${p}-opt-${i}`;
+
+          // textContent, not innerHTML — these strings come from Google, not from
+          // a hardcoded list, so interpolating them into markup would be an
+          // injection vector.
+          const strong = document.createElement("strong");
+          strong.textContent = s.primary;
+          const span = document.createElement("span");
+          span.textContent = s.secondary;
+
+          item.append(strong, span);
+          els.addrList.append(item);
+        });
+      }
+
+      els.addrList.classList.add("open");
+      els.addr.setAttribute("aria-expanded", "true");
+      activeIndex = -1;
+    }
+
+    function highlight(next) {
+      const items = $$(".autocomplete__item", els.addrList);
+      if (!items.length) return;
+      activeIndex = (next + items.length) % items.length;
+      items.forEach((el, i) => el.classList.toggle("active", i === activeIndex));
+      els.addr.setAttribute("aria-activedescendant", `${p}-opt-${activeIndex}`);
+      items[activeIndex].scrollIntoView({ block: "nearest" });
+    }
+
+    async function fetchSuggestions(q) {
+      if (suggestController) suggestController.abort();
+      suggestController = new AbortController();
+
+      // One session token spans the whole typing session and is retired by the
+      // details call — that is what keeps Places on session pricing.
+      if (!sessionToken) sessionToken = crypto.randomUUID();
+
+      try {
+        const url = `/api/places/autocomplete?q=${encodeURIComponent(q)}&session=${sessionToken}`;
+        const res = await fetch(url, { signal: suggestController.signal });
+        const data = await res.json();
+
+        if (!res.ok) {
+          setHint(
+            data.error === "not_configured"
+              ? "Address lookup isn't configured yet."
+              : "Address lookup is unavailable right now.",
+            true
+          );
+          closeList();
+          return;
+        }
+
+        setHint("");
+        suggestions = data.predictions || [];
+        renderSuggestions();
+      } catch (err) {
+        if (err.name === "AbortError") return;
+        setHint("Address lookup is unavailable right now.", true);
+        closeList();
+      }
+    }
+
+    els.addr.addEventListener("input", () => {
+      selected = null;
+      invalidate();
+      clearTimeout(debounceTimer);
+
+      const q = els.addr.value.trim();
+      if (q.length < MIN_QUERY) {
+        if (suggestController) suggestController.abort();
+        closeList();
+        setHint("");
+        return;
+      }
+
+      setHint("Looking up addresses…");
+      debounceTimer = setTimeout(() => fetchSuggestions(q), DEBOUNCE_MS);
+    });
+
+    async function choose(index) {
+      const pick = suggestions[index];
+      if (!pick) return;
+
+      els.addr.value = [pick.primary, pick.secondary].filter(Boolean).join(", ");
+      closeList();
+      setHint("Confirming address…");
+
+      try {
+        const url = `/api/places/details?placeId=${encodeURIComponent(pick.placeId)}&session=${sessionToken || ""}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "lookup failed");
+
+        selected = data.place;
+        els.addr.value = selected.formattedAddress || els.addr.value;
+        setHint("");
+      } catch {
+        selected = null;
+        setHint("We couldn't confirm that address. Try selecting it again.", true);
+      } finally {
+        sessionToken = null; // the session ends with the details call
+        updateScanButton();
+      }
+    }
+
+    els.addrList.addEventListener("click", (e) => {
+      const item = e.target.closest(".autocomplete__item");
+      if (item) choose(Number(item.dataset.idx));
+    });
+
+    els.addr.addEventListener("keydown", (e) => {
+      const open = els.addrList.classList.contains("open");
+      if (e.key === "ArrowDown" && open) {
+        e.preventDefault();
+        highlight(activeIndex + 1);
+      } else if (e.key === "ArrowUp" && open) {
+        e.preventDefault();
+        highlight(activeIndex - 1);
+      } else if (e.key === "Enter") {
+        if (open && activeIndex >= 0) {
+          e.preventDefault();
+          choose(activeIndex);
+        }
+      } else if (e.key === "Escape") {
+        closeList();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(`#${p}-addr-list`) && e.target !== els.addr) closeList();
+    });
+
+    // ================= estimate =================
+
     els.scanBtn.addEventListener("click", () => {
-      if (els.scanBtn.disabled) return;
-      maybeAnalyze();
+      if (!els.scanBtn.disabled) runEstimate({ forceRefresh: false });
     });
     if (els.rescanBtn) {
       els.rescanBtn.addEventListener("click", () => {
-        if (scanning) return;
-        maybeAnalyze();
+        // An explicit re-scan is the one place a user can bypass the cache.
+        if (!scanning) runEstimate({ forceRefresh: true });
+      });
+    }
+    if (els.retryBtn) {
+      els.retryBtn.addEventListener("click", () => {
+        if (!scanning) runEstimate({ forceRefresh: false });
       });
     }
 
-    function maybeAnalyze() {
+    /* Progress reflects a real request of unknown length: the bar eases toward
+       90% and only completes when the response lands. */
+    function startLoadingUi() {
+      const steps = STEPS[scenario];
+      let i = 0;
+      els.scanBtn.hidden = true;
+      els.aiResult.hidden = true;
+      if (els.aiError) els.aiError.hidden = true;
+      els.aiLoading.hidden = false;
+      els.aiStep.textContent = steps[0];
+
+      let width = 0;
+      els.aiBar.style.transition = "width 220ms linear";
+      progressTimer = setInterval(() => {
+        width += (90 - width) * 0.08;
+        els.aiBar.style.width = width.toFixed(1) + "%";
+      }, 220);
+
+      const advance = () => {
+        i = Math.min(i + 1, steps.length - 1);
+        els.aiStep.textContent = steps[i];
+        if (i < steps.length - 1) stepTimer = setTimeout(advance, STEP_MS);
+      };
+      stepTimer = setTimeout(advance, STEP_MS);
+    }
+
+    function stopLoadingUi() {
+      clearTimeout(stepTimer);
+      clearTimeout(revealTimer);
+      clearInterval(progressTimer);
+      els.aiBar.style.width = "100%";
+      els.aiLoading.hidden = true;
+    }
+
+    function showError(message) {
+      stopLoadingUi();
+      if (els.aiError) {
+        els.aiErrorMsg.textContent = message;
+        els.aiError.hidden = false;
+      }
+      // A failed re-scan doesn't invalidate the estimate already on screen — the
+      // totals below are still derived from it, so keep the two consistent.
+      const keepPrevious = !!estimate;
+      els.aiResult.hidden = !keepPrevious;
+      els.scanBtn.hidden = keepPrevious;
+    }
+
+    async function runEstimate({ forceRefresh }) {
       if (!selected) return;
-      if (scenario === "rented") {
-        const typed = parseInt(els.rent.value, 10);
-        if (!typed || typed <= 0) return;
-        runAnalysis(
-          () => Math.round(Math.max(typed * 1.35, selected.aiLTR) / 10) * 10,
-          "Current market rent for this address"
-        );
-      } else {
-        runAnalysis(() => selected.aiLTR, "Potential long-term rent for this address");
+      if (scenario === "rented" && !(parseInt(els.rent.value, 10) > 0)) return;
+
+      clearTimeout(stepTimer);
+      clearTimeout(revealTimer);
+      clearInterval(progressTimer);
+      if (estimateController) estimateController.abort();
+      const myController = new AbortController();
+      estimateController = myController;
+
+      scanning = true;
+      els.scanBtn.disabled = true;
+      if (els.aiError) els.aiError.hidden = true;
+
+      // Hold the loading UI back briefly — a cache hit returns before this fires,
+      // and playing a multi-second scan over a 100ms response would be theatre.
+      revealTimer = setTimeout(startLoadingUi, LOADING_REVEAL_MS);
+
+      try {
+        const res = await fetch("/api/estimate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: myController.signal,
+          body: JSON.stringify({
+            placeId: selected.placeId,
+            formattedAddress: selected.formattedAddress,
+            locality: selected.locality,
+            city: selected.city,
+            region: selected.region,
+            bedrooms: bedrooms(),
+            dwellingType,
+            scenario,
+            currentWeeklyRent: parseInt(els.rent?.value, 10) || null,
+            forceRefresh,
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          showError(
+            data.error === "not_configured"
+              ? "The estimate service isn't configured yet."
+              : data.message || "We couldn't analyse that address just now."
+          );
+          return;
+        }
+
+        stopLoadingUi();
+        estimate = data;
+        renderEstimate(data);
+        recalc();
+      } catch (err) {
+        if (err.name === "AbortError") return; // superseded or user edited an input
+        showError("We couldn't reach the estimate service. Please try again.");
+      } finally {
+        // Only the newest request may clear the busy flag. A superseded one
+        // reaching here would otherwise re-enable the button mid-flight and let
+        // a duplicate (billed) call through.
+        if (estimateController === myController) {
+          estimateController = null;
+          scanning = false;
+          updateScanButton();
+        }
       }
     }
 
-    function runAnalysis(computeFn, label) {
-      clearTimeout(aiTimer);
-      scanning = true;
-      els.scanBtn.disabled = true;
-      els.scanBtn.hidden = true;
-      els.aiResult.hidden = true;
-      els.aiLoading.hidden = false;
+    function relativeAge(iso) {
+      if (!iso) return "";
+      const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+      if (!Number.isFinite(days)) return "";
+      if (days <= 0) return "Analysed today";
+      if (days === 1) return "Analysed yesterday";
+      return `Analysed ${days} days ago`;
+    }
 
-      const steps = STEPS[scenario];
-      let i = 0;
-      els.aiStep.textContent = steps[0];
-      els.aiBar.style.transition = "none";
-      els.aiBar.style.width = "0%";
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          els.aiBar.style.transition = `width ${steps.length * STEP_MS}ms linear`;
-          els.aiBar.style.width = "100%";
+    function renderEstimate(data) {
+      els.aiLabel.textContent =
+        scenario === "rented"
+          ? "Current market rent for this address"
+          : "Potential long-term rent for this address";
+      els.aiValue.textContent =
+        "$" + data.weeklyMarketRent.toLocaleString("en-NZ") + "/wk";
+
+      const comparables = data.comparablesFound
+        ? ` · ${data.comparablesFound} comparable${data.comparablesFound === 1 ? "" : "s"}`
+        : "";
+      els.aiConfidence.textContent = `${data.confidence}% confidence${comparables}`;
+
+      if (els.aiRationale) {
+        els.aiRationale.textContent = data.rationale || "";
+        els.aiRationale.hidden = !data.rationale;
+      }
+
+      // Real hostnames the model consulted, not the old decorative logo row.
+      if (els.aiSources) {
+        els.aiSources.textContent = "";
+        const list = Array.isArray(data.sources) ? data.sources : [];
+        list.forEach((host) => {
+          const span = document.createElement("span");
+          span.textContent = host;
+          els.aiSources.append(span);
         });
-      });
+        els.aiSources.hidden = !list.length;
+      }
 
-      const advance = () => {
-        i++;
-        if (i < steps.length) {
-          els.aiStep.textContent = steps[i];
-          aiTimer = setTimeout(advance, STEP_MS);
-        } else {
-          aiTimer = setTimeout(() => {
-            aiRent = computeFn();
-            els.aiLabel.textContent = label;
-            els.aiValue.textContent = "$" + aiRent.toLocaleString("en-NZ") + "/wk";
-
-            const confidence = Math.min(97, Math.round(88 + selected.tier * 6));
-            const comparables = Math.round(9 + selected.tier * 6);
-            els.aiConfidence.textContent = `${confidence}% confidence · ${comparables} comparables`;
-
-            if (scenario === "rented") {
-              const typed = parseInt(els.rent.value, 10);
-              const deltaPct = Math.round(((aiRent - typed) / typed) * 100);
-              els.aiDelta.hidden = false;
-              if (deltaPct > 3) {
-                els.aiDelta.textContent = `${deltaPct}% under market`;
-                els.aiDelta.classList.add("good");
-              } else if (deltaPct < -3) {
-                els.aiDelta.textContent = `${Math.abs(deltaPct)}% over market`;
-                els.aiDelta.classList.remove("good");
-              } else {
-                els.aiDelta.textContent = "At market rate";
-                els.aiDelta.classList.remove("good");
-              }
-            } else {
-              els.aiDelta.hidden = true;
-            }
-
-            els.aiLoading.hidden = true;
-            els.aiResult.hidden = false;
-            scanning = false;
-            recalc();
-          }, STEP_MS);
+      if (els.aiFreshness) {
+        const parts = [];
+        if (data.source === "locality") {
+          parts.push("Suburb-level estimate — no live analysis for this address");
+        } else if (data.cached) {
+          parts.push(relativeAge(data.cachedAt));
         }
-      };
-      aiTimer = setTimeout(advance, STEP_MS);
+        // The re-scan button is budgeted, because every press bills. Say so
+        // rather than letting an unchanged number read as a broken button.
+        if (data.refreshDenied) {
+          parts.push("Re-analysis limit reached — showing the saved analysis");
+        }
+        els.aiFreshness.textContent = parts.join(" · ");
+        els.aiFreshness.hidden = !parts.length;
+      }
+
+      // Under/over market only means something against a rent the user gave us.
+      if (scenario === "rented") {
+        const typed = parseInt(els.rent.value, 10);
+        const deltaPct = Math.round(
+          ((data.weeklyMarketRent - typed) / typed) * 100
+        );
+        els.aiDelta.hidden = false;
+        if (deltaPct > 3) {
+          els.aiDelta.textContent = `${deltaPct}% under market`;
+          els.aiDelta.classList.add("good");
+        } else if (deltaPct < -3) {
+          els.aiDelta.textContent = `${Math.abs(deltaPct)}% over market`;
+          els.aiDelta.classList.remove("good");
+        } else {
+          els.aiDelta.textContent = "At market rate";
+          els.aiDelta.classList.remove("good");
+        }
+      } else {
+        els.aiDelta.hidden = true;
+      }
+
+      els.scanBtn.hidden = true;
+      els.aiResult.hidden = false;
     }
 
+    /* The API already accounts for bedrooms and dwelling type, so this applies
+       only the commercial factors the model isn't asked about. */
     function recalc() {
-      if (!selected || aiRent == null) return;
-      const extra = opts.getExtras ? opts.getExtras() : { typeMult: 1, bathBonus: 0, sleeps: 6, bonusPct: 0 };
-      const occ = Math.min(0.92, selected.occ + extra.bonusPct * 0.4);
-      const adr = selected.adr * extra.typeMult * (1 + extra.bonusPct) * (0.9 + extra.sleeps * 0.015);
-      const str = adr * 365 * occ * 0.82;
-      const ltrAnnual = aiRent * 52;
-      opts.onResult({ str, ltrAnnual, adr, occ, selected, scenario });
+      if (!estimate) return;
+      const occ = Math.min(CALC.MAX_OCCUPANCY, estimate.occupancy);
+      const str = estimate.nightlyRate * 365 * occ * CALC.STR_NET_FACTOR;
+      const ltrAnnual = estimate.weeklyMarketRent * 52;
+      opts.onResult({ str, ltrAnnual, occ, estimate, scenario });
     }
 
-    function selectAddress(record, rentValue) {
-      selected = record;
-      els.addr.value = record.addr;
-      els.addrList.classList.remove("open");
-      els.addrList.innerHTML = "";
-      if (rentValue != null && els.rent) els.rent.value = rentValue;
-      resetScan();
-      updateScanButton();
-    }
-
-    return { setScenario, recalc, selectAddress, getState: () => ({ scenario, selected, aiRent }) };
+    return {
+      setScenario,
+      recalc,
+      getState: () => ({
+        scenario,
+        selected,
+        estimate,
+        bedrooms: bedrooms(),
+        dwellingType,
+        currentWeeklyRent: parseInt(els.rent?.value, 10) || null,
+      }),
+    };
   }
 
   // ---------- Calculator (hero card) ----------
+  let lastProjection = null;
+
   const fc = createCalculator("fc", {
     onResultsClear() {
+      lastProjection = null;
       $("#calc-str").textContent = "—";
       $("#calc-ltr").textContent = "—";
       $("#calc-delta").textContent = "—";
@@ -299,18 +606,25 @@
       $("#calc-delta").textContent = (diff >= 0 ? "+" : "") + fmt(diff);
       $("#calc-pct").textContent = pct(pctVal);
 
-      // 5 year projection: STR grows 6%/yr, LTR 2.5%/yr
       let s5 = 0, l5 = 0;
       const rows = [];
       for (let i = 0; i < 5; i++) {
-        const sY = str * Math.pow(1.06, i);
-        const lY = ltrAnnual * Math.pow(1.025, i);
+        const sY = str * Math.pow(CALC.STR_GROWTH, i);
+        const lY = ltrAnnual * Math.pow(CALC.LTR_GROWTH, i);
         s5 += sY; l5 += lY;
         rows.push([sY, lY, i]);
       }
       $("#out-5str").textContent = fmt(s5);
       $("#out-5ltr").textContent = fmt(l5);
       $("#out-5diff").textContent = (s5 - l5 >= 0 ? "+" : "") + fmt(s5 - l5);
+
+      lastProjection = {
+        strAnnual: str,
+        ltrAnnual,
+        fiveYearStr: s5,
+        fiveYearLtr: l5,
+        fiveYearDiff: s5 - l5,
+      };
 
       const max = Math.max(...rows.flatMap((r) => [r[0], r[1]]));
       const chart = $("#chart");
@@ -331,12 +645,24 @@
   const projWrap = $("#proj-wrap");
 
   if (modal) {
+    const submitBtn = $("#lead-submit");
+    const errorEl = $("#lead-error");
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
     const openModal = () => {
       modal.hidden = false;
       modalForm.hidden = false;
       modalThanks.hidden = true;
+      if (errorEl) errorEl.hidden = true;
+      $("#lead-name").focus();
     };
     const closeModal = () => { modal.hidden = true; };
+
+    const showFormError = (msg) => {
+      if (!errorEl) return;
+      errorEl.textContent = msg;
+      errorEl.hidden = false;
+    };
 
     $("#proj-unlock-btn").addEventListener("click", openModal);
     $("#lead-modal-close").addEventListener("click", closeModal);
@@ -346,11 +672,54 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && !modal.hidden) closeModal();
     });
-    $("#lead-submit").addEventListener("click", () => {
-      modalForm.hidden = true;
-      modalThanks.hidden = false;
-      projWrap.classList.remove("locked");
+
+    submitBtn.addEventListener("click", async () => {
+      const name = $("#lead-name").value.trim();
+      const email = $("#lead-email").value.trim();
+      const phone = $("#lead-phone").value.trim();
+
+      if (name.length < 2) return showFormError("Please enter your name.");
+      if (!EMAIL_RE.test(email)) return showFormError("Please enter a valid email address.");
+
+      if (errorEl) errorEl.hidden = true;
+      submitBtn.disabled = true;
+      const originalLabel = submitBtn.textContent;
+      submitBtn.textContent = "Sending…";
+
+      const state = fc ? fc.getState() : {};
+      try {
+        const res = await fetch("/api/lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            placeId: state.selected?.placeId || null,
+            formattedAddress: state.selected?.formattedAddress || null,
+            bedrooms: state.bedrooms ?? null,
+            dwellingType: state.dwellingType || null,
+            scenario: state.scenario || null,
+            currentWeeklyRent: state.currentWeeklyRent,
+            estimate: state.estimate || null,
+            projection: lastProjection,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.message || "Something went wrong.");
+
+        // Only unlock once the lead is actually recorded.
+        modalForm.hidden = true;
+        modalThanks.hidden = false;
+        projWrap.classList.remove("locked");
+      } catch (err) {
+        showFormError(err.message || "We couldn't send your details. Please try again.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }
     });
+
     $("#lead-modal-done").addEventListener("click", closeModal);
   }
 
@@ -402,7 +771,4 @@
     { rootMargin: "-40% 0px -55% 0px" }
   );
   sections.forEach((s) => io.observe(s));
-
-  // ---------- Seed the calculator with a default address for a populated demo ----------
-  if (fc) fc.selectAddress(ADDRESS_DB[0], 780);
 })();

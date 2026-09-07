@@ -298,8 +298,30 @@
           <label for="fc-addr">Enter the property details</label>
           <div class="input input--icon autocomplete">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-7.5-7-12a7 7 0 1 1 14 0c0 4.5-7 12-7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-            <input id="fc-addr" type="text" placeholder="Start typing an address…" autocomplete="off" />
-            <div class="autocomplete__list" id="fc-addr-list"></div>
+            <input id="fc-addr" type="text" placeholder="Start typing an address…" autocomplete="off"
+                   role="combobox" aria-expanded="false" aria-autocomplete="list"
+                   aria-controls="fc-addr-list" aria-describedby="fc-addr-hint" />
+            <div class="autocomplete__list" id="fc-addr-list" role="listbox" aria-label="Address suggestions"></div>
+          </div>
+          <p class="calc-card__hint" id="fc-addr-hint" hidden></p>
+        </div>
+
+        <div class="calc-card__row calc-card__row--split">
+          <div>
+            <label for="fc-beds">Bedrooms</label>
+            <div class="stepper" data-stepper data-min="1" data-max="8">
+              <button type="button" data-step="-1" aria-label="One fewer bedroom">−</button>
+              <input id="fc-beds" type="text" inputmode="numeric" value="3" aria-label="Bedrooms" />
+              <button type="button" data-step="1" aria-label="One more bedroom">+</button>
+            </div>
+          </div>
+          <div>
+            <label id="fc-type-label">Property type</label>
+            <div class="segmented segmented--3 segmented--sm" data-dwelling-group="fc" role="group" aria-labelledby="fc-type-label">
+              <button type="button" class="on" data-dwelling="house">House</button>
+              <button type="button" data-dwelling="apartment">Apartment</button>
+              <button type="button" data-dwelling="flat">Flat</button>
+            </div>
           </div>
         </div>
 
@@ -338,7 +360,14 @@
               <span class="ai-scan__confidence" id="fc-ai-confidence">— confidence</span>
               <span class="ai-scan__delta" id="fc-ai-delta" hidden></span>
             </div>
-            <div class="ai-scan__sources" aria-hidden="true"><span>Airbnb</span><span>Booking.com</span><span>Bookabach</span><span>Trade Me</span></div>
+            <p class="ai-scan__rationale" id="fc-ai-rationale" hidden></p>
+            <div class="ai-scan__sources" id="fc-ai-sources" hidden></div>
+            <p class="ai-scan__freshness" id="fc-ai-freshness" hidden></p>
+          </div>
+
+          <div class="ai-scan__error" id="fc-ai-error" hidden role="alert">
+            <p id="fc-ai-error-msg">We couldn't analyse that address just now.</p>
+            <button type="button" class="ai-scan__retry" id="fc-retry-btn">Try again</button>
           </div>
         </div>
 
@@ -429,16 +458,17 @@
       <span class="eyebrow"><span class="dot"></span> Unlock your full report</span>
       <h3 id="lead-modal-title">Where should we send it?</h3>
       <p class="muted">Full 5-year projection, comparables, and a PDF report.</p>
-      <div class="field"><label for="lead-name">Name</label><div class="input"><input id="lead-name" type="text" placeholder="Sam Te Aroha" /></div></div>
-      <div class="field"><label for="lead-email">Email</label><div class="input"><input id="lead-email" type="email" placeholder="sam@example.co.nz" /></div></div>
-      <div class="field"><label for="lead-phone">Mobile</label><div class="input"><input id="lead-phone" type="tel" placeholder="021 555 0192" /></div></div>
+      <div class="field"><label for="lead-name">Name</label><div class="input"><input id="lead-name" type="text" placeholder="Sam Te Aroha" autocomplete="name" required /></div></div>
+      <div class="field"><label for="lead-email">Email</label><div class="input"><input id="lead-email" type="email" placeholder="sam@example.co.nz" autocomplete="email" required /></div></div>
+      <div class="field"><label for="lead-phone">Mobile</label><div class="input"><input id="lead-phone" type="tel" placeholder="021 555 0192" autocomplete="tel" /></div></div>
+      <p class="form-error" id="lead-error" hidden role="alert"></p>
       <button class="btn btn--primary btn--block btn--lg" id="lead-submit" type="button">Unlock my projection →</button>
       <p class="micro">By submitting you agree to be contacted about your property. No spam, no list-sharing — we hate that too.</p>
     </div>
     <div class="modal__thanks" id="lead-modal-thanks" hidden>
       <div class="tick">✓</div>
       <h3>Thank you for your submission.</h3>
-      <p>We've unlocked your 5-year projection above, and a full PDF report is on its way to your inbox.</p>
+      <p>We've unlocked your 5-year projection above. One of our team will be in touch shortly to talk through the numbers.</p>
       <button class="btn btn--primary" id="lead-modal-done" type="button">View my projection</button>
     </div>
   </div>

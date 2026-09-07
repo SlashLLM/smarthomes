@@ -76,6 +76,14 @@ html.lenis body {
   box-sizing: border-box;
 }
 
+/* The `hidden` attribute is only `display: none` in the UA stylesheet, so any
+   author rule that sets `display` beats it. Several components here are flex
+   containers toggled via `hidden` (the calculator's scan states, for one), which
+   left them visible while marked hidden. Make the attribute authoritative. */
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;
@@ -882,6 +890,24 @@ button {
   color: var(--paper);
 }
 
+/* Three-option variant (property type). Base .segmented is a 2-column grid. */
+.segmented--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Sits inline beside the bedrooms stepper, so it matches input height, not the
+   taller scenario tabs at the top of the card. */
+.segmented--sm {
+  border-radius: var(--r-sm);
+  margin-bottom: 0;
+}
+
+.segmented--sm button {
+  padding: 0 6px;
+  height: 42px;
+  font-size: 12px;
+}
+
 /* ====================== Autocomplete ====================== */
 .autocomplete {
   position: relative;
@@ -1205,6 +1231,73 @@ button {
   padding: 3px 7px;
   border-radius: var(--r-pill);
   background: var(--paper);
+}
+
+/* Model's own explanation of the estimate. */
+.ai-scan__rationale {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0 0 10px;
+}
+
+/* Cache age, so a stored result never passes as a fresh analysis. */
+.ai-scan__freshness {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  margin: 8px 0 0;
+}
+
+.ai-scan__error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  border: 1px solid rgba(196, 100, 56, 0.35);
+  border-radius: var(--r-md);
+  background: rgba(196, 100, 56, 0.07);
+}
+
+.ai-scan__error p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.ai-scan__retry {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* Inline status under the address field (looking up / not found). */
+.calc-card__hint {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+
+.calc-card__hint--error {
+  color: var(--accent-2);
+}
+
+.form-error {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--accent-2);
 }
 
 @keyframes fadein {
