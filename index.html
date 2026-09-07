@@ -234,10 +234,9 @@
     <a href="#how">How it works</a>
     <a href="#results">Results</a>
     <a href="#faq">FAQ</a>
-    <a href="#dashboard">Owner Portal</a>
   </nav>
   <div class="nav__cta">
-    <a class="ghost" href="#dashboard">Sign in</a>
+    <a class="ghost" href="#assess">Sign in</a>
     <a class="btn btn--primary" href="#assess">Free assessment <span aria-hidden="true">→</span></a>
   </div>
   <button class="nav__toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
@@ -259,92 +258,131 @@
 <!-- =========================================================
      HERO
 ========================================================= -->
-<section class="hero">
-  <div class="hero__bg" aria-hidden="true" style="background: transparent;">
-    <!-- Background image removed; gradient overlay stays, video is behind it -->
-  </div>
+<section class="hero hero--v2" id="calculator">
+  <!-- Background is the scroll-world video stage (see #world / scrub-engine.js) -->
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="hero__scrim" aria-hidden="true"></div>
 
   <div class="hero__grid">
-    <div class="hero__copy">
-      <div class="eyebrow">
-        <span class="dot"></span> Now managing 247 properties across Aotearoa
-      </div>
-      <h1 class="display">
-        Short-Term Rental Management NZ — Earn <em>2&times; more.</em>
-      </h1>
-      <p class="lede">
+    <div class="hero__copy hero__copy--reveal">
+      <span class="eyebrow eyebrow--light"><span class="dot"></span> Now managing 247 properties across Aotearoa</span>
+      <h1 class="display display--light">Your property could be earning <em>2&times; more.</em></h1>
+      <p class="lede lede--light">
         SmartHomes turns Kiwi homes into high-performing short-stay rentals. Professionally listed, dynamically priced, fully managed — you keep the keys and the upside.
       </p>
-      <div class="hero__ctas">
-        <a class="btn btn--primary btn--lg" href="#calculator">Run the numbers <span aria-hidden="true">→</span></a>
-        <a class="btn btn--ghost btn--lg" href="#assess">Book a free assessment</a>
+      <div class="hero__proof">
+        <div><strong class="num">$14.2M</strong><span>paid to owners in 2025</span></div>
+        <div><strong class="num">4.92★</strong><span>average guest rating</span></div>
+        <div><strong class="num">83%</strong><span>average occupancy</span></div>
       </div>
-      <ul class="hero__chips">
+      <ul class="hero__chips hero__chips--light">
         <li>No setup fees</li>
         <li>30-day exit clause</li>
         <li>Average payout in 4 days</li>
       </ul>
     </div>
 
-    <!-- Calculator preview card (sticks visually with the calc below) -->
-    <aside class="hero__calc" aria-label="Income calculator preview">
+    <aside class="hero__calc hero__calc--reveal" aria-label="Property income calculator">
       <div class="calc-card">
         <header>
-          <span class="calc-card__tag">LIVE ESTIMATE</span>
-          <h2 class="calc-card__title" style="font-size: 1.25rem; margin: 0; font-weight: 600;">Property Income Calculator</h2>
+          <span class="calc-card__tag">PROPERTY INCOME CALCULATOR</span>
+          <h2 class="calc-card__title">What could your place earn?</h2>
         </header>
 
+        <div class="segmented" data-scenario-group="fc">
+          <button type="button" class="on" data-scenario="rented">Currently rented</button>
+          <button type="button" data-scenario="new">New / not rented</button>
+        </div>
+
         <div class="calc-card__row">
-          <label>Suburb</label>
-          <div class="select">
-            <select id="hero-suburb">
-              <option>Mount Maunganui, Tauranga</option>
-              <option>Queenstown CBD</option>
-              <option>Ponsonby, Auckland</option>
-              <option>Wānaka</option>
-              <option>Oriental Bay, Wellington</option>
-              <option>Hahei, Coromandel</option>
-            </select>
+          <label for="fc-addr">Enter the property details</label>
+          <div class="input input--icon autocomplete">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-7.5-7-12a7 7 0 1 1 14 0c0 4.5-7 12-7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            <input id="fc-addr" type="text" placeholder="Start typing an address…" autocomplete="off" />
+            <div class="autocomplete__list" id="fc-addr-list"></div>
           </div>
         </div>
 
-        <div class="calc-card__row calc-card__row--split">
-          <div>
-            <label>Bedrooms</label>
-            <div class="stepper" data-stepper>
-              <button type="button" data-step="-1" aria-label="Decrease">−</button>
-              <input id="hero-beds" type="text" value="3" inputmode="numeric" />
-              <button type="button" data-step="1" aria-label="Increase">+</button>
+        <div class="calc-card__row" id="fc-rent-wrap">
+          <label for="fc-rent">Current weekly rent (NZD)</label>
+          <div class="input input--prefix">
+            <span>$</span>
+            <input id="fc-rent" type="text" inputmode="numeric" placeholder="e.g. 780" />
+          </div>
+        </div>
+
+        <div class="ai-scan" id="fc-ai-row">
+          <button type="button" class="ai-scan__btn" id="fc-scan-btn" disabled>
+            <svg class="ai-scan__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3l1.6 4.6L18 9l-4.4 1.4L12 15l-1.6-4.6L6 9l4.4-1.4L12 3Z"/><path d="M19 14.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2Z"/></svg>
+            <span id="fc-scan-btn-label">Get AI market rent</span>
+            <span class="ai-scan__arrow" aria-hidden="true">→</span>
+          </button>
+
+          <div class="ai-scan__working" id="fc-ai-loading" hidden>
+            <div class="ai-scan__radar" aria-hidden="true"><span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span><span class="core"></span></div>
+            <div class="ai-scan__status">
+              <p class="ai-scan__step" id="fc-ai-step">Pulling comparable listings nearby…</p>
+              <div class="ai-scan__bar"><div class="ai-scan__bar-fill" id="fc-ai-bar"></div></div>
             </div>
           </div>
-          <div>
-            <label>Current weekly rent</label>
-            <div class="input input--prefix">
-              <span>$</span>
-              <input id="hero-rent" type="text" value="780" inputmode="numeric" />
+
+          <div class="ai-scan__result" id="fc-ai-result" hidden>
+            <div class="ai-scan__result-top">
+              <span class="ai-scan__label" id="fc-ai-label">Current market rent, this address</span>
+              <button class="ai-scan__rescan" id="fc-rescan-btn" type="button" title="Re-run scan" aria-label="Re-run scan">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 4v5h-5"/></svg>
+              </button>
             </div>
+            <strong id="fc-ai-value">—</strong>
+            <div class="ai-scan__meta">
+              <span class="ai-scan__confidence" id="fc-ai-confidence">— confidence</span>
+              <span class="ai-scan__delta" id="fc-ai-delta" hidden></span>
+            </div>
+            <div class="ai-scan__sources" aria-hidden="true"><span>Airbnb</span><span>Booking.com</span><span>Bookabach</span><span>Trade Me</span></div>
           </div>
         </div>
 
         <div class="calc-card__result">
           <div>
             <span class="muted">Estimated STR income / yr</span>
-            <strong class="num" id="hero-str">$108,420</strong>
+            <strong class="num" id="calc-str">—</strong>
           </div>
           <div class="vs">vs</div>
           <div>
-            <span class="muted">Long-term rental / yr</span>
-            <strong class="num num--dim" id="hero-ltr">$40,560</strong>
+            <span class="muted" id="calc-ltr-label">Long-term rental / yr</span>
+            <strong class="num num--dim" id="calc-ltr">—</strong>
           </div>
         </div>
 
         <div class="calc-card__delta">
           <span>You could earn</span>
-          <strong id="hero-delta">+$67,860</strong>
-          <span class="pct" id="hero-pct">+167%</span>
+          <strong id="calc-delta">—</strong>
+          <span class="pct" id="calc-pct"></span>
         </div>
 
-        <a class="btn btn--primary btn--block" href="#calculator">See full 5-year projection →</a>
+        <!-- 5 year projection (lead-gated) -->
+        <div class="proj-wrap locked" id="proj-wrap">
+          <div class="proj" id="proj-content">
+            <header>
+              <h3>5-year projection</h3>
+              <div class="legend"><span class="sw sw--str"></span> STR <span class="sw sw--ltr"></span> LT</div>
+            </header>
+            <div class="proj__chart" id="chart" aria-hidden="true"></div>
+            <div class="proj__totals">
+              <div><span class="muted">5yr STR</span><strong class="num num--md" id="out-5str">—</strong></div>
+              <div><span class="muted">5yr long-term</span><strong class="num num--md num--dim" id="out-5ltr">—</strong></div>
+              <div><span class="muted">5yr difference</span><strong class="num num--md num--accent" id="out-5diff">—</strong></div>
+            </div>
+          </div>
+          <div class="lock-overlay" id="proj-lock">
+            <div class="lock-card">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+              <strong>Unlock your 5-year projection</strong>
+              <p>Enter your details and we'll send the full report too.</p>
+              <button class="btn btn--primary" id="proj-unlock-btn" type="button">See full 5-year projection →</button>
+            </div>
+          </div>
+        </div>
       </div>
     </aside>
   </div>
@@ -382,183 +420,29 @@
   </div>
 </section>
 
-<!-- =========================================================
-     CALCULATOR (full)
-========================================================= -->
-<section class="section section--cream" id="calculator">
-  <div class="section__head">
-    <span class="eyebrow"><span class="dot"></span> The flagship tool</span>
-    <h2 class="display display--md">How much could <em>your</em> property earn?</h2>
-    <p class="lede lede--center">
-      Two minutes, real comparables, no jargon. We pull from 18 months of booking data across 247 properties so your estimate is grounded in what's actually happening on the ground.
-    </p>
-  </div>
 
-  <div class="calc-full">
-    <!-- INPUT COLUMN -->
-    <div class="calc-full__inputs">
-      <ol class="calc-steps">
-        <li><span>1</span> Property</li>
-        <li><span>2</span> Specs</li>
-        <li><span>3</span> See results</li>
-      </ol>
-
-      <div class="field">
-        <label>Property address or suburb</label>
-        <div class="input input--icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-7.5-7-12a7 7 0 1 1 14 0c0 4.5-7 12-7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-          <input id="addr" type="text" value="14 Marine Parade, Mount Maunganui" />
-        </div>
-        <div class="hint">We support all of Aotearoa. Bach, townhouse, apartment, lifestyle block — any of it.</div>
-      </div>
-
-      <div class="field-row">
-        <div class="field">
-          <label>Suburb tier</label>
-          <div class="select">
-            <select id="tier">
-              <option value="1.35">Tier 1 — Coastal / Resort</option>
-              <option value="1.15" selected>Tier 1 — Coastal / Resort (Mt Maunganui)</option>
-              <option value="1.05">Tier 2 — Major Metro</option>
-              <option value="0.92">Tier 3 — Regional</option>
-            </select>
-          </div>
-        </div>
-        <div class="field">
-          <label>Property type</label>
-          <div class="select">
-            <select id="ptype">
-              <option value="1">House</option>
-              <option value="0.92">Apartment</option>
-              <option value="1.08">Bach / Holiday home</option>
-              <option value="1.18">Luxury / Architectural</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="field-row field-row--steppers">
-        <div class="field">
-          <label>Bedrooms</label>
-          <div class="stepper" data-stepper>
-            <button type="button" data-step="-1">−</button>
-            <input id="beds" type="text" value="3" />
-            <button type="button" data-step="1">+</button>
-          </div>
-        </div>
-        <div class="field">
-          <label>Bathrooms</label>
-          <div class="stepper" data-stepper>
-            <button type="button" data-step="-1">−</button>
-            <input id="baths" type="text" value="2" />
-            <button type="button" data-step="1">+</button>
-          </div>
-        </div>
-        <div class="field">
-          <label>Sleeps</label>
-          <div class="stepper" data-stepper>
-            <button type="button" data-step="-1">−</button>
-            <input id="sleeps" type="text" value="6" />
-            <button type="button" data-step="1">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Current weekly long-term rent (NZD)</label>
-        <div class="input input--prefix">
-          <span>$</span>
-          <input id="rent" type="text" value="780" inputmode="numeric" />
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Standout features <span class="muted">(optional, pick any)</span></label>
-        <div class="chips" id="features">
-          <button type="button" data-bonus="0.06">Sea view</button>
-          <button type="button" data-bonus="0.04">Spa pool</button>
-          <button type="button" data-bonus="0.05">Walk to beach</button>
-          <button type="button" data-bonus="0.03">Pet friendly</button>
-          <button type="button" data-bonus="0.04">EV charger</button>
-          <button type="button" data-bonus="0.05">Architectural</button>
-        </div>
-      </div>
-
-      <!-- gated reveal -->
-      <div class="gated">
-        <div class="gated__head">
-          <strong>Unlock full 5-year projection</strong>
-          <span>We'll email a PDF report and a comparables breakdown.</span>
-        </div>
-        <div class="field-row">
-          <div class="field"><label>Name</label><div class="input"><input type="text" placeholder="Sam Te Aroha" /></div></div>
-          <div class="field"><label>Email</label><div class="input"><input type="email" placeholder="sam@example.co.nz" /></div></div>
-        </div>
-        <div class="field-row">
-          <div class="field"><label>Mobile</label><div class="input"><input type="tel" placeholder="021 555 0192" /></div></div>
-          <div class="field"><label>Best time to call</label>
-            <div class="select"><select><option>Anytime</option><option>Mornings</option><option>Lunch</option><option>Evenings</option></select></div>
-          </div>
-        </div>
-        <button class="btn btn--primary btn--block btn--lg" type="button">Send me the full report</button>
-        <p class="micro">By submitting you agree to be contacted about your property. No spam, no list-sharing — we hate that too.</p>
-      </div>
+<!-- Lead-gate modal (unlocks the 5-year projection) -->
+<div class="modal-overlay" id="lead-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title">
+    <button class="modal__close" id="lead-modal-close" type="button" aria-label="Close">×</button>
+    <div class="modal__form" id="lead-modal-form">
+      <span class="eyebrow"><span class="dot"></span> Unlock your full report</span>
+      <h3 id="lead-modal-title">Where should we send it?</h3>
+      <p class="muted">Full 5-year projection, comparables, and a PDF report.</p>
+      <div class="field"><label for="lead-name">Name</label><div class="input"><input id="lead-name" type="text" placeholder="Sam Te Aroha" /></div></div>
+      <div class="field"><label for="lead-email">Email</label><div class="input"><input id="lead-email" type="email" placeholder="sam@example.co.nz" /></div></div>
+      <div class="field"><label for="lead-phone">Mobile</label><div class="input"><input id="lead-phone" type="tel" placeholder="021 555 0192" /></div></div>
+      <button class="btn btn--primary btn--block btn--lg" id="lead-submit" type="button">Unlock my projection →</button>
+      <p class="micro">By submitting you agree to be contacted about your property. No spam, no list-sharing — we hate that too.</p>
     </div>
-
-    <!-- OUTPUT COLUMN -->
-    <aside class="calc-full__output">
-      <div class="card-stat">
-        <span class="muted">Estimated STR income — Year 1</span>
-        <strong class="num num--xl" id="out-str">$108,420</strong>
-        <div class="badge badge--good"><span>+167%</span> vs long-term</div>
-      </div>
-
-      <div class="split">
-        <div>
-          <span class="muted">Long-term rental income</span>
-          <strong class="num num--md" id="out-ltr">$40,560</strong>
-        </div>
-        <div>
-          <span class="muted">Average nightly rate</span>
-          <strong class="num num--md" id="out-adr">$358</strong>
-        </div>
-        <div>
-          <span class="muted">Projected occupancy</span>
-          <strong class="num num--md" id="out-occ">83%</strong>
-        </div>
-        <div>
-          <span class="muted">SmartHomes fee</span>
-          <strong class="num num--md">18%</strong>
-        </div>
-      </div>
-
-      <!-- 5 year projection -->
-      <div class="proj">
-        <header>
-          <h3>5-year projection</h3>
-          <div class="legend"><span class="sw sw--str"></span> STR <span class="sw sw--ltr"></span> Long-term</div>
-        </header>
-        <div class="proj__chart" id="chart" aria-hidden="true"></div>
-        <div class="proj__totals">
-          <div>
-            <span class="muted">5yr STR total</span>
-            <strong class="num num--md" id="out-5str">$556,210</strong>
-          </div>
-          <div>
-            <span class="muted">5yr long-term total</span>
-            <strong class="num num--md num--dim" id="out-5ltr">$208,170</strong>
-          </div>
-          <div>
-            <span class="muted">5yr difference</span>
-            <strong class="num num--md num--accent" id="out-5diff">+$348,040</strong>
-          </div>
-        </div>
-      </div>
-
-      <p class="micro">Estimates blend live bookings from 247 NZ properties with seasonal demand curves. Actual results vary; the assessment will give you a fixed-fee guarantee within ±8%.</p>
-    </aside>
+    <div class="modal__thanks" id="lead-modal-thanks" hidden>
+      <div class="tick">✓</div>
+      <h3>Thank you for your submission.</h3>
+      <p>We've unlocked your 5-year projection above, and a full PDF report is on its way to your inbox.</p>
+      <button class="btn btn--primary" id="lead-modal-done" type="button">View my projection</button>
+    </div>
   </div>
-</section>
+</div>
 
 <!-- =========================================================
      HOW IT WORKS
@@ -603,7 +487,7 @@
     <li>
       <div class="steps__num">04</div>
       <h3>You Get Paid</h3>
-      <p>Monthly payouts on the 5th, with a transparent statement and a real-time Owner Portal. Block your own dates whenever you like.</p>
+      <p>Monthly payouts on the 5th, with a transparent statement and a real-time owner dashboard. Block your own dates whenever you like.</p>
       <ul>
         <li>Direct deposit, 4-day average clearance</li>
         <li>Live dashboard with occupancy &amp; revenue</li>
@@ -815,21 +699,6 @@
 </section>
 
 <!-- =========================================================
-     OWNER DASHBOARD PREVIEW
-========================================================= -->
-<section class="section section--ink section--tight" id="dashboard">
-  <div class="section__head section__head--light">
-    <span class="eyebrow eyebrow--light"><span class="dot"></span> Owner Portal · preview</span>
-    <h2 class="display display--md">The same view we look at every morning.</h2>
-    <p class="lede lede--center lede--light">
-      Real-time bookings, cashflow, cleaning, reviews and occupancy — for every property you own. No more emailing the property manager to ask "how's it going?"
-    </p>
-  </div>
-
-  <div class="dash" id="dash"></div>
-</section>
-
-<!-- =========================================================
      ASSESSMENT CTA
 ========================================================= -->
 <section class="cta" id="assess">
@@ -899,7 +768,6 @@
         <a href="#calculator">Income calculator</a>
         <a href="#how">How it works</a>
         <a href="#results">Case studies</a>
-        <a href="#dashboard">Owner Portal</a>
       </div>
       <div>
         <h3>Resources</h3>
@@ -924,7 +792,6 @@
 </footer>
 
 <!-- App scripts -->
-<script type="module" src="dashboard.js"></script>
 <script type="module" src="app.js"></script>
 
 <!-- Tweaks: React + Babel + tweaks-panel -->
