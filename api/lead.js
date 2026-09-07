@@ -40,47 +40,79 @@ function validate(body) {
   return { name: name.slice(0, 120), email: email.slice(0, 200), phone: phone.slice(0, 40) };
 }
 
-function buildEmail(lead, body) {
+/* Which form the lead came from. The assessment CTA carries no calculator
+ * numbers, so the email is shaped differently for it. */
+function readSource(body) {
+  return body.source === "assessment" ? "assessment" : "calculator";
+}
+
+function buildEmail(lead, body, source) {
   const e = body.estimate || {};
   const p = body.projection || {};
+  const hasEstimate = Boolean(body.estimate);
   const row = (label, value) =>
     `<tr><td style="padding:6px 16px 6px 0;color:#6b6b63;">${escapeHtml(label)}</td>` +
     `<td style="padding:6px 0;font-weight:600;">${escapeHtml(value)}</td></tr>`;
+  const table = (rows) =>
+    `<table style="border-collapse:collapse;font-size:14px;margin-bottom:20px;">${rows.join("")}</table>`;
+
+  const heading =
+    source === "assessment" ? "New assessment booking" : "New calculator lead";
+
+  const contact = [
+    row("Name", lead.name),
+    row("Email", lead.email),
+    row("Mobile", lead.phone || "—"),
+  ];
+  // Not a leads column — it rides along in the notification only.
+  if (body.preferredTime) {
+    contact.push(row("Preferred time", String(body.preferredTime).slice(0, 60)));
+  }
+
+  // The assessment form only collects a typed address, so the property table
+  // would otherwise be four dashes. Skip it entirely there.
+  const property = hasEstimate
+    ? [
+        row("Address", body.formattedAddress || "—"),
+        row("Bedrooms", body.bedrooms ?? "—"),
+        row("Type", body.dwellingType || "—"),
+        row("Scenario", body.scenario === "new" ? "New / not rented" : "Currently rented"),
+        row("Current rent", body.currentWeeklyRent ? money(body.currentWeeklyRent) + "/wk" : "—"),
+      ]
+    : [];
+
+  const estimate = hasEstimate
+    ? [
+        row("Market rent", e.weeklyMarketRent ? money(e.weeklyMarketRent) + "/wk" : "—"),
+        row("Nightly rate", e.nightlyRate ? money(e.nightlyRate) : "—"),
+        row("Occupancy", typeof e.occupancy === "number" ? Math.round(e.occupancy * 100) + "%" : "—"),
+        row("STR income / yr", money(p.strAnnual)),
+        row("Long-term / yr", money(p.ltrAnnual)),
+        row("5yr STR", money(p.fiveYearStr)),
+        row("5yr long-term", money(p.fiveYearLtr)),
+        row("5yr difference", money(p.fiveYearDiff)),
+        row("Confidence", e.confidence != null ? e.confidence + "%" : "—"),
+        row("Comparables", e.comparablesFound ?? "—"),
+        row(
+          "Data source",
+          e.source === "cache"
+            ? "Cached analysis"
+            : e.source === "locality"
+              ? "Suburb-level fallback"
+              : "Live analysis"
+        ),
+      ]
+    : [];
 
   return `<div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:640px;color:#1c1c19;">
-  <h2 style="margin:0 0 4px;">New calculator lead</h2>
+  <h2 style="margin:0 0 4px;">${heading}</h2>
   <p style="margin:0 0 20px;color:#6b6b63;">${escapeHtml(body.formattedAddress || "Address not recorded")}</p>
 
   <h3 style="margin:0 0 8px;font-size:15px;">Contact</h3>
-  <table style="border-collapse:collapse;font-size:14px;margin-bottom:20px;">
-    ${row("Name", lead.name)}
-    ${row("Email", lead.email)}
-    ${row("Mobile", lead.phone || "—")}
-  </table>
+  ${table(contact)}
 
-  <h3 style="margin:0 0 8px;font-size:15px;">Property</h3>
-  <table style="border-collapse:collapse;font-size:14px;margin-bottom:20px;">
-    ${row("Address", body.formattedAddress || "—")}
-    ${row("Bedrooms", body.bedrooms ?? "—")}
-    ${row("Type", body.dwellingType || "—")}
-    ${row("Scenario", body.scenario === "new" ? "New / not rented" : "Currently rented")}
-    ${row("Current rent", body.currentWeeklyRent ? money(body.currentWeeklyRent) + "/wk" : "—")}
-  </table>
-
-  <h3 style="margin:0 0 8px;font-size:15px;">Estimate</h3>
-  <table style="border-collapse:collapse;font-size:14px;margin-bottom:20px;">
-    ${row("Market rent", e.weeklyMarketRent ? money(e.weeklyMarketRent) + "/wk" : "—")}
-    ${row("Nightly rate", e.nightlyRate ? money(e.nightlyRate) : "—")}
-    ${row("Occupancy", typeof e.occupancy === "number" ? Math.round(e.occupancy * 100) + "%" : "—")}
-    ${row("STR income / yr", money(p.strAnnual))}
-    ${row("Long-term / yr", money(p.ltrAnnual))}
-    ${row("5yr STR", money(p.fiveYearStr))}
-    ${row("5yr long-term", money(p.fiveYearLtr))}
-    ${row("5yr difference", money(p.fiveYearDiff))}
-    ${row("Confidence", e.confidence != null ? e.confidence + "%" : "—")}
-    ${row("Comparables", e.comparablesFound ?? "—")}
-    ${row("Data source", e.source === "cache" ? "Cached analysis" : e.source === "locality" ? "Suburb-level fallback" : "Live analysis")}
-  </table>
+  ${property.length ? `<h3 style="margin:0 0 8px;font-size:15px;">Property</h3>${table(property)}` : ""}
+  ${estimate.length ? `<h3 style="margin:0 0 8px;font-size:15px;">Estimate</h3>${table(estimate)}` : ""}
 
   ${e.rationale ? `<p style="font-size:14px;color:#3a3a35;"><strong>Model rationale:</strong> ${escapeHtml(e.rationale)}</p>` : ""}
   ${Array.isArray(e.sources) && e.sources.length ? `<p style="font-size:13px;color:#6b6b63;">Sources: ${escapeHtml(e.sources.join(", "))}</p>` : ""}
@@ -90,6 +122,7 @@ function buildEmail(lead, body) {
 export default createHandler(
   async ({ body }) => {
     const lead = validate(body);
+    const source = readSource(body);
     const db = getSupabase();
 
     if (!db) {
@@ -128,8 +161,10 @@ export default createHandler(
           from: LEAD_FROM_EMAIL,
           to: LEAD_TO_EMAIL,
           replyTo: lead.email,
-          subject: `New calculator lead — ${body.formattedAddress || lead.name}`,
-          html: buildEmail(lead, body),
+          subject:
+            (source === "assessment" ? "New assessment booking" : "New calculator lead") +
+            ` — ${body.formattedAddress || lead.name}`,
+          html: buildEmail(lead, body, source),
         });
         if (sendError) throw new Error(sendError.message);
 

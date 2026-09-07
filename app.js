@@ -31,6 +31,194 @@
   });
 
   // ================================================================
+  // Address autocomplete — Google Places, proxied through /api/places
+  // ================================================================
+  /* Shared by the hero calculator and the assessment CTA. Owns the whole
+   * typing session: debounce, suggestion list, keyboard nav, and the session
+   * token that keeps Places on session pricing rather than per-keystroke.
+   *
+   * The host supplies the elements and two callbacks:
+   *   onTyping()        the field was edited, so any resolved place is stale
+   *   onResolve(place)  a details lookup settled — the place, or null on failure
+   *   onHint(msg, err)  status line ("Looking up addresses…", errors)
+   */
+  function createAddressAutocomplete({ input, list, idPrefix, onTyping, onResolve, onHint }) {
+    if (!input || !list) return null;
+
+    const DEBOUNCE_MS = 250;
+    const MIN_QUERY = 3;
+    const prefix = idPrefix || input.id;
+    const hint = (text, isError) => onHint && onHint(text, !!isError);
+
+    let sessionToken = null;
+    let suggestions = [];
+    let activeIndex = -1;
+    let suggestController = null;
+    let debounceTimer = null;
+
+    function closeList() {
+      list.classList.remove("open");
+      input.setAttribute("aria-expanded", "false");
+      activeIndex = -1;
+    }
+
+    function renderSuggestions() {
+      list.textContent = "";
+
+      if (!suggestions.length) {
+        const empty = document.createElement("div");
+        empty.className = "autocomplete__empty";
+        empty.textContent = "No matching addresses";
+        list.append(empty);
+      } else {
+        suggestions.forEach((s, i) => {
+          const item = document.createElement("div");
+          item.className = "autocomplete__item";
+          item.dataset.idx = String(i);
+          item.setAttribute("role", "option");
+          item.id = `${prefix}-opt-${i}`;
+
+          // textContent, not innerHTML — these strings come from Google, not from
+          // a hardcoded list, so interpolating them into markup would be an
+          // injection vector.
+          const strong = document.createElement("strong");
+          strong.textContent = s.primary;
+          const span = document.createElement("span");
+          span.textContent = s.secondary;
+
+          item.append(strong, span);
+          list.append(item);
+        });
+      }
+
+      list.classList.add("open");
+      input.setAttribute("aria-expanded", "true");
+      activeIndex = -1;
+    }
+
+    function highlight(next) {
+      const items = $$(".autocomplete__item", list);
+      if (!items.length) return;
+      activeIndex = (next + items.length) % items.length;
+      items.forEach((el, i) => el.classList.toggle("active", i === activeIndex));
+      input.setAttribute("aria-activedescendant", `${prefix}-opt-${activeIndex}`);
+      items[activeIndex].scrollIntoView({ block: "nearest" });
+    }
+
+    async function fetchSuggestions(q) {
+      if (suggestController) suggestController.abort();
+      suggestController = new AbortController();
+
+      // One session token spans the whole typing session and is retired by the
+      // details call — that is what keeps Places on session pricing.
+      if (!sessionToken) sessionToken = crypto.randomUUID();
+
+      try {
+        const url = `/api/places/autocomplete?q=${encodeURIComponent(q)}&session=${sessionToken}`;
+        const res = await fetch(url, { signal: suggestController.signal });
+        const data = await res.json();
+
+        if (!res.ok) {
+          hint(
+            data.error === "not_configured"
+              ? "Address lookup isn't configured yet."
+              : "Address lookup is unavailable right now.",
+            true
+          );
+          closeList();
+          return;
+        }
+
+        hint("");
+        suggestions = data.predictions || [];
+        renderSuggestions();
+      } catch (err) {
+        if (err.name === "AbortError") return;
+        hint("Address lookup is unavailable right now.", true);
+        closeList();
+      }
+    }
+
+    input.addEventListener("input", () => {
+      if (onTyping) onTyping();
+      clearTimeout(debounceTimer);
+
+      const q = input.value.trim();
+      if (q.length < MIN_QUERY) {
+        if (suggestController) suggestController.abort();
+        closeList();
+        hint("");
+        return;
+      }
+
+      hint("Looking up addresses…");
+      debounceTimer = setTimeout(() => fetchSuggestions(q), DEBOUNCE_MS);
+    });
+
+    async function choose(index) {
+      const pick = suggestions[index];
+      if (!pick) return;
+
+      input.value = [pick.primary, pick.secondary].filter(Boolean).join(", ");
+      closeList();
+      hint("Confirming address…");
+
+      let place = null;
+      try {
+        const url = `/api/places/details?placeId=${encodeURIComponent(pick.placeId)}&session=${sessionToken || ""}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "lookup failed");
+
+        place = data.place;
+        input.value = place.formattedAddress || input.value;
+        hint("");
+      } catch {
+        place = null;
+        hint("We couldn't confirm that address. Try selecting it again.", true);
+      } finally {
+        sessionToken = null; // the session ends with the details call
+        if (onResolve) onResolve(place);
+      }
+    }
+
+    list.addEventListener("click", (e) => {
+      const item = e.target.closest(".autocomplete__item");
+      if (item) choose(Number(item.dataset.idx));
+    });
+
+    /* Keep focus on the input while a suggestion is being clicked, so the blur
+       handler below can close the list unconditionally — without this, tabbing
+       out of the field leaves the dropdown hanging over the fields under it. */
+    list.addEventListener("mousedown", (e) => e.preventDefault());
+    input.addEventListener("blur", closeList);
+
+    input.addEventListener("keydown", (e) => {
+      const open = list.classList.contains("open");
+      if (e.key === "ArrowDown" && open) {
+        e.preventDefault();
+        highlight(activeIndex + 1);
+      } else if (e.key === "ArrowUp" && open) {
+        e.preventDefault();
+        highlight(activeIndex - 1);
+      } else if (e.key === "Enter") {
+        if (open && activeIndex >= 0) {
+          e.preventDefault();
+          choose(activeIndex);
+        }
+      } else if (e.key === "Escape") {
+        closeList();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!list.contains(e.target) && e.target !== input) closeList();
+    });
+
+    return { close: closeList };
+  }
+
+  // ================================================================
   // Calculator — Places autocomplete, AI estimate, projection
   // ================================================================
   function createCalculator(p, opts) {
@@ -86,8 +274,6 @@
     const STEP_MS = 3500;
     // Requests that beat this are cache hits — show the answer, skip the theatre.
     const LOADING_REVEAL_MS = 400;
-    const DEBOUNCE_MS = 250;
-    const MIN_QUERY = 3;
 
     let scenario = "rented"; // "rented" | "new"
     let dwellingType = "house";
@@ -95,13 +281,7 @@
     let estimate = null; // validated API response
     let scanning = false;
 
-    let sessionToken = null;
-    let suggestions = [];
-    let activeIndex = -1;
-
-    let suggestController = null;
     let estimateController = null;
-    let debounceTimer = null;
     let stepTimer = null;
     let progressTimer = null;
     let revealTimer = null;
@@ -193,157 +373,20 @@
 
     // ================= address autocomplete =================
 
-    function closeList() {
-      els.addrList.classList.remove("open");
-      els.addr.setAttribute("aria-expanded", "false");
-      activeIndex = -1;
-    }
-
-    function renderSuggestions() {
-      els.addrList.textContent = "";
-
-      if (!suggestions.length) {
-        const empty = document.createElement("div");
-        empty.className = "autocomplete__empty";
-        empty.textContent = "No matching addresses";
-        els.addrList.append(empty);
-      } else {
-        suggestions.forEach((s, i) => {
-          const item = document.createElement("div");
-          item.className = "autocomplete__item";
-          item.dataset.idx = String(i);
-          item.setAttribute("role", "option");
-          item.id = `${p}-opt-${i}`;
-
-          // textContent, not innerHTML — these strings come from Google, not from
-          // a hardcoded list, so interpolating them into markup would be an
-          // injection vector.
-          const strong = document.createElement("strong");
-          strong.textContent = s.primary;
-          const span = document.createElement("span");
-          span.textContent = s.secondary;
-
-          item.append(strong, span);
-          els.addrList.append(item);
-        });
-      }
-
-      els.addrList.classList.add("open");
-      els.addr.setAttribute("aria-expanded", "true");
-      activeIndex = -1;
-    }
-
-    function highlight(next) {
-      const items = $$(".autocomplete__item", els.addrList);
-      if (!items.length) return;
-      activeIndex = (next + items.length) % items.length;
-      items.forEach((el, i) => el.classList.toggle("active", i === activeIndex));
-      els.addr.setAttribute("aria-activedescendant", `${p}-opt-${activeIndex}`);
-      items[activeIndex].scrollIntoView({ block: "nearest" });
-    }
-
-    async function fetchSuggestions(q) {
-      if (suggestController) suggestController.abort();
-      suggestController = new AbortController();
-
-      // One session token spans the whole typing session and is retired by the
-      // details call — that is what keeps Places on session pricing.
-      if (!sessionToken) sessionToken = crypto.randomUUID();
-
-      try {
-        const url = `/api/places/autocomplete?q=${encodeURIComponent(q)}&session=${sessionToken}`;
-        const res = await fetch(url, { signal: suggestController.signal });
-        const data = await res.json();
-
-        if (!res.ok) {
-          setHint(
-            data.error === "not_configured"
-              ? "Address lookup isn't configured yet."
-              : "Address lookup is unavailable right now.",
-            true
-          );
-          closeList();
-          return;
-        }
-
-        setHint("");
-        suggestions = data.predictions || [];
-        renderSuggestions();
-      } catch (err) {
-        if (err.name === "AbortError") return;
-        setHint("Address lookup is unavailable right now.", true);
-        closeList();
-      }
-    }
-
-    els.addr.addEventListener("input", () => {
-      selected = null;
-      invalidate();
-      clearTimeout(debounceTimer);
-
-      const q = els.addr.value.trim();
-      if (q.length < MIN_QUERY) {
-        if (suggestController) suggestController.abort();
-        closeList();
-        setHint("");
-        return;
-      }
-
-      setHint("Looking up addresses…");
-      debounceTimer = setTimeout(() => fetchSuggestions(q), DEBOUNCE_MS);
-    });
-
-    async function choose(index) {
-      const pick = suggestions[index];
-      if (!pick) return;
-
-      els.addr.value = [pick.primary, pick.secondary].filter(Boolean).join(", ");
-      closeList();
-      setHint("Confirming address…");
-
-      try {
-        const url = `/api/places/details?placeId=${encodeURIComponent(pick.placeId)}&session=${sessionToken || ""}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "lookup failed");
-
-        selected = data.place;
-        els.addr.value = selected.formattedAddress || els.addr.value;
-        setHint("");
-      } catch {
+    createAddressAutocomplete({
+      input: els.addr,
+      list: els.addrList,
+      idPrefix: p,
+      // Editing the field makes any prior estimate stale, so tear it down.
+      onTyping: () => {
         selected = null;
-        setHint("We couldn't confirm that address. Try selecting it again.", true);
-      } finally {
-        sessionToken = null; // the session ends with the details call
+        invalidate();
+      },
+      onResolve: (place) => {
+        selected = place;
         updateScanButton();
-      }
-    }
-
-    els.addrList.addEventListener("click", (e) => {
-      const item = e.target.closest(".autocomplete__item");
-      if (item) choose(Number(item.dataset.idx));
-    });
-
-    els.addr.addEventListener("keydown", (e) => {
-      const open = els.addrList.classList.contains("open");
-      if (e.key === "ArrowDown" && open) {
-        e.preventDefault();
-        highlight(activeIndex + 1);
-      } else if (e.key === "ArrowUp" && open) {
-        e.preventDefault();
-        highlight(activeIndex - 1);
-      } else if (e.key === "Enter") {
-        if (open && activeIndex >= 0) {
-          e.preventDefault();
-          choose(activeIndex);
-        }
-      } else if (e.key === "Escape") {
-        closeList();
-      }
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(`#${p}-addr-list`) && e.target !== els.addr) closeList();
+      },
+      onHint: setHint,
     });
 
     // ================= estimate =================
@@ -721,6 +764,107 @@
     });
 
     $("#lead-modal-done").addEventListener("click", closeModal);
+  }
+
+  // ---------- Assessment CTA form (books an on-site visit) ----------
+  const ctaForm = $("#cta-form");
+
+  if (ctaForm) {
+    const ctaError = $("#cta-error");
+    const ctaSubmit = $("#cta-submit");
+    const ctaFields = $(".cta__fields", ctaForm);
+    const ctaDone = $(".cta__done", ctaForm);
+    const ctaAddr = $("#cta-addr");
+    const ctaAddrHint = $("#cta-addr-hint");
+    const CTA_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    const showCtaError = (msg) => {
+      ctaError.textContent = msg;
+      ctaError.hidden = false;
+    };
+
+    // The Google place behind the typed address, once confirmed. Null while the
+    // visitor is still typing or if the details lookup failed.
+    let ctaPlace = null;
+
+    createAddressAutocomplete({
+      input: ctaAddr,
+      list: $("#cta-addr-list"),
+      idPrefix: "cta",
+      onTyping: () => {
+        ctaPlace = null;
+      },
+      onResolve: (place) => {
+        ctaPlace = place;
+      },
+      onHint: (text, isError) => {
+        ctaAddrHint.textContent = text || "";
+        ctaAddrHint.hidden = !text;
+        ctaAddrHint.classList.toggle("field-hint--error", !!isError);
+      },
+    });
+
+    // A validation message describes the form as it was at submit time, so drop
+    // it the moment the visitor changes anything rather than leaving it to
+    // contradict the corrected field.
+    ctaForm.addEventListener("input", () => {
+      ctaError.hidden = true;
+    });
+    ctaForm.addEventListener("change", () => {
+      ctaError.hidden = true;
+    });
+
+    ctaForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const address = ctaAddr.value.trim();
+      const name = $("#cta-name").value.trim();
+      const phone = $("#cta-phone").value.trim();
+      const email = $("#cta-email").value.trim();
+      const preferredTime = $("#cta-time").value;
+
+      if (address.length < 4) return showCtaError("Please enter the property address.");
+      // A confirmed place gives sales a map pin and matches the lead to any
+      // cached estimate for the same property. Typed-only text does neither.
+      if (!ctaPlace) {
+        return showCtaError("Please pick your address from the suggestions.");
+      }
+      if (name.length < 2) return showCtaError("Please enter your name.");
+      if (phone.replace(/\D/g, "").length < 7) return showCtaError("Please enter a valid mobile number.");
+      if (!CTA_EMAIL_RE.test(email)) return showCtaError("Please enter a valid email address.");
+
+      ctaError.hidden = true;
+      ctaSubmit.disabled = true;
+      const originalLabel = ctaSubmit.textContent;
+      ctaSubmit.textContent = "Sending…";
+
+      try {
+        const res = await fetch("/api/lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            placeId: ctaPlace.placeId || null,
+            formattedAddress: (ctaPlace.formattedAddress || address).slice(0, 300),
+            preferredTime,
+            source: "assessment",
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.message || "Something went wrong.");
+
+        // Only claim the booking once the lead is actually recorded.
+        ctaFields.hidden = true;
+        ctaDone.hidden = false;
+      } catch (err) {
+        showCtaError(err.message || "We couldn't send your details. Please try again.");
+      } finally {
+        ctaSubmit.disabled = false;
+        ctaSubmit.textContent = originalLabel;
+      }
+    });
   }
 
   // ---------- Mobile Navigation Drawer ----------

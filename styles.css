@@ -1300,6 +1300,18 @@ button {
   color: var(--accent-2);
 }
 
+.field-hint {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+
+.field-hint--error {
+  color: var(--accent-2);
+}
+
 @keyframes fadein {
   from {
     opacity: 0;

@@ -739,25 +739,35 @@
       A 45-minute visit, a fixed-fee guarantee, and a yes-or-no by the end of the week. If it's not a fit, we'll tell you — and recommend who is.
     </p>
 
-    <form class="cta__form" onsubmit="event.preventDefault(); this.querySelector('.cta__done').hidden=false; this.querySelector('.cta__fields').hidden=true;">
+    <form class="cta__form" id="cta-form" novalidate>
       <div class="cta__fields">
-        <div class="field"><label>Property address</label><div class="input"><input required type="text" placeholder="14 Marine Parade, Mount Maunganui" /></div></div>
-        <div class="field-row">
-          <div class="field"><label>Your name</label><div class="input"><input required type="text" placeholder="Sam Te Aroha" /></div></div>
-          <div class="field"><label>Mobile</label><div class="input"><input required type="tel" placeholder="021 555 0192" /></div></div>
+        <div class="field">
+          <label for="cta-addr">Property address</label>
+          <div class="input autocomplete">
+            <input id="cta-addr" name="address" required type="text" placeholder="Start typing an address…"
+                   autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list"
+                   aria-controls="cta-addr-list" aria-describedby="cta-addr-hint" />
+            <div class="autocomplete__list" id="cta-addr-list" role="listbox" aria-label="Address suggestions"></div>
+          </div>
+          <p class="field-hint" id="cta-addr-hint" hidden></p>
         </div>
         <div class="field-row">
-          <div class="field"><label>Email</label><div class="input"><input required type="email" placeholder="sam@example.co.nz" /></div></div>
-          <div class="field"><label>Preferred time</label>
-            <div class="select"><select><option>This week</option><option>Next week</option><option>I'm flexible</option></select></div>
+          <div class="field"><label for="cta-name">Your name</label><div class="input"><input id="cta-name" name="name" required type="text" placeholder="Sam Te Aroha" autocomplete="name" /></div></div>
+          <div class="field"><label for="cta-phone">Mobile</label><div class="input"><input id="cta-phone" name="phone" required type="tel" placeholder="021 555 0192" autocomplete="tel" /></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="cta-email">Email</label><div class="input"><input id="cta-email" name="email" required type="email" placeholder="sam@example.co.nz" autocomplete="email" /></div></div>
+          <div class="field"><label for="cta-time">Preferred time</label>
+            <div class="select"><select id="cta-time" name="preferredTime"><option>This week</option><option>Next week</option><option>I'm flexible</option></select></div>
           </div>
         </div>
-        <button class="btn btn--primary btn--lg btn--block" type="submit">Book my free assessment →</button>
+        <p class="form-error" id="cta-error" hidden role="alert"></p>
+        <button class="btn btn--primary btn--lg btn--block" id="cta-submit" type="submit">Book my free assessment →</button>
       </div>
       <div class="cta__done" hidden>
         <div class="tick">✓</div>
         <h3>Booked. We'll be in touch within 24 hours.</h3>
-        <p>A specialist will phone you on the number above to confirm the visit. In the meantime, you'll get a confirmation email with what to expect.</p>
+        <p>A specialist will phone you on the number above to confirm the visit and talk through what to expect.</p>
       </div>
     </form>
 
