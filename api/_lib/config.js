@@ -85,6 +85,9 @@ export const RATE_LIMIT = {
   estimateRefresh: { max: 3, windowMs: 60 * 60 * 1000 },
   lead: { max: 6, windowMs: 60 * 60 * 1000, global: true },
   places: { max: 200, windowMs: 60 * 60 * 1000 },
+  // Password guessing. Global so it can't be dodged by waiting for a cold start.
+  adminLogin: { max: 10, windowMs: 15 * 60 * 1000, global: true },
+  admin: { max: 600, windowMs: 60 * 60 * 1000 },
 };
 
 /* When the suburb rollup may answer on its own instead of calling the model.

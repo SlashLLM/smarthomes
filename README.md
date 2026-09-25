@@ -107,8 +107,12 @@ api/            serverless functions (never bundled into the browser)
   _lib/         shared config, HTTP wrapper, Supabase client, cache, model call
   places/       Google Places proxies
 index.html      the whole site, including the calculator markup
-app.js          calculator + site interactions
-styles.css
-scrub-engine.js scroll-driven background video
-supabase/       database migration
+src/
+  main.js       entry: styles, intro film, page logic
+  main.css      Tailwind + component classes the calculator JS toggles
+  app.js        calculator + site interactions (finds elements by id)
+  intro.*       first-visit intro film (GSAP), gated in <head>
+public/         served as-is: images, favicon, robots.txt, sitemap.xml
+tailwind.config.js  brand palette (Warm Architectural)
+supabase/       database migrations
 ```

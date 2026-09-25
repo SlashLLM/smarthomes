@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Intro Lab</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet" />
+<style>
+  :root { --cream: #FFF8E7; --papaya: #FFEFD5; --apricot: #FFE4B5; --ink: #2D241E; --muted: #685950; --accent: #A6431E; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--cream); color: var(--ink); font-family: 'Plus Jakarta Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  header { max-width: 1320px; margin: 0 auto; padding: 40px 24px 8px; display: flex; flex-wrap: wrap; gap: 16px; align-items: end; justify-content: space-between; }
+  h1 { margin: 0; font-size: clamp(28px, 4vw, 44px); letter-spacing: -0.035em; }
+  header p { margin: 6px 0 0; color: var(--muted); max-width: 640px; line-height: 1.5; }
+  .seg { display: inline-flex; padding: 4px; gap: 4px; background: var(--papaya); border: 1px solid var(--apricot); border-radius: 999px; }
+  .seg button { border: 0; background: transparent; padding: 8px 16px; border-radius: 999px; font: 700 13px 'Plus Jakarta Sans', sans-serif; color: var(--muted); cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(45,36,30,.12); }
+  main { max-width: 1320px; margin: 0 auto; padding: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr)); gap: 24px; }
+  .card { background: #fff; border: 2px solid var(--apricot); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; }
+  .screen { position: relative; background: #2B221B; overflow: hidden; }
+  .screen iframe { position: absolute; top: 0; left: 50%; border: 0; transform-origin: top center; background: var(--cream); }
+  .meta { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .meta h2 { margin: 0; font-size: 20px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+  .tag { font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 999px; background: var(--papaya); border: 1px solid var(--apricot); color: var(--accent); }
+  .meta p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+  .meta .ref { font-size: 12px; }
+  .actions { margin-top: auto; display: flex; gap: 8px; flex-wrap: wrap; padding-top: 6px; }
+  .actions button, .actions a { font: 700 13px 'Plus Jakarta Sans', sans-serif; padding: 9px 16px; border-radius: 999px; cursor: pointer; text-decoration: none; }
+  .actions button { border: 0; background: var(--accent); color: #fff; }
+  .actions a { border: 1px solid var(--apricot); color: var(--ink); background: var(--cream); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Intro Lab</h1>
+    <p>Four opening films for the homepage. Each one lands on the live hero with no visible cut. Replay any card, switch to phone size, or open one full screen. The default is set by <code>INTRO_DEFAULT</code> in <code>index.html</code>.</p>
+  </div>
+  <div class="seg" role="group" aria-label="Preview size">
+    <button type="button" data-size="desktop" aria-pressed="true">Desktop</button>
+    <button type="button" data-size="phone" aria-pressed="false">Phone</button>
+  </div>
+</header>
+
+<main>
+  <article class="card" data-v="a">
+    <div class="screen"></div>
+    <div class="meta">
+      <h2>A · Original <span class="tag">~11s</span></h2>
+      <p>The current film: letterboxed and desaturated. Tenancy pain points fall in as cards, a sweep turns them into SmartHomes benefits, the income counter climbs, and a title card resolves into the site.</p>
+    </div>
+  </article>
+  <article class="card" data-v="b">
+    <div class="screen"></div>
+    <div class="meta">
+      <h2>B · Aperture <span class="tag">~7s</span></h2>
+      <p>Architectural restraint. A terracotta hairline opens into a window onto the house. Two quiet lines, "Every home has a second income. Most owners never see it.", sit beside one proof card counting long-term to short-stay income. Then the window widens into the hero.</p>
+      <p class="ref">Reference: Kononenko Architectural Bureau (small type anchored bottom-left, generous negative space).</p>
+    </div>
+  </article>
+  <article class="card" data-v="c">
+    <div class="screen"></div>
+    <div class="meta">
+      <h2>C · Ledger <span class="tag">~8s</span></h2>
+      <p>An editorial owner report on espresso. Three ruled rows count up the proof ($14.2M paid out, 83% occupancy, +167% uplift). The page then splits open like doors onto the house, and an oversized SmartHomes wordmark rises over the photo.</p>
+      <p class="ref">Reference: Velora Home (giant wordmark overlapping a full-bleed photo), Serpentine (line reveals).</p>
+    </div>
+  </article>
+  <article class="card" data-v="d">
+    <div class="screen"></div>
+    <div class="meta">
+      <h2>D · Split <span class="tag">default · ~7s</span></h2>
+      <p>The whole pitch in one frame. The same house, run two ways: a grey "long-term let" half against a warm "managed short-stay" half, both incomes counting up. The divider then sweeps the long-term side away, ending on "+193% · same keys, same house".</p>
+      <p class="ref">Reference: before/after comparison sliders, done cinematically.</p>
+    </div>
+  </article>
+</main>
+
+<script>
+  const SIZES = { desktop: [1440, 900], phone: [390, 844] };
+  let size = 'desktop';
+
+  function mount(card) {
+    const screen = card.querySelector('.screen');
+    const [w, h] = SIZES[size];
+    const frameW = screen.clientWidth;
+    // Phone previews show the device at a comfortable height, not full card width.
+    const scale = size === 'phone' ? Math.min(1, 440 / h) : frameW / w;
+    screen.style.height = Math.round(h * scale) + 'px';
+    screen.textContent = '';
+    const f = document.createElement('iframe');
+    f.title = 'Intro ' + card.dataset.v.toUpperCase() + ' preview';
+    f.width = w;
+    f.height = h;
+    f.style.width = w + 'px';
+    f.style.height = h + 'px';
+    f.style.transform = 'translateX(-50%) scale(' + scale + ')';
+    f.loading = 'lazy';
+    f.src = '/?intro=' + card.dataset.v + '&t=' + Date.now();
+    screen.append(f);
+  }
+
+  document.querySelectorAll('.card').forEach((card) => {
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+    actions.innerHTML =
+      '<button type="button">↻ Replay</button>' +
+      '<a href="/?intro=' + card.dataset.v + '" target="_blank" rel="noopener">Open full screen ↗</a>';
+    actions.querySelector('button').addEventListener('click', () => mount(card));
+    card.querySelector('.meta').append(actions);
+    mount(card);
+  });
+
+  document.querySelectorAll('.seg button').forEach((b) => b.addEventListener('click', () => {
+    size = b.dataset.size;
+    document.querySelectorAll('.seg button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    document.querySelectorAll('.card').forEach(mount);
+  }));
+
+  let t;
+  addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => document.querySelectorAll('.card').forEach(mount), 250); });
+</script>
+</body>
+</html>

@@ -8,6 +8,7 @@
  */
 
 import OpenAI from "openai";
+import { cleanRationale } from "../../shared/rationale.js";
 import { DEFAULT_OPENAI_MODEL, BOUNDS } from "./config.js";
 
 const SCHEMA = {
@@ -51,7 +52,7 @@ const SCHEMA = {
     },
     rationale: {
       type: "string",
-      description: "One or two plain sentences explaining the estimate.",
+      description: "One or two plain sentences explaining the estimate. No URLs, markdown or inline citations; sources go in `sources`.",
     },
   },
 };
@@ -189,7 +190,7 @@ function validate(raw) {
     sources: Array.isArray(raw.sources)
       ? raw.sources.filter((s) => typeof s === "string" && s).slice(0, 8)
       : [],
-    rationale: typeof raw.rationale === "string" ? raw.rationale.slice(0, 600) : "",
+    rationale: typeof raw.rationale === "string" ? cleanRationale(raw.rationale).slice(0, 600) : "",
   };
 }
 

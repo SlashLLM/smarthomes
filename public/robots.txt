@@ -1,5 +1,9 @@
 # robots.txt for SmartHomes NZ
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /report/
+Disallow: /api/
+Disallow: /intro-lab
 
 Sitemap: https://smarthomes.co.nz/sitemap.xml

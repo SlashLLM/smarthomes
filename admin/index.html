@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Leads | SmartHomes Admin</title>
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#FFF8E7" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/src/main.css" />
+<script type="module" src="/src/admin.js"></script>
+</head>
+<body class="min-h-screen">
+
+<!-- ============ Login ============ -->
+<main id="login" class="min-h-screen flex items-center justify-center px-4" hidden>
+  <form id="loginForm" class="w-full max-w-sm bg-brand-white border border-brand-borderTone rounded-wavy shadow-xs p-8" novalidate>
+    <img src="/logo.svg" alt="SmartHomes" class="h-8 mb-6" width="140" height="32" />
+    <h1 class="text-xl font-extrabold mb-1">Admin sign in</h1>
+    <p class="text-sm text-brand-inkMuted mb-6">Leads dashboard</p>
+    <label for="password" class="field-label">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required class="field-input mb-4" />
+    <p id="loginError" class="form-error mb-4" role="alert" hidden></p>
+    <button type="submit" class="btn-primary w-full py-3">Sign in</button>
+  </form>
+</main>
+
+<!-- ============ Dashboard ============ -->
+<div id="app" hidden>
+  <header class="sticky top-0 z-20 bg-brand-cream/95 backdrop-blur border-b border-brand-borderTone">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center gap-4">
+      <img src="/logo.svg" alt="SmartHomes" class="h-7" width="120" height="28" />
+      <span class="text-xs font-bold uppercase tracking-wider text-brand-inkSoft">Admin</span>
+      <div class="ml-auto flex items-center gap-2">
+        <a id="exportBtn" href="/api/admin/export" class="px-4 py-2 rounded-full text-sm font-bold border border-brand-apricot bg-brand-white hover:bg-brand-papaya">Export CSV</a>
+        <button id="logoutBtn" type="button" class="px-4 py-2 rounded-full text-sm font-bold text-brand-inkMuted hover:text-brand-ink">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6">
+    <div class="flex items-baseline justify-between gap-4 mb-4">
+      <h1 class="text-2xl font-extrabold">Leads</h1>
+      <p id="summary" class="text-sm text-brand-inkMuted" aria-live="polite"></p>
+    </div>
+
+    <nav id="tabs" class="flex gap-1 overflow-x-auto pb-1 mb-4" aria-label="Filter by status"></nav>
+
+    <form id="filters" class="grid gap-3 grid-cols-2 md:grid-cols-[1fr_auto_auto_auto_auto] items-end mb-4">
+      <div class="col-span-2 md:col-span-1">
+        <label for="fSearch" class="field-label">Search</label>
+        <input id="fSearch" name="search" type="search" placeholder="Name, email, phone, address" class="field-input" />
+      </div>
+      <div>
+        <label for="fSource" class="field-label">Source</label>
+        <select id="fSource" name="source" class="field-input">
+          <option value="">All</option>
+          <option value="calculator">Calculator</option>
+          <option value="assessment">Assessment</option>
+        </select>
+      </div>
+      <div>
+        <label for="fFrom" class="field-label">From</label>
+        <input id="fFrom" name="from" type="date" class="field-input" />
+      </div>
+      <div>
+        <label for="fTo" class="field-label">To</label>
+        <input id="fTo" name="to" type="date" class="field-input" />
+      </div>
+      <button id="clearFilters" type="button" class="py-2.5 text-sm font-bold text-brand-accentDark hover:underline">Clear</button>
+    </form>
+
+    <p id="listError" class="form-error mb-4" role="alert" hidden></p>
+
+    <div class="bg-brand-white border border-brand-borderTone rounded-scallop overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-brand-papaya text-left text-xs uppercase tracking-wider text-brand-inkSoft">
+            <tr>
+              <th class="px-4 py-3 font-bold">Received</th>
+              <th class="px-4 py-3 font-bold">Contact</th>
+              <th class="px-4 py-3 font-bold">Address</th>
+              <th class="px-4 py-3 font-bold">Source</th>
+              <th class="px-4 py-3 font-bold">Estimate</th>
+              <th class="px-4 py-3 font-bold">Status</th>
+            </tr>
+          </thead>
+          <tbody id="rows" class="divide-y divide-brand-apricot/60"></tbody>
+        </table>
+      </div>
+      <p id="empty" class="px-4 py-12 text-center text-brand-inkMuted" hidden>No leads match these filters.</p>
+    </div>
+
+    <div class="flex items-center justify-between mt-4 text-sm">
+      <button id="prevPage" type="button" class="px-4 py-2 rounded-full font-bold border border-brand-apricot bg-brand-white disabled:opacity-40">← Newer</button>
+      <span id="pageInfo" class="text-brand-inkMuted"></span>
+      <button id="nextPage" type="button" class="px-4 py-2 rounded-full font-bold border border-brand-apricot bg-brand-white disabled:opacity-40">Older →</button>
+    </div>
+  </main>
+
+  <!-- ============ Lead detail drawer ============ -->
+  <div id="drawer" class="fixed inset-0 z-30" hidden>
+    <div id="drawerScrim" class="absolute inset-0 bg-brand-ink/30"></div>
+    <aside class="absolute right-0 top-0 h-full w-full max-w-xl bg-brand-cream shadow-2xl overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="dName">
+      <div class="sticky top-0 bg-brand-cream border-b border-brand-borderTone px-6 py-4 flex items-start gap-4">
+        <div class="min-w-0">
+          <h2 id="dName" class="text-xl font-extrabold truncate"></h2>
+          <p id="dMeta" class="text-sm text-brand-inkMuted"></p>
+        </div>
+        <button id="drawerClose" type="button" class="ml-auto text-2xl leading-none px-2 text-brand-inkMuted hover:text-brand-ink" aria-label="Close">×</button>
+      </div>
+      <div id="dBody" class="px-6 py-6 space-y-6"></div>
+      <form id="dForm" class="px-6 pb-8 space-y-4">
+        <div>
+          <label for="dStatus" class="field-label">Status</label>
+          <select id="dStatus" class="field-input"></select>
+        </div>
+        <div>
+          <label for="dNotes" class="field-label">Notes</label>
+          <textarea id="dNotes" rows="5" maxlength="5000" class="field-input"></textarea>
+        </div>
+        <p id="dError" class="form-error" role="alert" hidden></p>
+        <div class="flex items-center gap-3">
+          <button id="dSave" type="submit" class="btn-primary px-6 py-2.5">Save</button>
+          <span id="dSaved" class="text-sm font-semibold text-green-700" hidden>Saved</span>
+        </div>
+      </form>
+
+      <!-- Appraisal report: overrides on top of the lead's estimate, then the PDF -->
+      <form id="rForm" class="mx-6 mb-10 p-5 bg-brand-white border border-brand-borderTone rounded-scallop space-y-4" novalidate>
+        <div class="flex items-baseline justify-between gap-4">
+          <h3 class="text-lg font-extrabold">Appraisal report</h3>
+          <span id="rGenerated" class="text-xs text-brand-inkMuted"></span>
+        </div>
+        <p class="text-sm text-brand-inkMuted -mt-2">Leave a field blank to use the calculator's figure (shown as the placeholder).</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="rRent" class="field-label">Market rent $/wk</label>
+            <input id="rRent" name="report_weekly_rent" type="number" inputmode="decimal" min="50" max="10000" step="1" class="field-input" />
+          </div>
+          <div>
+            <label for="rNightly" class="field-label">Nightly rate $</label>
+            <input id="rNightly" name="report_nightly_rate" type="number" inputmode="decimal" min="20" max="10000" step="1" class="field-input" />
+          </div>
+          <div>
+            <label for="rOcc" class="field-label">Occupancy %</label>
+            <input id="rOcc" name="report_occupancy" type="number" inputmode="decimal" min="5" max="100" step="1" class="field-input" />
+          </div>
+          <div>
+            <label for="rCosts" class="field-label">Costs &amp; mgmt %</label>
+            <input id="rCosts" name="report_costs_pct" type="number" inputmode="decimal" min="0" max="80" step="0.5" class="field-input" />
+          </div>
+        </div>
+        <div>
+          <label for="rCommentary" class="field-label">Our view (shown on the report)</label>
+          <textarea id="rCommentary" rows="4" maxlength="2000" class="field-input" placeholder="Optional. Local context for the owner: seasonality, street, standout features…"></textarea>
+        </div>
+        <div id="rPreview" class="rounded-2xl bg-brand-papaya px-4 py-3 text-sm" aria-live="polite"></div>
+        <p id="rError" class="form-error" role="alert" hidden></p>
+        <div class="flex flex-wrap items-center gap-3">
+          <button id="rSave" type="submit" class="px-5 py-2.5 rounded-full text-sm font-bold border border-brand-apricot bg-brand-white hover:bg-brand-papaya">Save settings</button>
+          <button id="rView" type="button" class="px-5 py-2.5 rounded-full text-sm font-bold border border-brand-apricot bg-brand-white hover:bg-brand-papaya">Preview PDF</button>
+          <button id="rDownload" type="button" class="btn-primary px-5 py-2.5">Download PDF</button>
+          <span id="rSaved" class="text-sm font-semibold text-green-700" hidden>Saved</span>
+        </div>
+      </form>
+    </aside>
+  </div>
+</div>
+
+</body>
+</html>
