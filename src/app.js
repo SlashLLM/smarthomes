@@ -507,6 +507,7 @@ import { cleanRationale } from "../shared/rationale.js";
         estimate = data;
         renderEstimate(data);
         recalc();
+        opts.onEstimate?.({ placeId: selected.placeId });
       } catch (err) {
         if (err.name === "AbortError") return; // superseded or user edited an input
         showError("We couldn't reach the estimate service. Please try again.");
@@ -633,6 +634,7 @@ import { cleanRationale } from "../shared/rationale.js";
   let lastProjection = null;
 
   const fc = createCalculator("fc", {
+    onEstimate: (info) => promptForLead(info),
     onResultsClear() {
       lastProjection = null;
       $("#calc-str").textContent = "—";
@@ -686,9 +688,41 @@ import { cleanRationale } from "../shared/rationale.js";
     },
   });
 
-  // ---------- Lead gate (inline form that unlocks the 5yr projection) ----------
+  // ---------- Lead gate (dialog that unlocks the 5yr projection) ----------
   const leadForm = $("#lead-form");
   const projWrap = $("#proj-wrap");
+  const leadDialog = $("#lead-dialog");
+  let leadUnlocked = false;
+  let lastPromptedPlace = null;
+
+  function openLeadDialog() {
+    if (!leadDialog || leadUnlocked || leadDialog.open) return;
+    if (lastProjection) {
+      const diff = lastProjection.strAnnual - lastProjection.ltrAnnual;
+      $("#lead-dialog-str").textContent = fmt(lastProjection.strAnnual);
+      $("#lead-dialog-diff").textContent =
+        (diff >= 0 ? "+" : "") + fmt(diff) + " vs long-term";
+    }
+    leadDialog.showModal();
+  }
+
+  if (leadDialog) {
+    const close = () => leadDialog.close();
+    $("#lead-dialog-close").addEventListener("click", close);
+    $("#lead-dialog-later").addEventListener("click", close);
+    // A click on the ::backdrop lands on the <dialog> itself.
+    leadDialog.addEventListener("click", (e) => { if (e.target === leadDialog) close(); });
+    $("#proj-unlock-btn")?.addEventListener("click", openLeadDialog);
+  }
+
+  // Prompt once per address, right after its estimate lands; re-scans of the
+  // same address don't nag — the unlock button stays available instead.
+  function promptForLead({ placeId }) {
+    if (placeId === lastPromptedPlace) return;
+    lastPromptedPlace = placeId;
+    // Let the result paint first so the dialog reads as a follow-up to it.
+    setTimeout(openLeadDialog, 700);
+  }
 
   if (leadForm) {
     const submitBtn = $("#lead-submit");
@@ -740,8 +774,11 @@ import { cleanRationale } from "../shared/rationale.js";
         if (!res.ok) throw new Error(data.message || "Something went wrong.");
 
         // Only unlock once the lead is actually recorded.
+        leadUnlocked = true;
         projWrap.classList.remove("locked");
         thanksEl.hidden = false;
+        leadDialog?.close();
+        projWrap.scrollIntoView({ behavior: "smooth", block: "center" });
       } catch (err) {
         showFormError(err.message || "We couldn't send your details. Please try again.");
       } finally {
