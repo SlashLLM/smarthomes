@@ -5,20 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Short-Term Rental Management NZ | SmartHomes</title>
 
-<!-- Primary SEO Meta Tags -->
-<meta name="description" content="Aotearoa's leading Airbnb &amp; short-term rental management service. Full listing, dynamic pricing &amp; 24/7 care for home owners. Get your free estimate." />
-<meta name="keywords" content="short term rental management NZ, Airbnb property management New Zealand, holiday home manager Tauranga, bach management Queenstown, vacation rental management Auckland" />
-<meta name="author" content="SmartHomes Property Management Ltd" />
-<meta name="robots" content="index, follow" />
+<!-- Primary SEO -->
+<meta name="description" content="Aotearoa's Airbnb &amp; short-term rental management service. Full listing, dynamic pricing &amp; 24/7 guest care for home owners. Get a free income estimate for your property." />
+<meta name="robots" content="index, follow, max-image-preview:large" />
 <link rel="canonical" href="https://smarthomes.co.nz/" />
+<meta name="theme-color" content="#FFF8E7" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-<!-- Geo & Local SEO Tags -->
-<meta name="geo.region" content="NZ" />
+<!-- Local SEO -->
+<meta name="geo.region" content="NZ-BOP" />
 <meta name="geo.placename" content="Tauranga, New Zealand" />
 <meta name="geo.position" content="-37.6861;176.1667" />
 <meta name="ICBM" content="-37.6861, 176.1667" />
 
-<!-- Open Graph / Facebook / LinkedIn Social Cards -->
+<!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://smarthomes.co.nz/" />
 <meta property="og:title" content="SmartHomes | Short-Term Rental Management NZ" />
@@ -26,26 +26,57 @@
 <meta property="og:image" content="https://smarthomes.co.nz/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="SmartHomes Short-Term Rental Management NZ" />
+<meta property="og:image:alt" content="SmartHomes short-term rental management NZ" />
 <meta property="og:site_name" content="SmartHomes NZ" />
 <meta property="og:locale" content="en_NZ" />
 
-<!-- Twitter Card Tags -->
+<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@smarthomesnz" />
-<meta name="twitter:url" content="https://smarthomes.co.nz/" />
 <meta name="twitter:title" content="SmartHomes | Short-Term Rental Management NZ" />
 <meta name="twitter:description" content="Turn your property into a high-performing short-stay rental across Aotearoa. Professional Airbnb management &amp; dynamic pricing." />
 <meta name="twitter:image" content="https://smarthomes.co.nz/og-image.png" />
 
-<!-- Fonts & Styles -->
+<!-- Fonts: one family, only the weights in use. Icons are subset to the glyphs on this page. -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,400&amp;family=Geist:wght@300..700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="styles.css" />
-<link rel="preload" as="image" href="assets/posters/property.webp" type="image/webp" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,700&amp;display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&amp;icon_names=auto_awesome,bolt,call,check_circle,cleaning_services,close,event_busy,hotel,location_on,lock,lock_open,mail,menu,payments,refresh,schedule,star,trending_up,verified,verified_user,villa&amp;display=block" rel="stylesheet" />
 
-<!-- JSON-LD Structured Data Schema -->
+<!-- LCP image: the hero photo (also the intro film's first frame) -->
+<link rel="preload" as="image" type="image/webp" href="/assets/img/hero-1280.webp"
+      imagesrcset="/assets/img/hero-1280.webp 1280w, /assets/img/hero-2400.webp 2400w" imagesizes="100vw" fetchpriority="high" />
+
+<script>
+  /* Intro gate — runs before first paint so the site never flashes behind the
+     film. Skipped for crawlers, reduced motion, deep links and repeat visits.
+     Failsafe: if intro.js never claims the stage, release the page anyway. */
+  (function () {
+    try {
+      /* Which intro first-time visitors get. 'a' = original film; b/c/d are
+         the alternatives (preview them all at /intro-lab). ?intro=<id> forces one. */
+      var INTRO_DEFAULT = 'd';
+      var VARIANTS = ['a', 'b', 'c', 'd'];
+      var root = document.documentElement;
+      var p = new URLSearchParams(location.search);
+      var q = p.get('intro');
+      var forced = q === '1' || VARIANTS.indexOf(q) !== -1;
+      root.setAttribute('data-intro', VARIANTS.indexOf(q) !== -1 ? q : INTRO_DEFAULT);
+      var seen = false;
+      try { seen = sessionStorage.getItem('sh_intro_seen') === '1'; } catch (e) {}
+      var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var deepLink = location.hash && location.hash.length > 1;
+      var bot = /bot|crawl|spider|slurp|lighthouse|pagespeed|headless|preview/i.test(navigator.userAgent);
+      if (forced || (!seen && !reduced && !deepLink && !bot)) {
+        root.classList.add('intro-active');
+        setTimeout(function () {
+          if (!window.__shIntro) root.classList.remove('intro-active');
+        }, 3000);
+      }
+    } catch (e) { /* never block the page */ }
+  })();
+</script>
+
+<!-- Structured data -->
 <script type="application/ld+json">
 [
   {
@@ -54,44 +85,9 @@
     "@id": "https://smarthomes.co.nz/#website",
     "url": "https://smarthomes.co.nz/",
     "name": "SmartHomes NZ",
-    "description": "Short-Term Rental Management & Airbnb Property Managers New Zealand",
-    "inLanguage": "en-NZ"
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://smarthomes.co.nz/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Calculator",
-        "item": "https://smarthomes.co.nz/#calculator"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "How It Works",
-        "item": "https://smarthomes.co.nz/#how"
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
-        "name": "Case Studies",
-        "item": "https://smarthomes.co.nz/#results"
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
-        "name": "FAQ",
-        "item": "https://smarthomes.co.nz/#faq"
-      }
-    ]
+    "description": "Short-term rental management and Airbnb property managers in New Zealand",
+    "inLanguage": "en-NZ",
+    "publisher": { "@id": "https://smarthomes.co.nz/#organization" }
   },
   {
     "@context": "https://schema.org",
@@ -99,9 +95,9 @@
     "@id": "https://smarthomes.co.nz/#organization",
     "name": "SmartHomes Property Management Ltd",
     "url": "https://smarthomes.co.nz/",
-    "logo": "https://smarthomes.co.nz/logo.png",
+    "logo": "https://smarthomes.co.nz/logo.svg",
     "image": "https://smarthomes.co.nz/og-image.png",
-    "telephone": "0800-762-784",
+    "telephone": "+64-800-762-784",
     "email": "kiaora@smarthomes.co.nz",
     "priceRange": "$$",
     "address": {
@@ -112,11 +108,7 @@
       "postalCode": "3110",
       "addressCountry": "NZ"
     },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": -37.6861,
-      "longitude": 176.1667
-    },
+    "geo": { "@type": "GeoCoordinates", "latitude": -37.6861, "longitude": 176.1667 },
     "areaServed": [
       { "@type": "Country", "name": "New Zealand" },
       { "@type": "City", "name": "Tauranga" },
@@ -124,812 +116,809 @@
       { "@type": "City", "name": "Queenstown" },
       { "@type": "City", "name": "Auckland" },
       { "@type": "City", "name": "Wānaka" },
-      { "@type": "City", "name": "Wellington" }
-    ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.92",
-      "bestRating": "5",
-      "ratingCount": "11400"
-    }
+      { "@type": "City", "name": "Rotorua" }
+    ]
   },
   {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": "Short-Term Rental & Airbnb Property Management",
     "provider": { "@id": "https://smarthomes.co.nz/#organization" },
-    "serviceType": "Property Management",
+    "serviceType": "Short-term rental management",
     "areaServed": { "@type": "Country", "name": "New Zealand" },
-    "description": "Full-service short-term rental management including dynamic pricing, professional photography, guest communications, maintenance, and compliance."
+    "description": "Full-service short-term rental management including dynamic pricing, professional photography, guest communications, cleaning, maintenance and compliance."
   },
   {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What about regulations? Council, Healthy Homes, the lot.",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "We handle the complete compliance stack: council STR registration where required (Auckland, Queenstown-Lakes, Rotorua, Christchurch), Healthy Homes warrant of fitness, smoke alarm + carbon monoxide testing, and meth-contamination baseline testing."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What about wear and tear? Guests can be hard on a place.",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Every stay ends with a professional clean and a checklist inspection. Linens are hotel-grade and rotated, and any damage is logged with photos before the next guest arrives. We carry $5M public liability and a $2,500 per-stay guest damage policy."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What about vacancy? Won't it just sit empty in winter?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Our pricing engine adjusts every 24 hours across six platforms (Airbnb, Booking, Bookabach, VRBO, Expedia, Google Vacation Rentals). Average annual occupancy across our portfolio is 83%."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I still use my own property?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Absolutely. Block any dates from your Owner Portal — instant, no questions. Most owners reserve 4–8 weeks a year for themselves and friends."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What are the fees, really?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A flat 18% of nights booked. No setup fee, no listing fee, no monthly minimum. Cleaning, linen and consumables are passed through at cost and billed to the guest."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I get paid, and when?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Direct deposit on the 5th of every month, in NZD, to any NZ or Australian bank account. Average clearance is 4 days from guest checkout."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What happens if I want to leave?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Thirty days written notice, full stop. We hand back the photography, the calendar, the guest reviews — all yours."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is my property right for SmartHomes?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Generally yes if it's a self-contained whole home, within 90 minutes of an airport or visitor centre, and free of body-corp short-stay restrictions."
-        }
-      }
+      { "@type": "Question", "name": "What about regulations? Council, Healthy Homes, the lot.",
+        "acceptedAnswer": { "@type": "Answer", "text": "We handle the complete compliance stack: council STR registration where required (Auckland, Queenstown-Lakes, Rotorua, Christchurch), Healthy Homes warrant of fitness, smoke alarm and carbon monoxide testing, and meth-contamination baseline testing." } },
+      { "@type": "Question", "name": "What about wear and tear? Guests can be hard on a place.",
+        "acceptedAnswer": { "@type": "Answer", "text": "Every stay ends with a professional clean and a checklist inspection. Linens are hotel-grade and rotated, and any damage is logged with photos before the next guest arrives. We carry $5M public liability and a $2,500 per-stay guest damage policy." } },
+      { "@type": "Question", "name": "What about vacancy? Won't it just sit empty in winter?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Our pricing engine adjusts every 24 hours across six platforms (Airbnb, Booking, Bookabach, VRBO, Expedia, Google Vacation Rentals). Average annual occupancy across our portfolio is 83%." } },
+      { "@type": "Question", "name": "Can I still use my own property?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Absolutely. Block any dates from your Owner Portal — instant, no questions. Most owners reserve 4–8 weeks a year for themselves and friends." } },
+      { "@type": "Question", "name": "What are the fees, really?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A flat 18% of nights booked. No setup fee, no listing fee, no monthly minimum. Cleaning, linen and consumables are passed through at cost and billed to the guest." } },
+      { "@type": "Question", "name": "How do I get paid, and when?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Direct deposit on the 5th of every month, in NZD, to any NZ or Australian bank account. Average clearance is 4 days from guest checkout." } },
+      { "@type": "Question", "name": "What happens if I want to leave?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Thirty days written notice, full stop. We hand back the photography, the calendar, the guest reviews — all yours." } },
+      { "@type": "Question", "name": "Is my property right for SmartHomes?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Generally yes if it's a self-contained whole home, within 90 minutes of an airport or visitor centre, and free of body-corp short-stay restrictions." } }
     ]
   }
 ]
 </script>
+
+<!-- Linked here, not imported from main.js: in dev Vite injects JS-imported CSS
+     only once the module runs, so the first paint was unstyled HTML. -->
+<link rel="stylesheet" href="/src/main.css" />
+<link rel="stylesheet" href="/src/intro.css" />
+<link rel="stylesheet" href="/src/intro-variants.css" />
+<script type="module" src="/src/main.js"></script>
 </head>
 <body>
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-full focus:bg-brand-white focus:shadow-lg">Skip to content</a>
 
-<!-- =========================================================
-     NAV
-========================================================= -->
-<header class="nav" id="nav">
-  <a class="brand" href="#top" aria-label="SmartHomes home">
-    <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
-      <path d="M6 20 L20 7 L34 20 L34 33 L24 33 L24 24 L16 24 L16 33 L6 33 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
-      <circle cx="29" cy="14" r="2.2" fill="currentColor"/>
-    </svg>
-    <span class="brand__type">SmartHomes</span>
-    <span class="brand__tld">.co.nz</span>
-  </a>
-  <nav class="nav__links" id="nav-links" aria-label="Primary navigation">
-    <a href="#calculator">Calculator</a>
-    <a href="#how">How it works</a>
-    <a href="#results">Results</a>
-    <a href="#faq">FAQ</a>
-  </nav>
-  <div class="nav__cta">
-    <a class="ghost" href="#assess">Sign in</a>
-    <a class="btn btn--primary" href="#assess">Free assessment <span aria-hidden="true">→</span></a>
+<!-- ================= CINEMATIC INTRO FILM =================
+     Styling in src/intro.css, timeline in src/intro.js. Inert unless <html>
+     has .intro-active. The photo is the SAME file as the hero photo so the
+     final frame of the film is the first frame of the site. -->
+<div aria-hidden="true" id="intro-film">
+  <div id="filmPhoto">
+    <div id="filmCam">
+      <img alt="" id="filmImg" src="/assets/img/hero-1280.webp"
+           srcset="/assets/img/hero-1280.webp 1280w, /assets/img/hero-2400.webp 2400w" sizes="100vw" />
+    </div>
+    <div class="film-wash"></div>
+    <div class="film-vignette"></div>
+    <div id="filmDust"></div>
+    <div class="film-hero-grade glow"></div>
+    <div class="film-hero-grade scrim"></div>
+    <div class="film-hero-grade foot"></div>
   </div>
-  <button class="nav__toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line class="line-1" x1="4" y1="6" x2="20" y2="6"></line>
-      <line class="line-2" x1="4" y1="12" x2="20" y2="12"></line>
-      <line class="line-3" x1="4" y1="18" x2="20" y2="18"></line>
-    </svg>
-  </button>
+  <div class="film-bars"><i class="bar-top"></i><i class="bar-bot"></i></div>
+  <div id="filmSweep"></div>
+  <div class="film-ui">
+    <div class="film-label"><span class="dot"></span><span id="filmLabelText"></span><span class="caret"></span></div>
+    <div class="film-counter" id="filmCounter">
+      <div class="caps">
+        <span class="cap lt">Long-term rental / yr</span>
+        <span class="cap str">Short-stay income / yr</span>
+      </div>
+      <div class="val">$0</div>
+    </div>
+    <div class="film-stamp-wrap"><div class="film-stamp">+193%</div></div>
+    <div id="filmCards">
+      <div class="film-card">
+        <div class="ic"><span class="material-symbols-outlined">schedule</span></div>
+        <div class="faces">
+          <div class="face front"><div class="t">Rent · 14 days late</div><div class="s">Third time this year. Again.</div></div>
+          <div class="face back"><div class="t">Prepaid · before arrival</div><div class="s">Funds cleared before check-in.</div></div>
+        </div>
+      </div>
+      <div class="film-card">
+        <div class="ic"><span class="material-symbols-outlined">cleaning_services</span></div>
+        <div class="faces">
+          <div class="face front"><div class="t">Last cleaned: 11 months ago</div><div class="s">Not your problem. Until it is.</div></div>
+          <div class="face back"><div class="t">Professionally cleaned</div><div class="s">Between every single guest.</div></div>
+        </div>
+      </div>
+      <div class="film-card">
+        <div class="ic"><span class="material-symbols-outlined">event_busy</span></div>
+        <div class="faces">
+          <div class="face front"><div class="t">6 weeks vacant · $0</div><div class="s">Empty between tenancies.</div></div>
+          <div class="face back"><div class="t">83% occupancy</div><div class="s">Dynamically priced, booked out.</div></div>
+        </div>
+      </div>
+      <div class="film-card">
+        <div class="ic"><span class="material-symbols-outlined">lock_open</span></div>
+        <div class="faces">
+          <div class="face front"><div class="t">Bond dispute · wear &amp; tear</div><div class="s">Locked into a 3-year term.</div></div>
+          <div class="face back"><div class="t">Fully managed · 30-day exit</div><div class="s">You keep the keys and the upside.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="film-title-scrim"></div>
+  <div class="film-title">
+    <div id="filmGlow"></div>
+    <div id="filmLogo">
+      <svg fill="none" viewBox="0 0 240 52" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(4, 4)">
+          <rect fill="#C85A32" height="44" rx="14" width="44"></rect>
+          <path d="M12 28L22 18L32 28V34C32 35.1 31.1 36 30 36H14C12.9 36 12 35.1 12 34V28Z" fill="#FFF8E7"></path>
+          <path d="M18 36V28H26V36" fill="#C85A32" opacity="0.4"></path>
+          <circle cx="22" cy="14" fill="#FFE4B5" r="2.5"></circle>
+        </g>
+        <text class="wm-name" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="800" letter-spacing="-0.5px" x="58" y="33">SmartHomes</text>
+        <text fill="#C85A32" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" letter-spacing="0.3px" x="198" y="24">.co.nz</text>
+      </svg>
+    </div>
+    <div class="film-introducing"><span>Introducing</span><span>SmartHomes</span></div>
+    <p class="film-tagline">Your property could be earning <b>2× more.</b></p>
+  </div>
+  <div id="filmCurtain">
+    <svg class="wave" fill="currentColor" preserveAspectRatio="none" viewBox="0 0 1200 120"><path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,60 L1200,120 L0,120 Z"></path></svg>
+    <div class="fill"></div>
+  </div>
+  <button id="filmSkip" type="button">Skip intro ›</button>
+</div>
+
+<!-- ================= HEADER / NAV ================= -->
+<header class="fixed top-0 left-0 right-0 z-50 transition-colors duration-300" id="nav">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
+    <a class="flex items-center gap-3 transition-transform hover:scale-[1.01]" href="#top" id="siteLogo" aria-label="SmartHomes home">
+      <svg class="h-9 sm:h-10 w-auto" fill="none" viewBox="0 0 240 52" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g transform="translate(4, 4)">
+          <rect fill="#C85A32" height="44" rx="14" width="44"></rect>
+          <path d="M12 28L22 18L32 28V34C32 35.1 31.1 36 30 36H14C12.9 36 12 35.1 12 34V28Z" fill="#FFF8E7"></path>
+          <path d="M18 36V28H26V36" fill="#C85A32" opacity="0.4"></path>
+          <circle cx="22" cy="14" fill="#FFE4B5" r="2.5"></circle>
+        </g>
+        <text fill="#2D241E" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="800" letter-spacing="-0.5px" x="58" y="33">SmartHomes</text>
+        <text fill="#C85A32" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" letter-spacing="0.3px" x="198" y="24">.co.nz</text>
+      </svg>
+    </a>
+
+    <nav class="hidden md:flex items-center bg-brand-papaya/90 border border-brand-apricot rounded-full px-2 py-1 shadow-sm" id="siteNav" aria-label="Primary">
+      <a class="nav-link px-4 py-1.5 rounded-full text-sm font-semibold text-brand-ink hover:text-brand-accentDark hover:bg-brand-white/80 transition-all" href="#calculator">Calculator</a>
+      <a class="nav-link px-4 py-1.5 rounded-full text-sm font-semibold text-brand-ink hover:text-brand-accentDark hover:bg-brand-white/80 transition-all" href="#process">How it works</a>
+      <a class="nav-link px-4 py-1.5 rounded-full text-sm font-semibold text-brand-ink hover:text-brand-accentDark hover:bg-brand-white/80 transition-all" href="#results">Results</a>
+      <a class="nav-link px-4 py-1.5 rounded-full text-sm font-semibold text-brand-ink hover:text-brand-accentDark hover:bg-brand-white/80 transition-all" href="#faq">FAQ</a>
+    </nav>
+
+    <a class="hidden md:inline-flex btn-primary text-sm px-5 py-2.5" href="#free-assessment">Free assessment <span aria-hidden="true">→</span></a>
+
+    <button class="md:hidden w-11 h-11 rounded-full bg-brand-papaya/90 border border-brand-apricot flex items-center justify-center text-2xl text-brand-ink" id="nav-toggle"
+            type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+      <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+    </button>
+  </div>
+
+  <nav id="mobileNav" class="mx-4 rounded-3xl bg-brand-white border-2 border-brand-apricot shadow-xl p-3 flex-col gap-1" aria-label="Mobile" hidden>
+    <a class="nav-link px-4 py-3 rounded-2xl font-semibold hover:bg-brand-papaya" href="#calculator">Calculator</a>
+    <a class="nav-link px-4 py-3 rounded-2xl font-semibold hover:bg-brand-papaya" href="#process">How it works</a>
+    <a class="nav-link px-4 py-3 rounded-2xl font-semibold hover:bg-brand-papaya" href="#results">Results</a>
+    <a class="nav-link px-4 py-3 rounded-2xl font-semibold hover:bg-brand-papaya" href="#faq">FAQ</a>
+    <a class="btn-primary px-4 py-3 mt-1" href="#free-assessment">Book a free assessment <span aria-hidden="true">→</span></a>
+  </nav>
 </header>
 
-<main id="top">
+<main class="overflow-x-clip" id="main">
+<span id="top"></span>
 
-<!-- =========================================================
-     SCROLL WORLD
-========================================================= -->
-<div id="world"></div>
-
-<!-- =========================================================
-     HERO
-========================================================= -->
-<section class="hero hero--v2" id="calculator">
-  <!-- Background is the scroll-world video stage (see #world / scrub-engine.js) -->
-  <div class="hero__bg" aria-hidden="true"></div>
-  <div class="hero__scrim" aria-hidden="true"></div>
-
-  <div class="hero__grid">
-    <div class="hero__copy hero__copy--reveal">
-      <span class="eyebrow eyebrow--light"><span class="dot"></span> Now managing 247 properties across Aotearoa</span>
-      <h1 class="display display--light">Your property could be earning <em>2&times; more.</em></h1>
-      <p class="lede lede--light">
-        SmartHomes turns Kiwi homes into high-performing short-stay rentals. Professionally listed, dynamically priced, fully managed — you keep the keys and the upside.
-      </p>
-      <div class="hero__proof">
-        <div><strong class="num">$14.2M</strong><span>paid to owners in 2025</span></div>
-        <div><strong class="num">4.92★</strong><span>average guest rating</span></div>
-        <div><strong class="num">83%</strong><span>average occupancy</span></div>
-      </div>
-      <ul class="hero__chips hero__chips--light">
-        <li>No setup fees</li>
-        <li>30-day exit clause</li>
-        <li>Average payout in 4 days</li>
-      </ul>
+<!-- ================= HERO + CALCULATOR ================= -->
+<section class="relative pt-28 pb-24 md:pt-36 md:pb-28 bg-brand-cream overflow-hidden">
+  <div class="absolute inset-0 w-full h-full pointer-events-none overflow-hidden select-none" aria-hidden="true">
+    <div class="hero-kenburns absolute inset-0">
+      <!-- Mirrored so the bright sky sits behind the headline and the villa frames the right edge -->
+      <img src="/assets/img/hero-1280.webp"
+           srcset="/assets/img/hero-1280.webp 1280w, /assets/img/hero-2400.webp 2400w" sizes="100vw"
+           width="2400" height="1340" alt="" fetchpriority="high" decoding="async"
+           class="w-full h-full object-cover object-[88%_30%] lg:object-[center_42%] -scale-x-100 saturate-[1.15] contrast-[1.05]" />
     </div>
+    <div class="absolute inset-0 mix-blend-soft-light" style="background: radial-gradient(ellipse 60% 55% at 12% 8%, rgba(255,200,120,.55) 0%, rgba(255,200,120,0) 70%);"></div>
+    <div class="absolute inset-0" style="background: radial-gradient(ellipse 60% 52% at 22% 33%, rgba(255,248,231,.78) 0%, rgba(255,248,231,.5) 45%, rgba(255,248,231,0) 100%);"></div>
+    <div class="absolute inset-0 lg:hidden" style="background: linear-gradient(180deg, rgba(255,248,231,.55) 0%, rgba(255,248,231,.25) 60%, rgba(255,248,231,.9) 100%);"></div>
+    <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(255,248,231,0) 84%, rgba(255,248,231,.9) 100%);"></div>
+  </div>
 
-    <aside class="hero__calc hero__calc--reveal" aria-label="Property income calculator">
-      <div class="calc-card">
-        <header>
-          <span class="calc-card__tag">PROPERTY INCOME CALCULATOR</span>
-          <h2 class="calc-card__title">What could your place earn?</h2>
-        </header>
+  <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-15" data-intro-fade="0.15" aria-hidden="true">
+    <svg class="absolute -right-36 -top-24 w-[720px] h-[720px]" fill="none" viewBox="0 0 600 600">
+      <circle cx="300" cy="300" r="280" stroke="#FFE4B5" stroke-dasharray="12 12" stroke-width="2"></circle>
+      <circle cx="300" cy="300" opacity="0.3" r="220" stroke="#FFDAB9" stroke-width="40"></circle>
+      <path d="M100,300 C150,200 250,200 300,300 C350,400 450,400 500,300" stroke="#FFE4B5" stroke-width="3"></path>
+    </svg>
+  </div>
 
-        <div class="segmented" data-scenario-group="fc">
-          <button type="button" class="on" data-scenario="rented">Currently rented</button>
-          <button type="button" data-scenario="new">New / not rented</button>
-        </div>
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
 
-        <div class="calc-card__row">
-          <label for="fc-addr">Enter the property details</label>
-          <div class="input input--icon autocomplete">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-7.5-7-12a7 7 0 1 1 14 0c0 4.5-7 12-7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-            <input id="fc-addr" type="text" placeholder="Start typing an address…" autocomplete="off"
-                   role="combobox" aria-expanded="false" aria-autocomplete="list"
-                   aria-controls="fc-addr-list" aria-describedby="fc-addr-hint" />
-            <div class="autocomplete__list" id="fc-addr-list" role="listbox" aria-label="Address suggestions"></div>
+      <!-- Left: value proposition -->
+      <div class="lg:col-span-7 pt-4">
+        <div class="space-y-6">
+          <div class="inline-flex flex-wrap items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-white/85 backdrop-blur-md border border-brand-apricot shadow-xs text-xs font-bold text-brand-ink" data-intro-reveal>
+            <span class="material-symbols-outlined text-brand-accentDark text-base" aria-hidden="true">villa</span>
+            <span>Holiday home &amp; bach management</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600" aria-hidden="true"></span>
+            <span class="text-brand-inkMuted font-semibold">Across Aotearoa</span>
           </div>
-          <p class="calc-card__hint" id="fc-addr-hint" hidden></p>
-        </div>
 
-        <div class="calc-card__row calc-card__row--split">
-          <div>
-            <label for="fc-beds">Bedrooms</label>
-            <div class="stepper" data-stepper data-min="1" data-max="8">
-              <button type="button" data-step="-1" aria-label="One fewer bedroom">−</button>
-              <input id="fc-beds" type="text" inputmode="numeric" value="3" aria-label="Bedrooms" />
-              <button type="button" data-step="1" aria-label="One more bedroom">+</button>
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-brand-ink leading-[1.15]" data-intro-reveal>
+            Your property could be earning
+            <span class="relative inline-block px-3.5 py-1.5 mt-1 text-brand-accentDark bg-brand-peach/80 rounded-2xl -rotate-1 border border-brand-apricot shadow-sm">
+              2× more.
+              <svg class="absolute -bottom-2.5 left-2 h-3 w-[calc(100%-16px)]" fill="none" preserveAspectRatio="none" viewBox="0 0 100 12" aria-hidden="true"><path d="M0,6 Q25,0 50,6 T100,6" stroke="#C85A32" stroke-linecap="round" stroke-width="3"></path></svg>
+            </span>
+          </h1>
+
+          <p class="text-lg md:text-xl text-brand-inkMuted leading-relaxed max-w-xl" data-intro-reveal>
+            SmartHomes turns Kiwi homes into high-performing short-stay rentals. Professionally listed, dynamically priced, fully managed — you keep the keys and the upside.
+          </p>
+
+          <div class="relative p-[2px] rounded-3xl bg-gradient-to-r from-brand-apricot via-brand-peach to-brand-papaya shadow-md max-w-xl" data-intro-reveal>
+            <div class="bg-brand-white/95 backdrop-blur-sm rounded-[22px] p-5 sm:p-7 shadow-sm">
+              <dl class="grid grid-cols-3 gap-3 sm:gap-4 text-center sm:text-left pb-5 border-b border-brand-papaya">
+                <div class="pr-2 border-r border-brand-papaya">
+                  <dd class="text-2xl sm:text-4xl font-extrabold text-brand-accentDark tracking-tight">$14.2M</dd>
+                  <dt class="text-[11px] font-bold uppercase tracking-wider text-brand-inkSoft mt-1">Paid out in 2025</dt>
+                </div>
+                <div class="px-2 border-r border-brand-papaya">
+                  <dd class="text-2xl sm:text-4xl font-extrabold text-brand-ink tracking-tight">+167%</dd>
+                  <dt class="text-[11px] font-bold uppercase tracking-wider text-brand-inkSoft mt-1">Avg net uplift</dt>
+                </div>
+                <div class="pl-2">
+                  <dd class="text-2xl sm:text-4xl font-extrabold text-brand-ink tracking-tight">247</dd>
+                  <dt class="text-[11px] font-bold uppercase tracking-wider text-brand-inkSoft mt-1">Homes managed</dt>
+                </div>
+              </dl>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-amber-500 text-2xl shrink-0" aria-hidden="true">star</span>
+                  <div>
+                    <span class="font-extrabold text-sm text-brand-ink block">4.92 / 5 guest rating</span>
+                    <span class="text-[11px] font-medium text-brand-inkMuted block">Across 11,400+ guest reviews</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-brand-accentDark text-2xl shrink-0" aria-hidden="true">hotel</span>
+                  <div>
+                    <span class="font-extrabold text-sm text-brand-ink block">83% occupancy</span>
+                    <span class="text-[11px] font-medium text-brand-inkMuted block">Portfolio annual average</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div>
-            <label id="fc-type-label">Property type</label>
-            <div class="segmented segmented--3 segmented--sm" data-dwelling-group="fc" role="group" aria-labelledby="fc-type-label">
-              <button type="button" class="on" data-dwelling="house">House</button>
-              <button type="button" data-dwelling="apartment">Apartment</button>
-              <button type="button" data-dwelling="flat">Flat</button>
-            </div>
-          </div>
         </div>
 
-        <div class="calc-card__row" id="fc-rent-wrap">
-          <label for="fc-rent">Current weekly rent (NZD)</label>
-          <div class="input input--prefix">
-            <span>$</span>
-            <input id="fc-rent" type="text" inputmode="numeric" placeholder="e.g. 780" />
+        <ul class="mt-8 pt-6 border-t border-brand-apricot/50 max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-3" data-intro-reveal>
+          <li class="p-3.5 rounded-2xl bg-brand-white/90 backdrop-blur-sm border border-brand-apricot/80 flex items-start gap-3 shadow-xs">
+            <span class="w-8 h-8 rounded-xl bg-brand-papaya flex items-center justify-center shrink-0 text-brand-accentDark text-lg material-symbols-outlined" aria-hidden="true">payments</span>
+            <div><div class="text-xs font-extrabold text-brand-ink">Zero setup fees</div><div class="text-[11px] text-brand-inkMuted leading-tight mt-0.5">No upfront listing, staging or lock costs.</div></div>
+          </li>
+          <li class="p-3.5 rounded-2xl bg-brand-white/90 backdrop-blur-sm border border-brand-apricot/80 flex items-start gap-3 shadow-xs">
+            <span class="w-8 h-8 rounded-xl bg-brand-papaya flex items-center justify-center shrink-0 text-brand-accentDark text-lg material-symbols-outlined" aria-hidden="true">lock_open</span>
+            <div><div class="text-xs font-extrabold text-brand-ink">30-day exit clause</div><div class="text-[11px] text-brand-inkMuted leading-tight mt-0.5">No lock-in contracts; leave any time.</div></div>
+          </li>
+          <li class="p-3.5 rounded-2xl bg-brand-white/90 backdrop-blur-sm border border-brand-apricot/80 flex items-start gap-3 shadow-xs">
+            <span class="w-8 h-8 rounded-xl bg-brand-papaya flex items-center justify-center shrink-0 text-brand-accentDark text-lg material-symbols-outlined" aria-hidden="true">bolt</span>
+            <div><div class="text-xs font-extrabold text-brand-ink">4-day payouts</div><div class="text-[11px] text-brand-inkMuted leading-tight mt-0.5">Direct bank transfers after guest checkout.</div></div>
+          </li>
+          <li class="p-3.5 rounded-2xl bg-brand-white/90 backdrop-blur-sm border border-brand-apricot/80 flex items-start gap-3 shadow-xs">
+            <span class="w-8 h-8 rounded-xl bg-brand-papaya flex items-center justify-center shrink-0 text-brand-accentDark text-lg material-symbols-outlined" aria-hidden="true">verified_user</span>
+            <div><div class="text-xs font-extrabold text-brand-ink">Hands-off care</div><div class="text-[11px] text-brand-inkMuted leading-tight mt-0.5">24/7 guest support, linen and compliance.</div></div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right: income calculator (wired to /api/estimate by app.js) -->
+      <div class="lg:col-span-5 w-full relative z-10 scroll-mt-24" data-intro-reveal id="calculator">
+        <div class="bg-brand-white/95 backdrop-blur-md rounded-3xl p-5 sm:p-8 shadow-[0_20px_50px_rgba(45,36,30,0.12)] border-2 border-brand-apricot">
+          <div class="flex items-center justify-between mb-2 gap-2">
+            <span class="text-xs font-extrabold tracking-widest text-brand-accentDark uppercase">Property income calculator</span>
+            <span class="inline-flex items-center gap-1.5 font-bold text-[11px] text-brand-ink bg-brand-peach/70 border border-brand-apricot px-3 py-0.5 rounded-full whitespace-nowrap">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" aria-hidden="true"></span> Live market data
+            </span>
           </div>
-        </div>
+          <h2 class="text-2xl font-bold text-brand-ink mb-5">What could your place earn?</h2>
 
-        <div class="ai-scan" id="fc-ai-row">
-          <button type="button" class="ai-scan__btn" id="fc-scan-btn" disabled>
-            <svg class="ai-scan__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3l1.6 4.6L18 9l-4.4 1.4L12 15l-1.6-4.6L6 9l4.4-1.4L12 3Z"/><path d="M19 14.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2Z"/></svg>
-            <span id="fc-scan-btn-label">Get AI market rent</span>
-            <span class="ai-scan__arrow" aria-hidden="true">→</span>
-          </button>
+          <div class="seg rounded-full mb-5" data-scenario-group="fc" role="group" aria-label="Rental situation">
+            <button type="button" class="on py-2 text-xs sm:text-sm rounded-full" data-scenario="rented">Currently rented</button>
+            <button type="button" class="py-2 text-xs sm:text-sm rounded-full" data-scenario="new">New / not rented</button>
+          </div>
 
-          <div class="ai-scan__working" id="fc-ai-loading" hidden>
-            <div class="ai-scan__radar" aria-hidden="true"><span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span><span class="core"></span></div>
-            <div class="ai-scan__status">
-              <p class="ai-scan__step" id="fc-ai-step">Pulling comparable listings nearby…</p>
-              <div class="ai-scan__bar"><div class="ai-scan__bar-fill" id="fc-ai-bar"></div></div>
+          <div class="space-y-4">
+            <div>
+              <label class="field-label" for="fc-addr">Property address (NZ)</label>
+              <div class="autocomplete">
+                <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-inkSoft text-lg pointer-events-none" aria-hidden="true">location_on</span>
+                <input id="fc-addr" class="field-input pl-10" type="text" placeholder="Start typing an address…" autocomplete="off"
+                       role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="fc-addr-list" aria-describedby="fc-addr-hint" />
+                <div class="autocomplete__list" id="fc-addr-list" role="listbox" aria-label="Address suggestions"></div>
+              </div>
+              <p class="calc-hint" id="fc-addr-hint" hidden></p>
             </div>
-          </div>
 
-          <div class="ai-scan__result" id="fc-ai-result" hidden>
-            <div class="ai-scan__result-top">
-              <span class="ai-scan__label" id="fc-ai-label">Current market rent, this address</span>
-              <button class="ai-scan__rescan" id="fc-rescan-btn" type="button" title="Re-run scan" aria-label="Re-run scan">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 4v5h-5"/></svg>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="field-label" for="fc-beds">Bedrooms</label>
+                <div class="flex items-center justify-between bg-brand-cream/80 border border-brand-apricot px-2 py-1 rounded-2xl" data-stepper data-min="1" data-max="8">
+                  <button type="button" data-step="-1" aria-label="One fewer bedroom" class="w-8 h-8 rounded-xl bg-brand-white border border-brand-apricot font-extrabold flex items-center justify-center hover:bg-brand-peach transition-colors shadow-xs">−</button>
+                  <input id="fc-beds" type="text" inputmode="numeric" value="3" class="w-10 text-center text-lg font-bold bg-transparent border-0 p-0 focus:ring-0" />
+                  <button type="button" data-step="1" aria-label="One more bedroom" class="w-8 h-8 rounded-xl bg-brand-white border border-brand-apricot font-extrabold flex items-center justify-center hover:bg-brand-peach transition-colors shadow-xs">+</button>
+                </div>
+              </div>
+              <div>
+                <span class="field-label" id="fc-type-label">Property type</span>
+                <div class="seg rounded-2xl bg-brand-cream/80" data-dwelling-group="fc" role="group" aria-labelledby="fc-type-label">
+                  <button type="button" class="on py-1.5 text-xs rounded-xl" data-dwelling="house">House</button>
+                  <button type="button" class="py-1.5 text-xs rounded-xl" data-dwelling="apartment" aria-label="Apartment">Apt</button>
+                  <button type="button" class="py-1.5 text-xs rounded-xl" data-dwelling="flat">Flat</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="fc-rent-wrap">
+              <label class="field-label" for="fc-rent">Current weekly rent (NZD)</label>
+              <div class="relative">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-extrabold text-brand-inkSoft" aria-hidden="true">$</span>
+                <input id="fc-rent" class="field-input pl-9 text-xl font-bold py-2" type="text" inputmode="numeric" placeholder="e.g. 780" />
+              </div>
+            </div>
+
+            <div class="space-y-2" id="fc-ai-row">
+              <button type="button" class="ai-scan__btn" id="fc-scan-btn" disabled>
+                <span class="material-symbols-outlined text-lg" aria-hidden="true">auto_awesome</span>
+                <span id="fc-scan-btn-label">Get AI market rent</span>
+                <span aria-hidden="true">→</span>
               </button>
-            </div>
-            <strong id="fc-ai-value">—</strong>
-            <div class="ai-scan__meta">
-              <span class="ai-scan__confidence" id="fc-ai-confidence">— confidence</span>
-              <span class="ai-scan__delta" id="fc-ai-delta" hidden></span>
-            </div>
-            <p class="ai-scan__rationale" id="fc-ai-rationale" hidden></p>
-            <div class="ai-scan__sources" id="fc-ai-sources" hidden></div>
-            <p class="ai-scan__freshness" id="fc-ai-freshness" hidden></p>
-          </div>
 
-          <div class="ai-scan__error" id="fc-ai-error" hidden role="alert">
-            <p id="fc-ai-error-msg">We couldn't analyse that address just now.</p>
-            <button type="button" class="ai-scan__retry" id="fc-retry-btn">Try again</button>
-          </div>
-        </div>
+              <div class="ai-scan__working" id="fc-ai-loading" hidden aria-live="polite">
+                <div class="ai-scan__radar" aria-hidden="true"><span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span><span class="core"></span></div>
+                <div class="ai-scan__status">
+                  <p class="ai-scan__step" id="fc-ai-step">Pulling comparable listings nearby…</p>
+                  <div class="ai-scan__bar"><div class="ai-scan__bar-fill" id="fc-ai-bar"></div></div>
+                </div>
+              </div>
 
-        <div class="calc-card__result">
-          <div>
-            <span class="muted">Estimated STR income / yr</span>
-            <strong class="num" id="calc-str">—</strong>
-          </div>
-          <div class="vs">vs</div>
-          <div>
-            <span class="muted" id="calc-ltr-label">Long-term rental / yr</span>
-            <strong class="num num--dim" id="calc-ltr">—</strong>
-          </div>
-        </div>
+              <div class="ai-scan__result" id="fc-ai-result" hidden aria-live="polite">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-brand-inkSoft" id="fc-ai-label">Current market rent for this address</span>
+                  <button class="w-7 h-7 rounded-full bg-brand-white border border-brand-apricot flex items-center justify-center text-base hover:bg-brand-peach" id="fc-rescan-btn" type="button" title="Re-run analysis" aria-label="Re-run analysis">
+                    <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+                  </button>
+                </div>
+                <strong id="fc-ai-value">—</strong>
+                <div class="ai-scan__meta">
+                  <span id="fc-ai-confidence">— confidence</span>
+                  <span class="ai-scan__delta" id="fc-ai-delta" hidden></span>
+                </div>
+                <p class="ai-scan__rationale" id="fc-ai-rationale" hidden></p>
+                <div class="ai-scan__sources" id="fc-ai-sources" hidden></div>
+                <p class="ai-scan__freshness" id="fc-ai-freshness" hidden></p>
+              </div>
 
-        <div class="calc-card__delta">
-          <span>You could earn</span>
-          <strong id="calc-delta">—</strong>
-          <span class="pct" id="calc-pct"></span>
-        </div>
-
-        <!-- 5 year projection (lead-gated) -->
-        <div class="proj-wrap locked" id="proj-wrap">
-          <div class="proj" id="proj-content">
-            <header>
-              <h3>5-year projection</h3>
-              <div class="legend"><span class="sw sw--str"></span> STR <span class="sw sw--ltr"></span> LT</div>
-            </header>
-            <div class="proj__chart" id="chart" aria-hidden="true"></div>
-            <div class="proj__totals">
-              <div><span class="muted">5yr STR</span><strong class="num num--md" id="out-5str">—</strong></div>
-              <div><span class="muted">5yr long-term</span><strong class="num num--md num--dim" id="out-5ltr">—</strong></div>
-              <div><span class="muted">5yr difference</span><strong class="num num--md num--accent" id="out-5diff">—</strong></div>
+              <div class="ai-scan__error" id="fc-ai-error" hidden role="alert">
+                <p id="fc-ai-error-msg">We couldn't analyse that address just now.</p>
+                <button type="button" class="ai-scan__retry" id="fc-retry-btn">Try again</button>
+              </div>
             </div>
           </div>
-          <div class="lock-overlay" id="proj-lock">
-            <div class="lock-card">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-              <strong>Unlock your 5-year projection</strong>
-              <p>Enter your details and we'll send the full report too.</p>
-              <button class="btn btn--primary" id="proj-unlock-btn" type="button">See full 5-year projection →</button>
+
+          <!-- Yield comparison -->
+          <div class="mt-5 p-5 bg-brand-cardDark text-brand-white rounded-2xl shadow-md" aria-live="polite">
+            <div class="flex items-start justify-between gap-3 pb-3 border-b border-brand-white/10">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-brand-peach block">Estimated STR income / yr</span>
+                <div class="text-2xl sm:text-3xl font-extrabold text-brand-peach mt-0.5" id="calc-str">—</div>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-brand-white/70 block" id="calc-ltr-label">Long-term rental / yr</span>
+                <div class="text-lg sm:text-xl font-bold text-brand-white/85 mt-0.5" id="calc-ltr">—</div>
+              </div>
+            </div>
+            <div class="mt-3.5 flex items-center justify-between gap-2 bg-brand-white/10 px-3.5 py-2 rounded-xl">
+              <span class="text-xs font-semibold text-brand-white/90">You could earn</span>
+              <span class="text-xs font-extrabold px-3 py-1 rounded-full bg-brand-peach text-brand-ink shadow-xs">
+                <span id="calc-delta">—</span> <span id="calc-pct"></span>
+              </span>
             </div>
           </div>
+
+          <!-- 5-year projection, gated on a lead -->
+          <div class="proj-wrap locked" id="proj-wrap">
+            <div class="proj" id="proj-content">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-brand-ink">5-year projection</h3>
+                <div class="flex items-center gap-2 text-[10px] font-bold text-brand-inkMuted">
+                  <span class="w-2.5 h-2.5 rounded-sm bg-brand-accent" aria-hidden="true"></span> STR
+                  <span class="w-2.5 h-2.5 rounded-sm bg-brand-apricot" aria-hidden="true"></span> Long-term
+                </div>
+              </div>
+              <div class="proj__chart" id="chart" aria-hidden="true"></div>
+              <dl class="grid grid-cols-3 gap-2 mt-3 text-center">
+                <div><dt class="text-[10px] font-bold uppercase text-brand-inkSoft">5yr STR</dt><dd class="text-sm font-extrabold text-brand-accentDark" id="out-5str">—</dd></div>
+                <div><dt class="text-[10px] font-bold uppercase text-brand-inkSoft">5yr long-term</dt><dd class="text-sm font-extrabold text-brand-inkMuted" id="out-5ltr">—</dd></div>
+                <div><dt class="text-[10px] font-bold uppercase text-brand-inkSoft">Difference</dt><dd class="text-sm font-extrabold text-emerald-700" id="out-5diff">—</dd></div>
+              </dl>
+            </div>
+
+            <div class="lock-overlay">
+              <form class="w-full bg-brand-white/95 border border-brand-apricot rounded-2xl p-4 shadow-md" id="lead-form" novalidate>
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="material-symbols-outlined text-brand-accentDark text-lg" aria-hidden="true">lock</span>
+                  <h3 class="text-xs font-extrabold text-brand-ink uppercase tracking-wider">Unlock your 5-year forecast</h3>
+                </div>
+                <p class="text-xs text-brand-inkMuted mb-3">We'll also send you a full appraisal report with suburb comparables.</p>
+                <div class="space-y-2">
+                  <div class="grid grid-cols-2 gap-2">
+                    <label class="sr-only" for="lead-name">Your name</label>
+                    <input id="lead-name" class="field-input text-xs py-2 rounded-xl bg-brand-white" type="text" placeholder="Your name" autocomplete="name" />
+                    <label class="sr-only" for="lead-phone">Mobile</label>
+                    <input id="lead-phone" class="field-input text-xs py-2 rounded-xl bg-brand-white" type="tel" placeholder="021 000 0000" autocomplete="tel" />
+                  </div>
+                  <label class="sr-only" for="lead-email">Email</label>
+                  <input id="lead-email" class="field-input text-xs py-2 rounded-xl bg-brand-white" type="email" placeholder="Email address" autocomplete="email" />
+                  <p class="form-error" id="lead-error" hidden role="alert"></p>
+                  <button class="btn-primary w-full text-xs py-2.5 rounded-xl" id="lead-submit" type="submit">See full 5-year projection <span aria-hidden="true">→</span></button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <p class="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-center text-xs text-emerald-900" id="lead-thanks" hidden role="status">
+            <strong class="block mb-0.5">✓ Forecast unlocked</strong>
+            Thanks — one of our team will be in touch to walk through the numbers and send your appraisal report.
+          </p>
         </div>
       </div>
-    </aside>
+    </div>
   </div>
 
-  <!-- ticker -->
-  <div class="ticker" aria-hidden="true">
-    <div class="ticker__track">
-      <span>★ 4.92 average guest rating</span><span>•</span>
-      <span>$14.2M paid to landlords in 2025</span><span>•</span>
-      <span>83% average annual occupancy</span><span>•</span>
-      <span>Featured in NZ Herald, Stuff &amp; The Spinoff</span><span>•</span>
-      <span>247 properties under management</span><span>•</span>
-      <span>★ 4.92 average guest rating</span><span>•</span>
-      <span>$14.2M paid to landlords in 2025</span><span>•</span>
-      <span>83% average annual occupancy</span><span>•</span>
-    </div>
+  <div class="absolute -bottom-1 left-0 right-0 w-full overflow-hidden leading-none z-10" aria-hidden="true">
+    <svg class="relative block w-full h-12 md:h-20 text-brand-papaya" fill="currentColor" preserveAspectRatio="none" viewBox="0 0 1200 120"><path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,60 L1200,120 L0,120 Z"></path></svg>
   </div>
 </section>
 
-<!-- =========================================================
-     TRUST SIGNALS
-========================================================= -->
-<section class="trust">
-  <div class="trust__item">
-    <div class="trust__num"><span class="num">247</span></div>
-    <p>Properties managed across NZ — from Kerikeri baches to Queenstown chalets.</p>
-  </div>
-  <div class="trust__item">
-    <div class="trust__num"><span class="num">$14.2M</span></div>
-    <p>Paid out to landlords in 2025 — up 38% on last year and climbing.</p>
-  </div>
-  <div class="trust__item">
-    <div class="trust__num"><span class="num">+167%</span></div>
-    <p>Average uplift on income versus a comparable long-term tenancy.</p>
-  </div>
-</section>
-
-
-<!-- Lead-gate modal (unlocks the 5-year projection) -->
-<div class="modal-overlay" id="lead-modal" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title">
-    <button class="modal__close" id="lead-modal-close" type="button" aria-label="Close">×</button>
-    <div class="modal__form" id="lead-modal-form">
-      <span class="eyebrow"><span class="dot"></span> Unlock your full report</span>
-      <h3 id="lead-modal-title">Where should we send it?</h3>
-      <p class="muted">Full 5-year projection, comparables, and a PDF report.</p>
-      <div class="field"><label for="lead-name">Name</label><div class="input"><input id="lead-name" type="text" placeholder="Sam Te Aroha" autocomplete="name" required /></div></div>
-      <div class="field"><label for="lead-email">Email</label><div class="input"><input id="lead-email" type="email" placeholder="sam@example.co.nz" autocomplete="email" required /></div></div>
-      <div class="field"><label for="lead-phone">Mobile</label><div class="input"><input id="lead-phone" type="tel" placeholder="021 555 0192" autocomplete="tel" /></div></div>
-      <p class="form-error" id="lead-error" hidden role="alert"></p>
-      <button class="btn btn--primary btn--block btn--lg" id="lead-submit" type="button">Unlock my projection →</button>
-      <p class="micro">By submitting you agree to be contacted about your property. No spam, no list-sharing — we hate that too.</p>
-    </div>
-    <div class="modal__thanks" id="lead-modal-thanks" hidden>
-      <div class="tick">✓</div>
-      <h3>Thank you for your submission.</h3>
-      <p>We've unlocked your 5-year projection above. One of our team will be in touch shortly to talk through the numbers.</p>
-      <button class="btn btn--primary" id="lead-modal-done" type="button">View my projection</button>
-    </div>
+<!-- ================= SOCIAL PROOF TICKER ================= -->
+<div class="w-full bg-brand-papaya border-y border-brand-apricot py-3 overflow-hidden whitespace-nowrap" aria-hidden="true">
+  <div class="animate-marquee text-brand-ink font-bold text-xs md:text-sm items-center gap-8">
+    <span><span class="text-amber-600">★</span> 4.92 average guest rating across 11,400+ stays</span><span class="text-brand-accent">•</span>
+    <span>$14.2M paid to owners in 2025</span><span class="text-brand-accent">•</span>
+    <span>83% average annual occupancy</span><span class="text-brand-accent">•</span>
+    <span>247 properties under active management</span><span class="text-brand-accent">•</span>
+    <span>Average first guest booking within 11 days</span><span class="text-brand-accent">•</span>
+    <span><span class="text-amber-600">★</span> 4.92 average guest rating across 11,400+ stays</span><span class="text-brand-accent">•</span>
+    <span>$14.2M paid to owners in 2025</span><span class="text-brand-accent">•</span>
+    <span>83% average annual occupancy</span><span class="text-brand-accent">•</span>
+    <span>247 properties under active management</span><span class="text-brand-accent">•</span>
+    <span>Average first guest booking within 11 days</span><span class="text-brand-accent">•</span>
   </div>
 </div>
 
-<!-- =========================================================
-     HOW IT WORKS
-========================================================= -->
-<section class="section section--ink" id="how">
-  <div class="section__head section__head--light">
-    <span class="eyebrow eyebrow--light"><span class="dot"></span> The Process</span>
-    <h2 class="display display--md">From keys handed over to first payout — in 14 days.</h2>
+<!-- ================= PROCESS ================= -->
+<section class="relative py-24 bg-brand-cardDark text-brand-white overflow-hidden scroll-mt-16" id="process">
+  <div class="absolute top-0 left-0 right-0 w-full overflow-hidden leading-none z-10 rotate-180" aria-hidden="true">
+    <svg class="relative block w-full h-10 md:h-16 text-brand-cream" fill="currentColor" preserveAspectRatio="none" viewBox="0 0 1200 120"><path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,60 L1200,120 L0,120 Z"></path></svg>
   </div>
-
-  <ol class="steps">
-    <li>
-      <div class="steps__num">01</div>
-      <h3>Free Assessment</h3>
-      <p>A specialist visits your property, photographs the space, models the income, and walks you through the proposal. No obligation, no surprise charges.</p>
-      <ul>
-        <li>On-site or video walkthrough</li>
-        <li>Fixed-fee guarantee within ±8%</li>
-        <li>72-hour turnaround on the report</li>
-      </ul>
-    </li>
-    <li>
-      <div class="steps__num">02</div>
-      <h3>Property Setup</h3>
-      <p>Professional photography, copywriting, smart-lock install, linen pack and a deep clean. Listed across 6+ platforms within 7 days.</p>
-      <ul>
-        <li>Architectural &amp; twilight photography</li>
-        <li>August smart-lock or equivalent</li>
-        <li>Hotel-grade linen &amp; toiletries pack</li>
-      </ul>
-    </li>
-    <li>
-      <div class="steps__num">03</div>
-      <h3>We Manage Everything</h3>
-      <p>Pricing, guest comms, cleaning, restocking, maintenance, compliance. You don't lift a finger unless you want to.</p>
-      <ul>
-        <li>24/7 guest support, NZ-based team</li>
-        <li>Dynamic pricing engine, updated daily</li>
-        <li>Quarterly maintenance inspections</li>
-      </ul>
-    </li>
-    <li>
-      <div class="steps__num">04</div>
-      <h3>You Get Paid</h3>
-      <p>Monthly payouts on the 5th, with a transparent statement and a real-time owner dashboard. Block your own dates whenever you like.</p>
-      <ul>
-        <li>Direct deposit, 4-day average clearance</li>
-        <li>Live dashboard with occupancy &amp; revenue</li>
-        <li>End-of-year tax summary included</li>
-      </ul>
-    </li>
-  </ol>
-</section>
-
-<!-- =========================================================
-     CASE STUDIES
-========================================================= -->
-<section class="section" id="results">
-  <div class="section__head">
-    <span class="eyebrow"><span class="dot"></span> Real properties · real numbers</span>
-    <h2 class="display display--md">What the spreadsheet looks like, twelve months in.</h2>
-  </div>
-
-  <article class="case case--feature">
-    <div class="case__photo">
-      <div class="case__img-wrapper">
-        <img src="assets/case-mt-maunganui.png" alt="Mount Maunganui 3BR luxury beach house short-term rental property" width="600" height="480" loading="lazy" class="case__img" />
-        <span class="ph__tag">[ MT MAUNGANUI · 3BR BEACH HOUSE ]</span>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 pt-6">
+    <div class="max-w-2xl mb-14">
+      <div class="inline-flex items-center gap-2 bg-brand-white/10 border border-brand-apricot/30 text-brand-peach font-bold text-xs uppercase tracking-widest px-3 py-1 rounded-full mb-3">
+        <span class="w-2 h-2 rounded-full bg-brand-peach" aria-hidden="true"></span> The process
       </div>
-      <div class="case__tags">
-        <span>3 bed</span><span>2 bath</span><span>Sleeps 6</span><span>Sea view</span>
-      </div>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">From keys handed over to first payout — in 14 days.</h2>
     </div>
-    <div class="case__body">
-      <div class="case__loc">Mount Maunganui · Bay of Plenty</div>
-      <h3>"It paid off our mortgage four years early."</h3>
-      <div class="case__nums">
+    <ol class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <li class="bg-brand-white/5 border border-brand-apricot/30 rounded-3xl p-6 flex flex-col justify-between hover:bg-brand-white/10 hover:border-brand-peach transition-all group">
         <div>
-          <span class="muted">Before · long-term</span>
-          <strong class="num num--md">$40,560/yr</strong>
+          <div class="w-12 h-12 rounded-2xl bg-brand-peach text-brand-ink font-extrabold text-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform" aria-hidden="true">01</div>
+          <h3 class="text-xl font-bold mb-2">Free assessment</h3>
+          <p class="text-sm text-brand-white/75 leading-relaxed mb-6">A specialist visits your property, photographs the space, models the income, and walks you through the proposal. No obligation, no surprise charges.</p>
         </div>
+        <ul class="space-y-2 text-xs font-semibold text-brand-peach bg-brand-white/5 p-4 rounded-2xl border border-brand-white/10">
+          <li>✓ On-site or video walkthrough</li><li>✓ Fixed-fee guarantee within ±8%</li><li>✓ 72-hour turnaround on the report</li>
+        </ul>
+      </li>
+      <li class="bg-brand-white/5 border border-brand-apricot/30 rounded-3xl p-6 flex flex-col justify-between hover:bg-brand-white/10 hover:border-brand-peach transition-all group">
         <div>
-          <span class="muted">After · SmartHomes</span>
-          <strong class="num num--md num--accent">$118,940/yr</strong>
+          <div class="w-12 h-12 rounded-2xl bg-brand-apricot text-brand-ink font-extrabold text-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform" aria-hidden="true">02</div>
+          <h3 class="text-xl font-bold mb-2">Property setup</h3>
+          <p class="text-sm text-brand-white/75 leading-relaxed mb-6">Professional photography, copywriting, smart-lock install, linen pack and a deep clean. Listed across 6+ platforms within 7 days.</p>
         </div>
+        <ul class="space-y-2 text-xs font-semibold text-brand-peach bg-brand-white/5 p-4 rounded-2xl border border-brand-white/10">
+          <li>✓ Architectural &amp; twilight photos</li><li>✓ Smart-lock install</li><li>✓ Hotel-grade linen &amp; amenities</li>
+        </ul>
+      </li>
+      <li class="bg-brand-white/5 border border-brand-apricot/30 rounded-3xl p-6 flex flex-col justify-between hover:bg-brand-white/10 hover:border-brand-peach transition-all group">
         <div>
-          <span class="muted">Increase</span>
-          <strong class="num num--md">+193%</strong>
+          <div class="w-12 h-12 rounded-2xl bg-brand-papaya text-brand-ink font-extrabold text-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform" aria-hidden="true">03</div>
+          <h3 class="text-xl font-bold mb-2">We manage everything</h3>
+          <p class="text-sm text-brand-white/75 leading-relaxed mb-6">Pricing, guest comms, cleaning, restocking, maintenance, compliance. You don't lift a finger unless you want to.</p>
         </div>
+        <ul class="space-y-2 text-xs font-semibold text-brand-peach bg-brand-white/5 p-4 rounded-2xl border border-brand-white/10">
+          <li>✓ 24/7 guest support, NZ-based team</li><li>✓ Dynamic pricing, updated daily</li><li>✓ Quarterly maintenance checks</li>
+        </ul>
+      </li>
+      <li class="bg-brand-white/5 border border-brand-apricot/30 rounded-3xl p-6 flex flex-col justify-between hover:bg-brand-white/10 hover:border-brand-peach transition-all group">
         <div>
-          <span class="muted">Occupancy</span>
-          <strong class="num num--md">87%</strong>
+          <div class="w-12 h-12 rounded-2xl bg-brand-peach text-brand-ink font-extrabold text-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform" aria-hidden="true">04</div>
+          <h3 class="text-xl font-bold mb-2">You get paid</h3>
+          <p class="text-sm text-brand-white/75 leading-relaxed mb-6">Monthly payouts on the 5th, with a transparent statement and a real-time owner dashboard. Block your own dates whenever you like.</p>
         </div>
-      </div>
-      <blockquote>
-        "We were dreading another tenancy cycle. SmartHomes took it over, sent us photos a week later, and the first payout landed before we'd even told the neighbours. We genuinely forget it's happening."
-      </blockquote>
-      <div class="case__by">
-        <div class="avatar">PT</div>
-        <div>
-          <strong>Pania &amp; Tama H.</strong>
-          <span class="muted">Owners since March 2024</span>
-        </div>
-      </div>
-    </div>
-  </article>
-
-  <div class="case-grid">
-
-    <article class="case-card">
-      <div class="case-card__img-wrapper">
-        <img src="assets/case-queenstown.png" alt="Queenstown 2BR alpine apartment short-term rental property" width="400" height="300" loading="lazy" class="case-card__img" />
-        <span class="ph__tag">[ QUEENSTOWN · 2BR APARTMENT ]</span>
-      </div>
-      <div class="case-card__body">
-        <div class="case__loc">Queenstown CBD · Otago</div>
-        <h3>The ski-season unlock</h3>
-        <div class="case__nums case__nums--tight">
-          <div><span class="muted">Before</span><strong>$31,200</strong></div>
-          <div><span class="muted">After</span><strong class="num--accent">$94,180</strong></div>
-          <div><span class="muted">Δ</span><strong>+202%</strong></div>
-        </div>
-        <p class="muted">"July and August now pay for the whole year. We use it ourselves in shoulder season — best of both."</p>
-        <div class="case__by">
-          <div class="avatar avatar--b">JM</div>
-          <div><strong>James M.</strong><span class="muted">Owner · Frankton</span></div>
-        </div>
-      </div>
-    </article>
-
-    <article class="case-card">
-      <div class="case-card__img-wrapper">
-        <img src="assets/case-hahei.png" alt="Hahei 4BR coastal bach short-term rental property" width="400" height="300" loading="lazy" class="case-card__img" />
-        <span class="ph__tag">[ HAHEI · 4BR BACH ]</span>
-      </div>
-      <div class="case-card__body">
-        <div class="case__loc">Hahei · Coromandel</div>
-        <h3>Family bach, working harder</h3>
-        <div class="case__nums case__nums--tight">
-          <div><span class="muted">Before</span><strong>$0 (vacant)</strong></div>
-          <div><span class="muted">After</span><strong class="num--accent">$76,420</strong></div>
-          <div><span class="muted">Δ</span><strong>—</strong></div>
-        </div>
-        <p class="muted">"It used to sit empty 40 weeks a year. Now it earns through every shoulder season and we still get our two weeks at Christmas."</p>
-        <div class="case__by">
-          <div class="avatar avatar--c">RW</div>
-          <div><strong>Rachel W.</strong><span class="muted">Owner · Auckland-based</span></div>
-        </div>
-      </div>
-    </article>
-
-    <article class="case-card">
-      <div class="case-card__img-wrapper">
-        <img src="assets/case-ponsonby.png" alt="Ponsonby 3BR restored villa short-term rental property" width="400" height="300" loading="lazy" class="case-card__img" />
-        <span class="ph__tag">[ PONSONBY · 3BR VILLA ]</span>
-      </div>
-      <div class="case-card__body">
-        <div class="case__loc">Ponsonby · Tāmaki Makaurau</div>
-        <h3>From flat-mates to four-star</h3>
-        <div class="case__nums case__nums--tight">
-          <div><span class="muted">Before</span><strong>$52,000</strong></div>
-          <div><span class="muted">After</span><strong class="num--accent">$103,640</strong></div>
-          <div><span class="muted">Δ</span><strong>+99%</strong></div>
-        </div>
-        <p class="muted">"We sold the idea of a long-term tenancy to ourselves for years. The switch was the easiest decision of 2025."</p>
-        <div class="case__by">
-          <div class="avatar avatar--d">AK</div>
-          <div><strong>Aroha K.</strong><span class="muted">Owner · Grey Lynn</span></div>
-        </div>
-      </div>
-    </article>
-
+        <ul class="space-y-2 text-xs font-semibold text-brand-peach bg-brand-white/5 p-4 rounded-2xl border border-brand-white/10">
+          <li>✓ Direct deposit, 4-day clearance</li><li>✓ Live dashboard with occupancy</li><li>✓ End-of-year tax pack included</li>
+        </ul>
+      </li>
+    </ol>
   </div>
-
-  <div class="results-strip">
-    <div><strong class="num">$14.2M</strong><span>paid to landlords in 2025</span></div>
-    <div><strong class="num">4.92★</strong><span>average guest rating across 11,400 stays</span></div>
-    <div><strong class="num">83%</strong><span>average annual occupancy</span></div>
-    <div><strong class="num">11 days</strong><span>average listing-to-first-booking</span></div>
+  <div class="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-10" aria-hidden="true">
+    <svg class="relative block w-full h-10 md:h-16 text-brand-cream" fill="currentColor" preserveAspectRatio="none" viewBox="0 0 1200 120"><path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,60 L1200,120 L0,120 Z"></path></svg>
   </div>
 </section>
 
-<!-- =========================================================
-     FAQ
-========================================================= -->
-<section class="section section--cream" id="faq">
-  <div class="section__head">
-    <span class="eyebrow"><span class="dot"></span> For landlords</span>
-    <h2 class="display display--md">The honest answers to the things that keep you up at night.</h2>
-  </div>
+<!-- ================= RESULTS ================= -->
+<section class="py-24 bg-brand-cream relative scroll-mt-16" id="results">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <span class="inline-block bg-brand-peach/60 border border-brand-apricot px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-brand-accentDark mb-3">Real properties • Real numbers</span>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">What the spreadsheet looks like, twelve months in.</h2>
+    </div>
 
-  <div class="faq" id="faq-list">
-    <details open>
-      <summary>What about regulations? Council, Healthy Homes, the lot.</summary>
-      <div>
-        <p>We handle the complete compliance stack: council STR registration where required (Auckland, Queenstown-Lakes, Rotorua, Christchurch), Healthy Homes warrant of fitness, smoke alarm + carbon monoxide testing, and meth-contamination baseline testing. We're a registered operator with every council we work in, and we keep your paperwork in your Owner Portal.</p>
-        <ul>
-          <li>Council STR registration filed within 7 days of onboarding</li>
-          <li>Healthy Homes WoF refreshed annually</li>
-          <li>Baseline + post-tenancy meth tests at our cost</li>
+    <!-- Featured: Mt Maunganui -->
+    <article class="bg-brand-white border-2 border-brand-apricot rounded-3xl overflow-hidden shadow-lg mb-12 grid grid-cols-1 lg:grid-cols-12">
+      <div class="lg:col-span-6 relative min-h-[320px] lg:min-h-full">
+        <img src="/assets/img/case-mt-maunganui.webp" width="1024" height="1024" loading="lazy" decoding="async"
+             alt="Mount Maunganui three-bedroom beach house managed as a short-term rental"
+             class="absolute inset-0 w-full h-full object-cover" />
+        <div class="absolute top-4 left-4 bg-brand-white/90 backdrop-blur-md border border-brand-apricot px-3.5 py-1.5 rounded-full text-xs font-extrabold shadow-sm">MT MAUNGANUI • 3BR BEACH HOUSE</div>
+        <ul class="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2 text-xs font-semibold text-brand-white">
+          <li class="bg-brand-cardDark/85 backdrop-blur-md px-3 py-1 rounded-full">3 bed</li>
+          <li class="bg-brand-cardDark/85 backdrop-blur-md px-3 py-1 rounded-full">2 bath</li>
+          <li class="bg-brand-cardDark/85 backdrop-blur-md px-3 py-1 rounded-full">Sleeps 6</li>
+          <li class="bg-brand-cardDark/85 backdrop-blur-md px-3 py-1 rounded-full">Sea view</li>
         </ul>
       </div>
-    </details>
-
-    <details>
-      <summary>What about wear and tear? Guests can be hard on a place.</summary>
-      <div>
-        <p>Every stay ends with a professional clean and a checklist inspection. Linens are hotel-grade and rotated, and any damage is logged with photos before the next guest arrives. We carry $5M public liability and a $2,500 per-stay guest damage policy — and a $1,000 SmartHomes top-up on every booking.</p>
+      <div class="lg:col-span-6 p-6 sm:p-8 lg:p-12 flex flex-col justify-between bg-gradient-to-b from-brand-white via-brand-cream/40 to-brand-papaya/40">
+        <div>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-peach/50 border border-brand-apricot text-[11px] font-extrabold uppercase tracking-widest text-brand-accentDark">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-accent" aria-hidden="true"></span> Mount Maunganui • Bay of Plenty
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-extrabold mt-4 mb-5 tracking-tight">“It paid off our mortgage four years early.”</h3>
+          <dl class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-brand-white/90 border-2 border-brand-apricot rounded-2xl p-4 shadow-sm mb-6">
+            <div class="p-2.5 rounded-xl bg-brand-cream/80 border border-brand-apricot/40"><dt class="text-[10px] font-bold uppercase tracking-wider text-brand-inkSoft">Before • LT</dt><dd class="text-lg font-extrabold">$40,560<span class="text-xs font-normal text-brand-inkSoft">/yr</span></dd></div>
+            <div class="p-2.5 rounded-xl bg-brand-papaya/90 border border-brand-apricot"><dt class="text-[10px] font-bold uppercase tracking-wider text-brand-accentDark">After • STR</dt><dd class="text-lg font-extrabold text-brand-accentDark">$118,940<span class="text-xs font-normal">/yr</span></dd></div>
+            <div class="p-2.5 rounded-xl bg-emerald-100/70 border border-emerald-300"><dt class="text-[10px] font-bold uppercase tracking-wider text-emerald-800">Net uplift</dt><dd class="text-lg font-extrabold text-emerald-800">+193%</dd></div>
+            <div class="p-2.5 rounded-xl bg-brand-cream/80 border border-brand-apricot/40"><dt class="text-[10px] font-bold uppercase tracking-wider text-brand-inkSoft">Occupancy</dt><dd class="text-lg font-extrabold">87%</dd></div>
+          </dl>
+          <blockquote class="pl-4 border-l-2 border-brand-accent/40 mb-6 text-sm sm:text-base text-brand-inkMuted italic leading-relaxed">
+            “We were dreading another tenancy cycle. SmartHomes took it over, sent us photos a week later, and the first payout landed before we'd even told the neighbours. We genuinely forget it's happening.”
+          </blockquote>
+        </div>
+        <div class="flex items-center justify-between bg-brand-white/60 p-3 rounded-2xl border border-brand-apricot/40">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-brand-peach to-brand-apricot border-2 border-brand-white text-brand-ink flex items-center justify-center font-extrabold text-sm" aria-hidden="true">PT</div>
+            <div>
+              <div class="text-sm font-bold">Pania &amp; Tama H.</div>
+              <div class="text-xs text-brand-inkSoft font-medium">Owners since March 2024</div>
+            </div>
+          </div>
+          <span class="hidden sm:inline-flex text-[11px] font-bold text-brand-accentDark bg-brand-papaya border border-brand-apricot px-2.5 py-1 rounded-full">Managed 14 mos</span>
+        </div>
       </div>
-    </details>
+    </article>
 
-    <details>
-      <summary>What about vacancy? Won't it just sit empty in winter?</summary>
-      <div>
-        <p>Our pricing engine adjusts every 24 hours across six platforms (Airbnb, Booking, Bookabach, VRBO, Expedia, Google Vacation Rentals). Average annual occupancy across our portfolio is 83%; in shoulder seasons we lean into mid-stay corporate and relocation guests to keep the lights on.</p>
-      </div>
-    </details>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+      <article class="bg-brand-white border-2 border-brand-apricot rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col group">
+        <div class="relative h-56 overflow-hidden">
+          <img src="/assets/img/case-queenstown.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="Queenstown two-bedroom alpine apartment short-term rental" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
+          <span class="absolute top-3 left-3 bg-brand-white/95 px-3 py-1 rounded-full text-[10px] font-extrabold border border-brand-apricot">QUEENSTOWN • 2BR APARTMENT</span>
+        </div>
+        <div class="p-6 flex flex-col justify-between flex-1">
+          <div>
+            <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-accentDark">Queenstown CBD • Otago</p>
+            <h3 class="text-lg font-bold mt-1 mb-3">The ski-season unlock</h3>
+            <dl class="grid grid-cols-3 gap-2 border border-brand-apricot/80 p-2.5 rounded-2xl text-center mb-4">
+              <div class="p-1.5 rounded-xl bg-brand-cream/60"><dt class="text-[9px] uppercase font-bold text-brand-inkSoft">Before</dt><dd class="font-extrabold text-xs">$31,200</dd></div>
+              <div class="p-1.5 rounded-xl bg-brand-papaya/90 border border-brand-apricot"><dt class="text-[9px] uppercase font-bold text-brand-accentDark">After</dt><dd class="font-extrabold text-brand-accentDark text-xs">$94,180</dd></div>
+              <div class="p-1.5 rounded-xl bg-emerald-100/80 border border-emerald-300"><dt class="text-[9px] uppercase font-bold text-emerald-800">Uplift</dt><dd class="font-extrabold text-emerald-800 text-xs">+202%</dd></div>
+            </dl>
+            <blockquote class="pl-3 border-l-2 border-brand-peach mb-4 text-xs text-brand-inkMuted italic leading-relaxed">“July and August now pay for the whole year. We use it ourselves in shoulder season — best of both worlds.”</blockquote>
+          </div>
+          <div class="flex items-center gap-2.5 pt-3 border-t border-brand-apricot/50 text-xs">
+            <div class="w-8 h-8 rounded-full bg-brand-peach border border-brand-apricot font-bold flex items-center justify-center" aria-hidden="true">JM</div>
+            <div><span class="font-bold block">James M.</span><span class="text-brand-inkSoft text-[11px]">Owner • Frankton</span></div>
+          </div>
+        </div>
+      </article>
 
-    <details>
-      <summary>Can I still use my own property?</summary>
-      <div>
-        <p>Absolutely. Block any dates from your Owner Portal — instant, no questions. Most owners reserve 4–8 weeks a year for themselves and friends. If you let us know early we can usually slot you into a low-demand window with zero income impact.</p>
-      </div>
-    </details>
+      <article class="bg-brand-white border-2 border-brand-apricot rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col group">
+        <div class="relative h-56 overflow-hidden">
+          <img src="/assets/img/case-hahei.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="Hahei four-bedroom coastal bach on the Coromandel short-term rental" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
+          <span class="absolute top-3 left-3 bg-brand-white/95 px-3 py-1 rounded-full text-[10px] font-extrabold border border-brand-apricot">HAHEI • 4BR BACH</span>
+        </div>
+        <div class="p-6 flex flex-col justify-between flex-1">
+          <div>
+            <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-accentDark">Hahei • Coromandel</p>
+            <h3 class="text-lg font-bold mt-1 mb-3">Family bach, working harder</h3>
+            <dl class="grid grid-cols-3 gap-2 border border-brand-apricot/80 p-2.5 rounded-2xl text-center mb-4">
+              <div class="p-1.5 rounded-xl bg-brand-cream/60"><dt class="text-[9px] uppercase font-bold text-brand-inkSoft">Before</dt><dd class="font-extrabold text-xs">$0 (vacant)</dd></div>
+              <div class="p-1.5 rounded-xl bg-brand-papaya/90 border border-brand-apricot"><dt class="text-[9px] uppercase font-bold text-brand-accentDark">After</dt><dd class="font-extrabold text-brand-accentDark text-xs">$76,420</dd></div>
+              <div class="p-1.5 rounded-xl bg-emerald-100/80 border border-emerald-300"><dt class="text-[9px] uppercase font-bold text-emerald-800">Change</dt><dd class="font-extrabold text-emerald-800 text-xs">+$76,420</dd></div>
+            </dl>
+            <blockquote class="pl-3 border-l-2 border-brand-peach mb-4 text-xs text-brand-inkMuted italic leading-relaxed">“It used to sit empty 40 weeks a year. Now it earns through every shoulder season and we still get our two weeks at Christmas.”</blockquote>
+          </div>
+          <div class="flex items-center gap-2.5 pt-3 border-t border-brand-apricot/50 text-xs">
+            <div class="w-8 h-8 rounded-full bg-brand-apricot font-bold flex items-center justify-center" aria-hidden="true">RW</div>
+            <div><span class="font-bold block">Rachel W.</span><span class="text-brand-inkSoft text-[11px]">Owner • Auckland-based</span></div>
+          </div>
+        </div>
+      </article>
 
-    <details>
-      <summary>What are the fees, really?</summary>
-      <div>
-        <p>A flat 18% of nights booked. No setup fee, no listing fee, no monthly minimum. Cleaning, linen and consumables are passed through at cost and billed to the guest. You see the math line by line on your monthly statement.</p>
-      </div>
-    </details>
+      <article class="bg-brand-white border-2 border-brand-apricot rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col group">
+        <div class="relative h-56 overflow-hidden">
+          <img src="/assets/img/case-ponsonby.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="Ponsonby three-bedroom restored villa in Auckland short-term rental" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
+          <span class="absolute top-3 left-3 bg-brand-white/95 px-3 py-1 rounded-full text-[10px] font-extrabold border border-brand-apricot">PONSONBY • 3BR VILLA</span>
+        </div>
+        <div class="p-6 flex flex-col justify-between flex-1">
+          <div>
+            <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-accentDark">Ponsonby • Tāmaki Makaurau</p>
+            <h3 class="text-lg font-bold mt-1 mb-3">From flatmates to four-star</h3>
+            <dl class="grid grid-cols-3 gap-2 border border-brand-apricot/80 p-2.5 rounded-2xl text-center mb-4">
+              <div class="p-1.5 rounded-xl bg-brand-cream/60"><dt class="text-[9px] uppercase font-bold text-brand-inkSoft">Before</dt><dd class="font-extrabold text-xs">$52,000</dd></div>
+              <div class="p-1.5 rounded-xl bg-brand-papaya/90 border border-brand-apricot"><dt class="text-[9px] uppercase font-bold text-brand-accentDark">After</dt><dd class="font-extrabold text-brand-accentDark text-xs">$103,640</dd></div>
+              <div class="p-1.5 rounded-xl bg-emerald-100/80 border border-emerald-300"><dt class="text-[9px] uppercase font-bold text-emerald-800">Uplift</dt><dd class="font-extrabold text-emerald-800 text-xs">+99%</dd></div>
+            </dl>
+            <blockquote class="pl-3 border-l-2 border-brand-peach mb-4 text-xs text-brand-inkMuted italic leading-relaxed">“We sold the idea of a long-term tenancy to ourselves for years. The switch was the easiest financial decision of 2025.”</blockquote>
+          </div>
+          <div class="flex items-center gap-2.5 pt-3 border-t border-brand-apricot/50 text-xs">
+            <div class="w-8 h-8 rounded-full bg-brand-peach border border-brand-apricot font-bold flex items-center justify-center" aria-hidden="true">AK</div>
+            <div><span class="font-bold block">Aroha K.</span><span class="text-brand-inkSoft text-[11px]">Owner • Grey Lynn</span></div>
+          </div>
+        </div>
+      </article>
+    </div>
 
-    <details>
-      <summary>How do I get paid, and when?</summary>
-      <div>
-        <p>Direct deposit on the 5th of every month, in NZD, to any NZ or Australian bank account. We can split payouts across multiple accounts (handy for trusts and co-ownership). Average clearance is 4 days from guest checkout.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>What happens if I want to leave?</summary>
-      <div>
-        <p>Thirty days written notice, full stop. We hand back the photography, the calendar, the guest reviews — all yours. We'd rather you stay because we're earning it, not because we've trapped you.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>Is my property right for SmartHomes?</summary>
-      <div>
-        <p>Generally yes if it's a self-contained whole home (not a room in a shared house), within 90 minutes of an airport or visitor centre, and free of body-corp short-stay restrictions. The free assessment is the fastest way to know — we'll tell you straight if it isn't a fit.</p>
-      </div>
-    </details>
+    <dl class="bg-brand-papaya/80 border-2 border-brand-apricot rounded-3xl p-6 sm:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div><dd class="text-2xl sm:text-3xl font-extrabold">$14.2M</dd><dt class="text-xs font-semibold text-brand-inkMuted mt-1">Paid to owners in 2025</dt></div>
+      <div><dd class="text-2xl sm:text-3xl font-extrabold">4.92<span class="text-amber-500" aria-hidden="true">★</span></dd><dt class="text-xs font-semibold text-brand-inkMuted mt-1">Average rating across 11,400 stays</dt></div>
+      <div><dd class="text-2xl sm:text-3xl font-extrabold">83%</dd><dt class="text-xs font-semibold text-brand-inkMuted mt-1">Average annual occupancy</dt></div>
+      <div><dd class="text-2xl sm:text-3xl font-extrabold text-brand-accentDark">11 days</dd><dt class="text-xs font-semibold text-brand-inkMuted mt-1">Avg listing-to-first-booking</dt></div>
+    </dl>
   </div>
 </section>
 
-<!-- =========================================================
-     ASSESSMENT CTA
-========================================================= -->
-<section class="cta" id="assess">
-  <div class="cta__inner">
-    <span class="eyebrow"><span class="dot"></span> Free, on-site, no obligation</span>
-    <h2 class="display display--lg">Let's run the numbers on <em>your</em> place.</h2>
-    <p class="lede lede--center">
-      A 45-minute visit, a fixed-fee guarantee, and a yes-or-no by the end of the week. If it's not a fit, we'll tell you — and recommend who is.
-    </p>
-
-    <form class="cta__form" id="cta-form" novalidate>
-      <div class="cta__fields">
-        <div class="field">
-          <label for="cta-addr">Property address</label>
-          <div class="input autocomplete">
-            <input id="cta-addr" name="address" required type="text" placeholder="Start typing an address…"
-                   autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list"
-                   aria-controls="cta-addr-list" aria-describedby="cta-addr-hint" />
-            <div class="autocomplete__list" id="cta-addr-list" role="listbox" aria-label="Address suggestions"></div>
-          </div>
-          <p class="field-hint" id="cta-addr-hint" hidden></p>
+<!-- ================= FAQ (keep in sync with the FAQPage JSON-LD) ================= -->
+<section class="py-24 bg-brand-white relative scroll-mt-16" id="faq">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-14">
+      <span class="inline-block bg-brand-peach/60 border border-brand-apricot px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-brand-accentDark mb-3">For owners</span>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">The honest answers to the things that keep you up at night.</h2>
+    </div>
+    <div class="space-y-4">
+      <details class="faq-item" open>
+        <summary><h3 class="text-lg font-bold pr-4">What about regulations? Council, Healthy Homes, the lot.</h3><span class="faq-icon w-9 h-9 rounded-full bg-brand-peach border border-brand-apricot flex items-center justify-center shrink-0 font-extrabold text-lg" aria-hidden="true">+</span></summary>
+        <div class="pt-4">
+          <p class="text-sm text-brand-inkMuted leading-relaxed mb-4">We handle the complete compliance stack: council STR registration where required (Auckland, Queenstown-Lakes, Rotorua, Christchurch), Healthy Homes warrant of fitness, smoke alarm and carbon monoxide testing, and meth-contamination baseline testing. We're a registered operator with every council we work in, and we keep your paperwork in your Owner Portal.</p>
+          <ul class="space-y-2 text-xs font-semibold bg-brand-white border border-brand-apricot/80 p-4 rounded-2xl">
+            <li><span class="text-brand-accentDark font-bold">•</span> Council STR registration filed within 7 days of onboarding</li>
+            <li><span class="text-brand-accentDark font-bold">•</span> Healthy Homes WoF refreshed annually</li>
+            <li><span class="text-brand-accentDark font-bold">•</span> Baseline and post-tenancy meth tests at our cost</li>
+          </ul>
         </div>
-        <div class="field-row">
-          <div class="field"><label for="cta-name">Your name</label><div class="input"><input id="cta-name" name="name" required type="text" placeholder="Sam Te Aroha" autocomplete="name" /></div></div>
-          <div class="field"><label for="cta-phone">Mobile</label><div class="input"><input id="cta-phone" name="phone" required type="tel" placeholder="021 555 0192" autocomplete="tel" /></div></div>
-        </div>
-        <div class="field-row">
-          <div class="field"><label for="cta-email">Email</label><div class="input"><input id="cta-email" name="email" required type="email" placeholder="sam@example.co.nz" autocomplete="email" /></div></div>
-          <div class="field"><label for="cta-time">Preferred time</label>
-            <div class="select"><select id="cta-time" name="preferredTime"><option>This week</option><option>Next week</option><option>I'm flexible</option></select></div>
-          </div>
-        </div>
-        <p class="form-error" id="cta-error" hidden role="alert"></p>
-        <button class="btn btn--primary btn--lg btn--block" id="cta-submit" type="submit">Book my free assessment →</button>
-      </div>
-      <div class="cta__done" hidden>
-        <div class="tick">✓</div>
-        <h3>Booked. We'll be in touch within 24 hours.</h3>
-        <p>A specialist will phone you on the number above to confirm the visit and talk through what to expect.</p>
-      </div>
-    </form>
-
-    <ul class="cta__assure">
-      <li>No setup fees, ever</li>
-      <li>30-day exit clause</li>
-      <li>Fixed-fee guarantee ±8%</li>
-      <li>NZ-owned &amp; NZ-based team</li>
-    </ul>
+      </details>
+      <details class="faq-item">
+        <summary><h3 class="text-lg font-bold pr-4">What about wear and tear? Guests can be hard on a place.</h3><span class="faq-icon w-9 h-9 rounded-full bg-brand-peach border border-brand-apricot flex items-center justify-center shrink-0 font-extrabold text-lg" aria-hidden="true">+</span></summary>
+        <p class="pt-4 text-sm text-brand-inkMuted leading-relaxed">Every stay ends with a professional clean and a checklist inspection. Linens are hotel-grade and rotated, and any damage is logged with photos before the next guest arrives. We carry $5M public liability and a $2,500 per-stay guest damage policy — plus a $1,000 SmartHomes top-up guarantee on every booking.</p>
+      </details>
+      <details class="faq-item">
+        <summary><h3 class="text-lg font-bold pr-4">What about vacancy? Won't it just sit empty in winter?</h3><span class="faq-icon w-9 h-9 rounded-full bg-brand-peach border border-brand-apricot flex items-center justify-center shrink-0 font-extrabold text-lg" aria-hidden="true">+</span></summary>
+        <p class="pt-4 text-sm text-brand-inkMuted leading-relaxed">Our pricing engine adjusts every 24 hours across six platforms (Airbnb, Booking, Bookabach, VRBO, Expedia, Google Vacation Rentals). Average annual occupancy across our portfolio is 83%; in shoulder seasons we lean into mid-stay corporate and relocation guests to keep yields steady.</p>
+      </details>
+      <details class="faq-item">
+        <summary><h3 class="text-lg font-bold pr-4">Can I still use my own property?</h3><span class="faq-icon w-9 h-9 rounded-full bg-brand-peach border border-brand-apricot flex items-center justify-center shrink-0 font-extrabold text-lg" aria-hidden="true">+</span></summary>
+        <p class="pt-4 text-sm text-brand-inkMuted leading-relaxed">Absolutely. Block any dates from your Owner Portal — instant, no questions. Most owners reserve 4–8 weeks a year for themselves and friends. If you let us know early we can usually slot you into a low-demand window with zero income impact.</p>
+      </details>
+      <details class="faq-item">
+        <summary><h3 class="text-lg font-bold pr-4">What are the fees, really?</h3><span class="faq-icon w-9 h-9 rounded-full bg-brand-peach border border-brand-apricot flex items-center justify-center shrink-0 font-extrabold text-lg" aria-hidden="true">+</span></summary>
+        <p class="pt-4 text-sm text-brand-inkMuted leading-relaxed">A flat 18% of nights booked. No setup fee, no listing fee, no monthly minimum. Cleaning, linen and consumables are passed through at cost and billed to the guest. You see the maths line by line on your monthly statement.</p>
+      </details>
+      <details class="faq-item">
+        <summary><h3 class="text-lg font-bold pr-4">How do I get paid, and when?</h3><span class="faq-icon w-9 h-9 rounded-full bg-brand-peach border border-brand-apricot flex items-center justify-center shrink-0 font-extrabold text-lg" aria-hidden="true">+</span></summary>
+        <p class="pt-4 text-sm text-brand-inkMuted leading-relaxed">Direct deposit on the 5th of every month, in NZD, to any NZ or Australian bank account. We can split payouts across multiple accounts (handy for trusts and co-ownership). Average clearance is 4 days from guest checkout.</p>
+      </details>
+      <details class="faq-item">
+        <summary><h3 class="text-lg font-bold pr-4">What happens if I want to leave?</h3><span class="faq-icon w-9 h-9 rounded-full bg-brand-peach border border-brand-apricot flex items-center justify-center shrink-0 font-extrabold text-lg" aria-hidden="true">+</span></summary>
+        <p class="pt-4 text-sm text-brand-inkMuted leading-relaxed">Thirty days written notice, full stop. We hand back the photography, the calendar, the guest reviews — all yours. We'd rather you stay because we're earning it, not because we've trapped you.</p>
+      </details>
+      <details class="faq-item">
+        <summary><h3 class="text-lg font-bold pr-4">Is my property right for SmartHomes?</h3><span class="faq-icon w-9 h-9 rounded-full bg-brand-peach border border-brand-apricot flex items-center justify-center shrink-0 font-extrabold text-lg" aria-hidden="true">+</span></summary>
+        <p class="pt-4 text-sm text-brand-inkMuted leading-relaxed">Generally yes if it's a self-contained whole home (not a room in a shared house), within 90 minutes of an airport or visitor centre, and free of body-corp short-stay restrictions. The free assessment is the fastest way to know — we'll tell you straight if it isn't a fit.</p>
+      </details>
+    </div>
   </div>
 </section>
 
+<!-- ================= ASSESSMENT BOOKING ================= -->
+<section class="relative py-24 bg-gradient-to-b from-brand-white via-brand-papaya to-brand-cream scroll-mt-16" id="free-assessment">
+  <div class="absolute top-0 left-0 right-0 w-full overflow-hidden leading-none z-10 rotate-180" aria-hidden="true">
+    <svg class="relative block w-full h-8 md:h-14 text-brand-white" fill="currentColor" preserveAspectRatio="none" viewBox="0 0 1200 120"><path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,60 L1200,120 L0,120 Z"></path></svg>
+  </div>
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 relative z-10">
+    <div class="bg-brand-white border-2 border-brand-apricot rounded-3xl p-6 sm:p-12 shadow-xl relative">
+      <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-brand-peach/40 blur-2xl pointer-events-none" aria-hidden="true"></div>
+      <div class="text-center mb-8 relative">
+        <span class="inline-block bg-brand-papaya border border-brand-apricot px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-brand-accentDark mb-3">Free, on-site, no obligation</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3">Let's run the numbers on <em class="text-brand-accentDark">your</em> place.</h2>
+        <p class="text-sm text-brand-inkMuted max-w-md mx-auto leading-relaxed">A 45-minute visit, a fixed-fee guarantee, and a yes-or-no by the end of the week. If it's not a fit, we'll tell you — and recommend who is.</p>
+      </div>
+
+      <form class="relative" id="cta-form" novalidate>
+        <div class="cta__fields space-y-4">
+          <div>
+            <label class="field-label" for="cta-addr">Property address</label>
+            <div class="autocomplete">
+              <input id="cta-addr" class="field-input" name="address" type="text" placeholder="Start typing an address…" autocomplete="off"
+                     role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="cta-addr-list" aria-describedby="cta-addr-hint" />
+              <div class="autocomplete__list" id="cta-addr-list" role="listbox" aria-label="Address suggestions"></div>
+            </div>
+            <p class="field-hint" id="cta-addr-hint" hidden></p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div><label class="field-label" for="cta-name">Your name</label><input id="cta-name" class="field-input" name="name" type="text" placeholder="Sam Te Aroha" autocomplete="name" /></div>
+            <div><label class="field-label" for="cta-phone">Mobile</label><input id="cta-phone" class="field-input" name="phone" type="tel" placeholder="021 555 0192" autocomplete="tel" /></div>
+          </div>
+          <div><label class="field-label" for="cta-email">Email</label><input id="cta-email" class="field-input" name="email" type="email" placeholder="sam@example.co.nz" autocomplete="email" /></div>
+          <fieldset>
+            <legend class="field-label">Preferred time</legend>
+            <div class="grid grid-cols-3 gap-2 text-center p-1.5 bg-brand-cream border border-brand-apricot rounded-2xl">
+              <label class="cursor-pointer"><input checked class="peer sr-only" name="preferredTime" type="radio" value="This week" /><span class="block py-2 px-2 rounded-xl text-xs font-bold text-brand-inkMuted peer-checked:bg-brand-white peer-checked:text-brand-ink peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-brand-accentDark transition-all">This week</span></label>
+              <label class="cursor-pointer"><input class="peer sr-only" name="preferredTime" type="radio" value="Next week" /><span class="block py-2 px-2 rounded-xl text-xs font-bold text-brand-inkMuted peer-checked:bg-brand-white peer-checked:text-brand-ink peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-brand-accentDark transition-all">Next week</span></label>
+              <label class="cursor-pointer"><input class="peer sr-only" name="preferredTime" type="radio" value="I'm flexible" /><span class="block py-2 px-2 rounded-xl text-xs font-bold text-brand-inkMuted peer-checked:bg-brand-white peer-checked:text-brand-ink peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-brand-accentDark transition-all">I'm flexible</span></label>
+            </div>
+          </fieldset>
+          <p class="form-error" id="cta-error" hidden role="alert"></p>
+          <button class="btn-primary w-full py-3.5 text-sm font-extrabold hover:-translate-y-0.5" id="cta-submit" type="submit">Book my free assessment <span aria-hidden="true">→</span></button>
+        </div>
+        <div class="cta__done text-center py-8" hidden role="status">
+          <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-4 border border-emerald-300 text-3xl">
+            <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+          </div>
+          <h3 class="text-xl font-bold mb-1">Booked. We'll be in touch within 24 hours.</h3>
+          <p class="text-xs text-brand-inkMuted max-w-sm mx-auto">A specialist will phone you on the number above to confirm the visit and talk through what to expect.</p>
+        </div>
+      </form>
+
+      <ul class="grid grid-cols-2 gap-2 mt-8 pt-6 border-t border-brand-papaya text-xs font-semibold text-brand-inkMuted">
+        <li><span class="text-brand-accentDark font-bold">•</span> No setup fees, ever</li>
+        <li><span class="text-brand-accentDark font-bold">•</span> 30-day exit clause</li>
+        <li><span class="text-brand-accentDark font-bold">•</span> Fixed-fee guarantee ±8%</li>
+        <li><span class="text-brand-accentDark font-bold">•</span> NZ-owned &amp; NZ-based team</li>
+      </ul>
+    </div>
+  </div>
+</section>
 </main>
 
-<!-- =========================================================
-     FOOTER
-========================================================= -->
-<footer class="foot">
-  <div class="foot__top">
-    <div class="foot__brand">
-      <a class="brand brand--foot" href="#top">
-        <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
-          <path d="M6 20 L20 7 L34 20 L34 33 L24 33 L24 24 L16 24 L16 33 L6 33 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
-          <circle cx="29" cy="14" r="2.2" fill="currentColor"/>
-        </svg>
-        <span class="brand__type">SmartHomes</span>
-      </a>
-      <p>Aotearoa's most trusted short-stay management partner. Built in Tauranga, working from Kerikeri to Bluff.</p>
-      <div class="foot__contact">
-        <span>0800 SMART HOMES</span>
-        <span>kiaora@smarthomes.co.nz</span>
-        <span>Level 3 / 42 The Strand, Tauranga</span>
+<!-- ================= FOOTER ================= -->
+<footer class="w-full bg-brand-papaya border-t border-brand-apricot pt-16 pb-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-brand-apricot/60">
+      <div class="lg:col-span-5 space-y-4">
+        <div class="flex items-center gap-3">
+          <img src="/logo.svg" alt="SmartHomes" width="170" height="37" class="h-9 w-auto" loading="lazy" />
+          <span class="inline-flex bg-brand-peach/80 border border-brand-apricot font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider">Aotearoa NZ</span>
+        </div>
+        <p class="text-sm text-brand-inkMuted max-w-sm leading-relaxed">Short-term rental management for holiday homes, baches and investment properties across New Zealand — elevated hospitality with rigorous financial returns.</p>
+        <address class="not-italic pt-2 space-y-1.5 text-xs text-brand-inkMuted">
+          <p class="flex items-center gap-2"><span class="material-symbols-outlined text-brand-accentDark text-base" aria-hidden="true">call</span><a class="font-bold text-brand-ink hover:text-brand-accentDark" href="tel:+64800762784">0800 762 784</a></p>
+          <p class="flex items-center gap-2"><span class="material-symbols-outlined text-brand-accentDark text-base" aria-hidden="true">mail</span><a class="hover:text-brand-accentDark" href="mailto:kiaora@smarthomes.co.nz">kiaora@smarthomes.co.nz</a></p>
+          <p class="flex items-center gap-2"><span class="material-symbols-outlined text-brand-accentDark text-base" aria-hidden="true">location_on</span><span>Level 3 / 42 The Strand, Tauranga 3110</span></p>
+        </address>
+      </div>
+      <nav class="lg:col-span-3 space-y-3" aria-label="Footer">
+        <h2 class="text-xs font-extrabold uppercase tracking-wider">Explore</h2>
+        <ul class="space-y-2 text-sm text-brand-inkMuted">
+          <li><a class="hover:text-brand-accentDark" href="#calculator">Income calculator</a></li>
+          <li><a class="hover:text-brand-accentDark" href="#process">How it works</a></li>
+          <li><a class="hover:text-brand-accentDark" href="#results">Owner results</a></li>
+          <li><a class="hover:text-brand-accentDark" href="#faq">Owner FAQ</a></li>
+          <li><a class="hover:text-brand-accentDark" href="#free-assessment">Free assessment</a></li>
+        </ul>
+      </nav>
+      <div class="lg:col-span-4 space-y-3">
+        <h2 class="text-xs font-extrabold uppercase tracking-wider">Serving</h2>
+        <p class="text-sm text-brand-inkMuted leading-relaxed">Auckland • Tauranga • Mount Maunganui • Queenstown • Wānaka • Rotorua • Coromandel</p>
       </div>
     </div>
-    <div class="foot__cols">
-      <div>
-        <h3>Product</h3>
-        <a href="#calculator">Income calculator</a>
-        <a href="#how">How it works</a>
-        <a href="#results">Case studies</a>
-      </div>
-      <div>
-        <h3>Resources</h3>
-        <a href="#faq">For landlords</a>
-        <a href="#faq" title="Compliance guide (FAQ)">Compliance guide</a>
-        <a href="#calculator" title="2026 market projections">2026 market report</a>
-        <a href="#faq" title="Tax info for short-term rental owners">Tax for STR owners</a>
-      </div>
-      <div>
-        <h3>Company</h3>
-        <a href="#how" title="About SmartHomes NZ">About</a>
-        <a href="#assess" title="Careers at SmartHomes">Careers · we're hiring</a>
-        <a href="#results" title="Press &amp; Media">Press</a>
-        <a href="#assess" title="Contact SmartHomes Team">Contact</a>
-      </div>
+    <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-brand-inkMuted">
+      <p>© 2026 SmartHomes Property Management Ltd. All rights reserved.</p>
+      <p>NZBN 9429 0481 1234</p>
     </div>
-  </div>
-  <div class="foot__bot">
-    <span>© 2026 SmartHomes Property Management Ltd. NZBN 9429 0481 1234.</span>
-    <span>Privacy · Terms · Trust &amp; Safety</span>
   </div>
 </footer>
-
-<!-- App scripts -->
-<script type="module" src="app.js"></script>
-
-<!-- Tweaks: React + Babel + tweaks-panel -->
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script type="text/babel" src="tweaks-panel.jsx"></script>
-<script type="text/babel" src="tweaks.jsx"></script>
-
-<!-- Smooth Scroll Engine (Lenis) -->
-<script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
-<script type="module">
-  import { mountScrollWorld } from './scrub-engine.js';
-
-  // Initialize Lenis Smooth Scrolling (disabled on touch for 1:1 mobile responsiveness)
-  const lenis = new Lenis({
-    duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    orientation: 'vertical',
-    gestureOrientation: 'vertical',
-    smoothWheel: true,
-    wheelMultiplier: 1.0,
-    touchMultiplier: 1.0,
-    smoothTouch: false,
-    syncTouch: false,
-    infinite: false
-  });
-
-  function rafLenis(time) {
-    lenis.raf(time);
-    requestAnimationFrame(rafLenis);
-  }
-  requestAnimationFrame(rafLenis);
-
-  mountScrollWorld(document.getElementById('world'), {
-    brand: null, // Disabled brand nav in scroll-world since it's just an intro
-    nav: false,  // Disabled top nav pill
-    hint: 'Scroll to explore',
-    diveScroll: 1.3,
-    connScroll: 0.9,
-    sections: [
-      {
-        id: 'property',
-        label: 'The Property',
-        still: 'assets/posters/property.webp',
-        clip: 'assets/vid/property.mp4',
-        clipMobile: 'assets/vid/property-m.mp4',
-        scroll: 1.5, linger: 0
-      },
-      {
-        id: 'interior',
-        label: 'The Experience',
-        still: 'assets/posters/interior.webp',
-        clip: 'assets/vid/interior.mp4',
-        clipMobile: 'assets/vid/interior-m.mp4',
-        scroll: 0.1, linger: 0
-      }
-    ],
-    connectors: ['assets/vid/conn_1.mp4'],
-    connectorsMobile: ['assets/vid/conn_1-m.mp4']
-  });
-
-  // Smooth fade transition to reveal the rest of the page (the original hero)
-  window.addEventListener('scroll', () => {
-    const track = document.querySelector('.sw-track');
-    const hero = document.querySelector('.hero');
-    if (!track || !hero) return;
-    
-    const y = window.scrollY || window.pageYOffset;
-    const endOfTrack = track.offsetTop + track.offsetHeight - window.innerHeight;
-    
-    // Check how far past the scroll-world track we are
-    const past = y - endOfTrack;
-    const fadeDistanceUI = window.innerHeight * 0.4;
-    
-    // 1. Fade out UI (particles, etc.) immediately when calculator appears
-    let opacityUI = 1;
-    if (past > 0) {
-      opacityUI = 1 - Math.min(1, past / fadeDistanceUI);
-    }
-    
-    const fixedElements = document.querySelectorAll('.sw-sky, .sw-copylayer, .sw-topbar, .sw-route, .sw-scrollbar, .sw-hint');
-    fixedElements.forEach(el => {
-      el.style.opacity = opacityUI;
-      el.style.pointerEvents = opacityUI > 0.01 ? 'auto' : 'none';
-    });
-
-    // 2. Fade out the video ONLY after the calculator section scrolls out of view
-    const heroHeight = hero.offsetHeight;
-    let opacityStage = 1;
-    if (past > heroHeight) {
-      opacityStage = 1 - Math.min(1, (past - heroHeight) / fadeDistanceUI);
-    }
-    
-    document.querySelectorAll('.sw-stage').forEach(el => {
-      el.style.opacity = opacityStage;
-    });
-  });
-</script>
 </body>
 </html>

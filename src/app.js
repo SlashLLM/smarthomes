@@ -1,5 +1,7 @@
 /* SmartHomes — calculator + general interactions */
 
+import { cleanRationale } from "../shared/rationale.js";
+
 (function () {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -543,8 +545,11 @@
       els.aiConfidence.textContent = `${data.confidence}% confidence${comparables}`;
 
       if (els.aiRationale) {
-        els.aiRationale.textContent = data.rationale || "";
-        els.aiRationale.hidden = !data.rationale;
+        // Cached estimates from before the server-side cleanup still carry
+        // markdown citation links, so clean at display time too.
+        const rationale = cleanRationale(data.rationale);
+        els.aiRationale.textContent = rationale;
+        els.aiRationale.hidden = !rationale;
       }
 
       // Real hostnames the model consulted, not the old decorative logo row.
@@ -681,42 +686,24 @@
     },
   });
 
-  // ---------- Lead-gate modal (gates the 5yr projection) ----------
-  const modal = $("#lead-modal");
-  const modalForm = $("#lead-modal-form");
-  const modalThanks = $("#lead-modal-thanks");
+  // ---------- Lead gate (inline form that unlocks the 5yr projection) ----------
+  const leadForm = $("#lead-form");
   const projWrap = $("#proj-wrap");
 
-  if (modal) {
+  if (leadForm) {
     const submitBtn = $("#lead-submit");
     const errorEl = $("#lead-error");
+    const thanksEl = $("#lead-thanks");
     const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-    const openModal = () => {
-      modal.hidden = false;
-      modalForm.hidden = false;
-      modalThanks.hidden = true;
-      if (errorEl) errorEl.hidden = true;
-      $("#lead-name").focus();
-    };
-    const closeModal = () => { modal.hidden = true; };
-
     const showFormError = (msg) => {
-      if (!errorEl) return;
       errorEl.textContent = msg;
       errorEl.hidden = false;
     };
+    leadForm.addEventListener("input", () => { errorEl.hidden = true; });
 
-    $("#proj-unlock-btn").addEventListener("click", openModal);
-    $("#lead-modal-close").addEventListener("click", closeModal);
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) closeModal();
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !modal.hidden) closeModal();
-    });
-
-    submitBtn.addEventListener("click", async () => {
+    leadForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
       const name = $("#lead-name").value.trim();
       const email = $("#lead-email").value.trim();
       const phone = $("#lead-phone").value.trim();
@@ -724,9 +711,9 @@
       if (name.length < 2) return showFormError("Please enter your name.");
       if (!EMAIL_RE.test(email)) return showFormError("Please enter a valid email address.");
 
-      if (errorEl) errorEl.hidden = true;
+      errorEl.hidden = true;
       submitBtn.disabled = true;
-      const originalLabel = submitBtn.textContent;
+      const originalLabel = submitBtn.innerHTML;
       submitBtn.textContent = "Sending…";
 
       const state = fc ? fc.getState() : {};
@@ -746,24 +733,22 @@
             currentWeeklyRent: state.currentWeeklyRent,
             estimate: state.estimate || null,
             projection: lastProjection,
+            source: "calculator",
           }),
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) throw new Error(data.message || "Something went wrong.");
 
         // Only unlock once the lead is actually recorded.
-        modalForm.hidden = true;
-        modalThanks.hidden = false;
         projWrap.classList.remove("locked");
+        thanksEl.hidden = false;
       } catch (err) {
         showFormError(err.message || "We couldn't send your details. Please try again.");
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = originalLabel;
+        submitBtn.innerHTML = originalLabel;
       }
     });
-
-    $("#lead-modal-done").addEventListener("click", closeModal);
   }
 
   // ---------- Assessment CTA form (books an on-site visit) ----------
@@ -821,7 +806,7 @@
       const name = $("#cta-name").value.trim();
       const phone = $("#cta-phone").value.trim();
       const email = $("#cta-email").value.trim();
-      const preferredTime = $("#cta-time").value;
+      const preferredTime = ctaForm.querySelector('input[name="preferredTime"]:checked')?.value || "";
 
       if (address.length < 4) return showCtaError("Please enter the property address.");
       // A confirmed place gives sales a map pin and matches the lead to any
@@ -835,7 +820,7 @@
 
       ctaError.hidden = true;
       ctaSubmit.disabled = true;
-      const originalLabel = ctaSubmit.textContent;
+      const originalLabel = ctaSubmit.innerHTML;
       ctaSubmit.textContent = "Sending…";
 
       try {
@@ -862,54 +847,70 @@
         showCtaError(err.message || "We couldn't send your details. Please try again.");
       } finally {
         ctaSubmit.disabled = false;
-        ctaSubmit.textContent = originalLabel;
+        ctaSubmit.innerHTML = originalLabel;
       }
     });
   }
 
-  // ---------- Mobile Navigation Drawer ----------
+  // ---------- Mobile navigation ----------
   const navToggle = $("#nav-toggle");
-  const navLinksContainer = $("#nav-links");
+  const mobileNav = $("#mobileNav");
 
-  if (navToggle && navLinksContainer) {
-    function toggleNav(show) {
-      const isOpen = show !== undefined ? show : !navLinksContainer.classList.contains("is-open");
-      navLinksContainer.classList.toggle("is-open", isOpen);
-      navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    }
-
+  if (navToggle && mobileNav) {
+    const icon = $(".material-symbols-outlined", navToggle);
+    const setOpen = (open) => {
+      mobileNav.hidden = !open;
+      mobileNav.classList.toggle("flex", open);
+      navToggle.setAttribute("aria-expanded", String(open));
+      navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      icon.textContent = open ? "close" : "menu";
+    };
     navToggle.addEventListener("click", (e) => {
       e.stopPropagation();
-      toggleNav();
+      setOpen(mobileNav.hidden);
     });
-
-    // Close when clicking nav link
-    $$("a", navLinksContainer).forEach((link) => {
-      link.addEventListener("click", () => toggleNav(false));
-    });
-
-    // Close when clicking outside header
+    $$("a", mobileNav).forEach((a) => a.addEventListener("click", () => setOpen(false)));
     document.addEventListener("click", (e) => {
-      if (!e.target.closest("#nav")) {
-        toggleNav(false);
+      if (!mobileNav.hidden && !e.target.closest("#nav")) setOpen(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !mobileNav.hidden) {
+        setOpen(false);
+        navToggle.focus();
       }
     });
+  }
+
+  // ---------- Solid header once the hero scrolls away ----------
+  const header = $("#nav");
+  if (header) {
+    const onScroll = () => {
+      const solid = window.scrollY > 40;
+      header.classList.toggle("bg-brand-cream/90", solid);
+      header.classList.toggle("backdrop-blur-md", solid);
+      header.classList.toggle("shadow-sm", solid);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
   }
 
   // ---------- Mark current section in nav ----------
-  const navLinks = $$(".nav__links a");
+  const navLinks = $$("#siteNav .nav-link");
   const sections = navLinks
     .map((a) => document.querySelector(a.getAttribute("href")))
     .filter(Boolean);
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
-        if (e.isIntersecting) {
-          const id = "#" + e.target.id;
-          navLinks.forEach((a) =>
-            a.classList.toggle("on", a.getAttribute("href") === id)
-          );
-        }
+        if (!e.isIntersecting) return;
+        const id = "#" + e.target.id;
+        navLinks.forEach((a) => {
+          const on = a.getAttribute("href") === id;
+          a.classList.toggle("bg-brand-white", on);
+          a.classList.toggle("text-brand-accentDark", on);
+          if (on) a.setAttribute("aria-current", "true");
+          else a.removeAttribute("aria-current");
+        });
       });
     },
     { rootMargin: "-40% 0px -55% 0px" }

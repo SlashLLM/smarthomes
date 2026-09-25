@@ -1,0 +1,622 @@
+/* ============================================================
+   SmartHomes NZ — Cinematic Intro Film
+   Palette is taken verbatim from the tailwind.config in index.html.
+   Nothing here applies unless <html> carries .intro-active, so a
+   failed script or blocked CDN leaves the site perfectly normal.
+   ============================================================ */
+
+:root {
+  --film-ink: #2D241E;
+  --film-card-dark: #2B221B;
+  --film-cream: #FFF8E7;
+  --film-papaya: #FFEFD5;
+  --film-peach: #FFDAB9;
+  --film-apricot: #FFE4B5;
+  --film-accent: #C85A32;
+  --film-accent-dark: #A6431E;
+}
+
+/* ---------- page lock while the film runs ---------- */
+
+html.intro-active,
+html.intro-active body {
+  overflow: hidden;
+  height: 100%;
+}
+
+/* The hero ken-burns is frozen at its 0% keyframe (scale 1.04, no
+   translate) so the film camera can land on that exact pose. Releasing
+   .intro-active resumes it from the very start — a seamless handover. */
+html.intro-active .hero-kenburns {
+  animation-play-state: paused;
+}
+
+/* Hidden only while the film owns the screen. The attribute selectors
+   outrank Tailwind's own opacity utilities, so no !important is needed. */
+html.intro-active [data-intro-reveal],
+html.intro-active [data-intro-fade] {
+  opacity: 0;
+}
+
+html.intro-active #siteLogo,
+html.intro-active #siteNav {
+  opacity: 0;
+}
+
+/* ---------- stage ---------- */
+
+/* The stage is inert by default and only exists when the head gate armed
+   the film. Without this it would sit over the whole site — full-screen,
+   fixed, opaque, z-100 — on every return visit, deep link, or load where
+   intro.js fails to run. The class is the single switch for the film. */
+#intro-film {
+  display: none;
+}
+
+html.intro-active #intro-film {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  background: var(--film-cream);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The photo frame is positioned by JS onto the live hero photo's exact
+   rect, so the last frame of the film IS the first frame of the site. */
+#filmPhoto {
+  position: absolute;
+  overflow: hidden;
+  will-change: transform;
+}
+
+#filmCam {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  transform: scale(1.34);
+}
+
+/* Mirroring, object-fit and the responsive crop are copied from the
+   hero <img> in index.html. The lg: breakpoint is Tailwind's 1024px. */
+#filmImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 88% 30%;
+  transform: scaleX(-1);
+  /* Order matches the hero img's `contrast(1.05) saturate(1.15)` exactly.
+     brightness lands on 1 (identity) so the end state is byte-identical
+     even where clamping would otherwise make the order matter. */
+  filter: brightness(var(--grade-bri, 0.52))
+          contrast(var(--grade-con, 0.95))
+          saturate(var(--grade-sat, 0.12));
+  will-change: filter;
+}
+
+@media (min-width: 1024px) {
+  #filmImg { object-position: center 42%; }
+}
+
+/* Cold cast for the neglected half — drops to 0 on the turn. */
+.film-wash {
+  position: absolute;
+  inset: 0;
+  background: #3E4A63;
+  mix-blend-mode: color;
+  opacity: var(--wash, 0.78);
+  pointer-events: none;
+}
+
+.film-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 78% 70% at 50% 45%,
+      rgba(12, 10, 9, 0) 38%,
+      rgba(12, 10, 9, 0.55) 78%,
+      rgba(12, 10, 9, 0.88) 100%);
+  opacity: var(--vig, 1);
+}
+
+/* The hero photo layer carries three gradient washes of its own. The film
+   must wear them too, or the handover crossfade would show a brightness
+   jump in the upper left. Faded in under the dark title card, so by the
+   blend the film photo matches the live hero exactly.
+   Values copied verbatim from the hero markup in index.html. */
+.film-hero-grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.film-hero-grade.glow {
+  mix-blend-mode: soft-light;
+  background: radial-gradient(ellipse 60% 55% at 12% 8%,
+    rgba(255, 200, 120, 0.55) 0%, rgba(255, 200, 120, 0) 70%);
+}
+
+.film-hero-grade.scrim {
+  background: radial-gradient(ellipse 60% 52% at 22% 33%,
+    rgba(255, 248, 231, 0.72) 0%,
+    rgba(255, 248, 231, 0.45) 45%,
+    rgba(255, 248, 231, 0) 100%);
+}
+
+.film-hero-grade.foot {
+  background: linear-gradient(180deg,
+    rgba(255, 248, 231, 0) 84%, rgba(255, 248, 231, 0.9) 100%);
+}
+
+/* ---------- dust motes ---------- */
+
+#filmDust {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.mote {
+  position: absolute;
+  border-radius: 9999px;
+  background: rgba(255, 239, 213, 0.85);
+  filter: blur(0.5px);
+  animation: moteDrift linear infinite;
+}
+
+@keyframes moteDrift {
+  0%   { transform: translate3d(0, 0, 0); opacity: 0; }
+  12%  { opacity: 0.7; }
+  88%  { opacity: 0.5; }
+  100% { transform: translate3d(28px, -120px, 0); opacity: 0; }
+}
+
+/* ---------- letterbox ---------- */
+
+.film-bars i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 11vh;
+  background: #100D0B;
+  z-index: 6;
+  pointer-events: none;
+}
+.film-bars .bar-top { top: 0; }
+.film-bars .bar-bot { bottom: 0; }
+
+/* ---------- the turn: terracotta light sweep ---------- */
+
+#filmSweep {
+  position: absolute;
+  top: -30%;
+  bottom: -30%;
+  width: 55vw;
+  left: -70vw;
+  z-index: 5; /* under the letterbox bars, so they stay pure black */
+  pointer-events: none;
+  opacity: 0;
+  transform: skewX(-12deg);
+  background: linear-gradient(
+    100deg,
+    rgba(200, 90, 50, 0) 0%,
+    rgba(200, 90, 50, 0.32) 34%,
+    rgba(255, 218, 185, 0.92) 50%,
+    rgba(255, 239, 213, 0.5) 62%,
+    rgba(200, 90, 50, 0) 100%);
+  filter: blur(6px);
+}
+
+/* ---------- HUD ---------- */
+
+.film-ui {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.film-label {
+  position: absolute;
+  top: clamp(84px, 15vh, 150px);
+  left: clamp(20px, 5vw, 66px);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 248, 231, 0.82);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.6);
+}
+
+.film-label .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--film-accent);
+  box-shadow: 0 0 10px rgba(200, 90, 50, 0.9);
+}
+
+/* Blinked by GSAP, not CSS — a CSS animation on opacity would win over
+   the timeline and leave the caret visible through the title card. */
+.film-label .caret {
+  display: inline-block;
+  width: 7px;
+  height: 11px;
+  background: var(--film-peach);
+  margin-left: 2px;
+  vertical-align: -1px;
+}
+
+/* money readout, top-right */
+.film-counter {
+  position: absolute;
+  top: clamp(78px, 14vh, 146px);
+  right: clamp(20px, 5vw, 66px);
+  text-align: right;
+  opacity: 0;
+}
+
+/* Two captions stacked in one box and crossfaded — no text swapping, so
+   the whole beat stays seekable when the skip button scrubs the timeline. */
+.film-counter .caps {
+  position: relative;
+  height: 14px;
+  margin-bottom: 4px;
+}
+
+.film-counter .cap {
+  position: absolute;
+  right: 0;
+  top: 0;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 248, 231, 0.6);
+}
+
+.film-counter .cap.str {
+  opacity: 0;
+  color: var(--film-peach);
+}
+
+.film-counter .val {
+  font-size: clamp(30px, 4.6vw, 58px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #FFF8E7;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 26px rgba(0, 0, 0, 0.55);
+}
+
+/* the +193% stamp — same wavy-badge language as the hero's "2x more."
+   The wrapper owns position so GSAP can own transform outright. */
+.film-stamp-wrap {
+  position: absolute;
+  top: clamp(150px, 25vh, 250px);
+  right: clamp(20px, 5vw, 66px);
+}
+
+.film-stamp {
+  display: inline-block;
+  opacity: 0;
+  padding: 12px 26px;
+  background: var(--film-peach);
+  color: var(--film-accent-dark);
+  font-size: clamp(18px, 2.3vw, 30px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  transform: rotate(-3deg);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+  clip-path: polygon(
+    0% 50%, 4% 30%, 10% 20%, 20% 12%, 35% 10%, 50% 8%, 65% 10%, 80% 12%, 90% 20%, 96% 30%, 100% 50%,
+    96% 70%, 90% 80%, 80% 88%, 65% 90%, 50% 92%, 35% 90%, 20% 88%, 10% 80%, 4% 70%
+  );
+}
+
+/* ---------- evidence cards ---------- */
+
+#filmCards {
+  position: absolute;
+  inset: 0;
+}
+
+.film-card {
+  position: absolute;
+  width: clamp(224px, 23vw, 318px);
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.93);
+  border: 1px solid var(--film-apricot);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+  opacity: 0;
+  backdrop-filter: blur(6px);
+  will-change: transform, opacity;
+}
+
+.film-card:nth-child(1) { top: 20%; left: 6%;  }
+.film-card:nth-child(2) { top: 36%; left: 13%; }
+.film-card:nth-child(3) { top: 52%; left: 5%;  }
+.film-card:nth-child(4) { top: 68%; left: 12%; }
+
+/* Cards start in the "neglected" state and are tweened warm on the turn
+   by GSAP directly — no class toggling, so scrubbing stays accurate. */
+.film-card .ic {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #E7E4E1;
+  color: #7C7671;
+}
+
+.film-card .ic .material-symbols-outlined { font-size: 19px; }
+
+/* front (problem) and back (solution) share one box and crossfade */
+.film-card .faces {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 32px;
+}
+
+.film-card .face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.film-card .face.back { opacity: 0; }
+
+.film-card .t {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: #4A423C;
+  line-height: 1.25;
+}
+
+.film-card .s {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #685950;
+  line-height: 1.3;
+  margin-top: 2px;
+}
+
+/* ---------- title card ---------- */
+
+.film-title-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  opacity: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(16, 13, 11, 0.7) 0%, rgba(16, 13, 11, 0.93) 100%);
+}
+
+.film-title {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  padding: 0 24px;
+}
+
+#filmGlow {
+  position: absolute;
+  width: min(760px, 86vw);
+  height: min(760px, 86vw);
+  border-radius: 9999px;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(200, 90, 50, 0.5) 0%, rgba(200, 90, 50, 0) 66%);
+}
+
+#filmLogo {
+  position: relative;
+  opacity: 0;
+  will-change: transform, opacity, filter;
+}
+
+#filmLogo svg {
+  height: clamp(52px, 7vw, 86px);
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 10px 40px rgba(0, 0, 0, 0.55));
+}
+
+/* the wordmark reads on the dark title card, then the morph hands over
+   to the real header logo which sits on cream */
+#filmLogo .wm-name { fill: var(--film-cream); }
+
+.film-introducing {
+  margin-top: clamp(20px, 3.4vh, 38px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.34em;
+  font-size: clamp(13px, 1.5vw, 19px);
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--film-peach);
+  text-indent: 0.4em;
+}
+
+.film-introducing span { opacity: 0; display: inline-block; }
+
+.film-tagline {
+  margin-top: clamp(14px, 2.2vh, 24px);
+  max-width: 34ch;
+  text-align: center;
+  text-wrap: balance;
+  font-size: clamp(15px, 1.9vw, 24px);
+  font-weight: 500;
+  line-height: 1.45;
+  color: rgba(255, 248, 231, 0.74);
+  opacity: 0;
+}
+
+.film-tagline b {
+  font-weight: 800;
+  color: var(--film-peach);
+}
+
+/* ---------- the reveal curtain ---------- */
+
+/* A wave-fronted wash of cream light that sweeps up and off the top.
+   It is deliberately NOT opaque all the way down — only a short trail
+   behind the wave front — so the photo stays visible through it and the
+   match-cut is never broken by a solid wipe.
+
+   The wave is a flex child INSIDE the box rather than sitting above it
+   via bottom:100%, so translateY(100%) parks the whole thing — wave
+   included — below the viewport instead of leaving the crest on screen. */
+#filmCurtain {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 180vh;
+  z-index: 11;
+  pointer-events: none;
+  transform: translateY(100%);
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
+}
+
+#filmCurtain .wave {
+  flex: 0 0 auto;
+  width: 100%;
+  height: clamp(48px, 7vw, 92px);
+  display: block;
+  color: var(--film-cream);
+}
+
+#filmCurtain .fill {
+  flex: 1 1 auto;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 248, 231, 0.96) 0%,
+    rgba(255, 248, 231, 0.86) 6%,
+    rgba(255, 248, 231, 0.38) 13%,
+    rgba(255, 248, 231, 0) 22%);
+}
+
+/* ---------- skip ---------- */
+
+#filmSkip {
+  position: absolute;
+  right: clamp(16px, 3vw, 34px);
+  bottom: clamp(16px, 3vh, 34px);
+  z-index: 14;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 17px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 228, 181, 0.4);
+  background: rgba(45, 36, 30, 0.42);
+  backdrop-filter: blur(8px);
+  color: rgba(255, 248, 231, 0.9);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+#filmSkip:hover {
+  background: var(--film-accent);
+  border-color: var(--film-accent);
+  color: #fff;
+}
+
+/* ---------- mobile ---------- */
+
+@media (max-width: 767px) {
+  .film-bars i { height: 7vh; }
+
+  #filmCards {
+    inset: auto 0 15vh 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+    padding: 0 16px;
+  }
+
+  .film-card {
+    position: static;
+    width: 100%;
+    max-width: 340px;
+    padding: 10px 13px;
+  }
+
+  .film-card:nth-child(n) { top: auto; left: auto; }
+
+  .film-counter {
+    top: auto;
+    bottom: 15vh;
+    right: 0;
+    left: 0;
+    text-align: center;
+  }
+
+  .film-counter .cap {
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  .film-stamp-wrap {
+    top: auto;
+    bottom: 26vh;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  .film-label { top: clamp(72px, 11vh, 110px); }
+}
+
+/* ---------- reduced motion: the film never runs at all ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  #intro-film { display: none; }
+  html.intro-active,
+  html.intro-active body { overflow: auto; height: auto; }
+  html.intro-active [data-intro-reveal],
+  html.intro-active #siteLogo,
+  html.intro-active #siteNav { opacity: 1; }
+  html.intro-active [data-intro-fade] { opacity: 0.15; }
+  html.intro-active .hero-kenburns { animation-play-state: running; }
+}

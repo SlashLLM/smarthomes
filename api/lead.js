@@ -9,6 +9,7 @@ import { Resend } from "resend";
 import { createHandler, ApiError } from "./_lib/handler.js";
 import { getSupabase } from "./_lib/supabase.js";
 import { RATE_LIMIT } from "./_lib/config.js";
+import { cleanRationale } from "../shared/rationale.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -64,7 +65,6 @@ function buildEmail(lead, body, source) {
     row("Email", lead.email),
     row("Mobile", lead.phone || "—"),
   ];
-  // Not a leads column — it rides along in the notification only.
   if (body.preferredTime) {
     contact.push(row("Preferred time", String(body.preferredTime).slice(0, 60)));
   }
@@ -114,7 +114,7 @@ function buildEmail(lead, body, source) {
   ${property.length ? `<h3 style="margin:0 0 8px;font-size:15px;">Property</h3>${table(property)}` : ""}
   ${estimate.length ? `<h3 style="margin:0 0 8px;font-size:15px;">Estimate</h3>${table(estimate)}` : ""}
 
-  ${e.rationale ? `<p style="font-size:14px;color:#3a3a35;"><strong>Model rationale:</strong> ${escapeHtml(e.rationale)}</p>` : ""}
+  ${e.rationale ? `<p style="font-size:14px;color:#3a3a35;"><strong>Model rationale:</strong> ${escapeHtml(cleanRationale(e.rationale))}</p>` : ""}
   ${Array.isArray(e.sources) && e.sources.length ? `<p style="font-size:13px;color:#6b6b63;">Sources: ${escapeHtml(e.sources.join(", "))}</p>` : ""}
 </div>`;
 }
@@ -131,7 +131,8 @@ export default createHandler(
 
     // insert_lead is a security definer RPC: the anon key has no grant on the
     // leads table itself, so this is the only way a lead can be written — and
-    // there is no matching read RPC, so it can never be read back out.
+    // there is no matching read RPC, so it can never be read back out with this
+    // key. (The admin portal reads leads with the service role key instead.)
     const { data: leadId, error } = await db.rpc("insert_lead", {
       p_name: lead.name,
       p_email: lead.email,
@@ -144,6 +145,8 @@ export default createHandler(
       p_current_weekly_rent: Number(body.currentWeeklyRent) || null,
       p_estimate: body.estimate || null,
       p_projection: body.projection || null,
+      p_source: source,
+      p_preferred_time: body.preferredTime ? String(body.preferredTime).slice(0, 60) : null,
     });
 
     if (error) {
