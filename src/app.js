@@ -1,6 +1,7 @@
 /* SmartHomes — calculator + general interactions */
 
 import { cleanRationale } from "../shared/rationale.js";
+import { initNav } from "./nav.js";
 
 (function () {
   const $ = (s, r = document) => r.querySelector(s);
@@ -889,51 +890,13 @@ import { cleanRationale } from "../shared/rationale.js";
     });
   }
 
-  // ---------- Mobile navigation ----------
-  const navToggle = $("#nav-toggle");
-  const mobileNav = $("#mobileNav");
-
-  if (navToggle && mobileNav) {
-    const icon = $(".material-symbols-outlined", navToggle);
-    const setOpen = (open) => {
-      mobileNav.hidden = !open;
-      mobileNav.classList.toggle("flex", open);
-      navToggle.setAttribute("aria-expanded", String(open));
-      navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-      icon.textContent = open ? "close" : "menu";
-    };
-    navToggle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      setOpen(mobileNav.hidden);
-    });
-    $$("a", mobileNav).forEach((a) => a.addEventListener("click", () => setOpen(false)));
-    document.addEventListener("click", (e) => {
-      if (!mobileNav.hidden && !e.target.closest("#nav")) setOpen(false);
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !mobileNav.hidden) {
-        setOpen(false);
-        navToggle.focus();
-      }
-    });
-  }
-
-  // ---------- Solid header once the hero scrolls away ----------
-  const header = $("#nav");
-  if (header) {
-    const onScroll = () => {
-      const solid = window.scrollY > 40;
-      header.classList.toggle("bg-brand-cream/90", solid);
-      header.classList.toggle("backdrop-blur-md", solid);
-      header.classList.toggle("shadow-sm", solid);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-  }
+  initNav();
 
   // ---------- Mark current section in nav ----------
   const navLinks = $$("#siteNav .nav-link");
+  // Only in-page anchors; links to other pages (e.g. /long-term-rental) aren't selectors.
   const sections = navLinks
+    .filter((a) => a.getAttribute("href").startsWith("#"))
     .map((a) => document.querySelector(a.getAttribute("href")))
     .filter(Boolean);
   const io = new IntersectionObserver(

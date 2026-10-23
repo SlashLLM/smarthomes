@@ -121,7 +121,7 @@
   .faq-item[open] .faq-icon { transform: rotate(45deg); }
 
   /* ---------- mobile nav ---------- */
-  #mobileNav { @apply md:hidden; }
+  #mobileNav { @apply lg:hidden; }
 }
 
 @layer utilities {
