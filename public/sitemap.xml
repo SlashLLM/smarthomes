@@ -2,12 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://smarthomes.co.nz/</loc>
+    <loc>https://smarthomesproperty.co.nz/</loc>
     <lastmod>2026-09-25</lastmod>
-    <image:image><image:loc>https://smarthomes.co.nz/assets/img/hero-2400.webp</image:loc></image:image>
-    <image:image><image:loc>https://smarthomes.co.nz/assets/img/case-mt-maunganui.webp</image:loc></image:image>
-    <image:image><image:loc>https://smarthomes.co.nz/assets/img/case-queenstown.webp</image:loc></image:image>
-    <image:image><image:loc>https://smarthomes.co.nz/assets/img/case-hahei.webp</image:loc></image:image>
-    <image:image><image:loc>https://smarthomes.co.nz/assets/img/case-ponsonby.webp</image:loc></image:image>
+    <image:image><image:loc>https://smarthomesproperty.co.nz/assets/img/hero-2400.webp</image:loc></image:image>
+    <image:image><image:loc>https://smarthomesproperty.co.nz/assets/img/case-mt-maunganui.webp</image:loc></image:image>
+    <image:image><image:loc>https://smarthomesproperty.co.nz/assets/img/case-queenstown.webp</image:loc></image:image>
+    <image:image><image:loc>https://smarthomesproperty.co.nz/assets/img/case-hahei.webp</image:loc></image:image>
+    <image:image><image:loc>https://smarthomesproperty.co.nz/assets/img/case-ponsonby.webp</image:loc></image:image>
   </url>
 </urlset>

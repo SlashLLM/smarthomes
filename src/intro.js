@@ -325,7 +325,8 @@ import { gsap } from "gsap";
 
     // the wordmark flies into the real header slot
     tl.add(function () { morphLogo(0.85); }, 10.05);
-    tl.to('#filmLogo .wm-name', { fill: '#2D241E', duration: 0.5 }, 10.35);
+    tl.to('#filmLogo .wm-light', { opacity: 0, duration: 0.5 }, 10.35);
+    tl.to('#filmLogo .wm-dark', { opacity: 1, duration: 0.5 }, 10.35);
 
     // THE MATCH-CUT, at 10.55 — after the overlays are gone. The film photo
     // crossfades to the live hero photo underneath it. Same file, same rect,

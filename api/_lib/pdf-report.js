@@ -45,11 +45,19 @@ let fontCache;
 const fonts = () =>
   (fontCache ??= Object.fromEntries(Object.entries(FONT_FILES).map(([k, url]) => [k, readFileSync(url)])));
 
+// Brand art from smarthomesproperty.co.nz (copies of public/logo.png, public/favicon.png).
+const IMG_FILES = {
+  logo: new URL("./img/logo.png", import.meta.url),
+  mark: new URL("./img/mark.png", import.meta.url),
+};
+let imgCache;
+const imgs = () =>
+  (imgCache ??= Object.fromEntries(Object.entries(IMG_FILES).map(([k, url]) => [k, readFileSync(url)])));
+
 const COMPANY = {
   name: "SmartHomes Property Management Ltd",
   phone: "0800 762 784",
-  email: "kiaora@smarthomes.co.nz",
-  web: "smarthomes.co.nz",
+  web: "smarthomesproperty.co.nz",
 };
 
 // A4 geometry, in points
@@ -80,22 +88,17 @@ function registerFonts(doc) {
 const accentGrad = (doc, x0, y0, x1, y1) =>
   doc.linearGradient(x0, y0, x1, y1).stop(0, C.accent).stop(1, C.accentDark);
 
-/* SmartHomes mark (public/logo.svg, 44×44 box) at (x, y). */
+/* Smart Homes mark on a white tile (size × size box) at (x, y) — reads on dark cards. */
 function drawMark(doc, x, y, size) {
-  const s = size / 44;
-  doc.save().translate(x, y).scale(s);
-  doc.roundedRect(0, 0, 44, 44, 14).fill(C.accent);
-  doc.path("M12 28L22 18L32 28V34C32 35.1 31.1 36 30 36H14C12.9 36 12 35.1 12 34V28Z").fill(C.cream);
-  doc.path("M18 36V28H26V36").fillOpacity(0.4).fill(C.accent).fillOpacity(1);
-  doc.circle(22, 14, 2.5).fill(C.apricot);
-  doc.restore();
+  doc.roundedRect(x, y, size, size, size * 0.3).fill(C.white);
+  const pad = size * 0.16;
+  doc.image(imgs().mark, x + pad, y + pad, { fit: [size - pad * 2, size - pad * 2], align: "center", valign: "center" });
   return x + size;
 }
 
-function wordmark(doc, x, y, size, color) {
-  const end = drawMark(doc, x, y, size);
-  doc.font(F.black).fontSize(size * 0.5).fillColor(color || C.ink)
-    .text("SmartHomes", end + size * 0.28, y + size * 0.2, { characterSpacing: -0.3, lineBreak: false });
+/* Full Smart Homes logo, `size` tall, at (x, y). */
+function wordmark(doc, x, y, size) {
+  doc.image(imgs().logo, x, y, { height: size });
 }
 
 function svgStroke(doc, d, x, y, scale, color, lineWidth) {
@@ -505,9 +508,8 @@ function nextStepsPage(doc, lead, a) {
   doc.roundedRect(M, y, CW, cH, 20).fill(C.cardDark);
   drawMark(doc, M + 22, y + 18, 40);
   doc.font(F.bold).fontSize(14).fillColor(C.white).text("Book your free on-site assessment", M + 78, y + 22);
-  doc.font(F.med).fontSize(9.5).fillColor(C.onDarkMuted).text("Reply to this report or get in touch directly", M + 78, y + 42);
-  doc.font(F.bold).fontSize(11).fillColor(C.apricot).text(COMPANY.phone, M, y + 22, { width: CW - 24, align: "right" });
-  doc.font(F.med).fontSize(10).fillColor(C.onDark).text(COMPANY.email, M, y + 42, { width: CW - 24, align: "right" });
+  doc.font(F.med).fontSize(9.5).fillColor(C.onDarkMuted).text("Give us a call to arrange a time that suits you", M + 78, y + 42);
+  doc.font(F.bold).fontSize(14).fillColor(C.apricot).text(COMPANY.phone, M, y + 30, { width: CW - 24, align: "right" });
   y += cH + 14;
 
   // disclaimer, sized to fit what's left

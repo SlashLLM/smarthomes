@@ -443,16 +443,16 @@ html.intro-active #intro-film {
   will-change: transform, opacity, filter;
 }
 
-#filmLogo svg {
+#filmLogo img {
   height: clamp(52px, 7vw, 86px);
   width: auto;
   display: block;
   filter: drop-shadow(0 10px 40px rgba(0, 0, 0, 0.55));
 }
 
-/* the wordmark reads on the dark title card, then the morph hands over
-   to the real header logo which sits on cream */
-#filmLogo .wm-name { fill: var(--film-cream); }
+/* the white wordmark reads on the dark title card, then crossfades to the
+   blue one as the morph hands over to the real header logo on cream */
+#filmLogo .wm-dark { position: absolute; inset: 0; opacity: 0; }
 
 .film-introducing {
   margin-top: clamp(20px, 3.4vh, 38px);

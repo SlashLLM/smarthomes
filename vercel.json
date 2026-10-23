@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "functions": {
-    "api/admin/report.js": { "includeFiles": "api/_lib/fonts/**" }
+    "api/admin/report.js": { "includeFiles": "api/_lib/{fonts,img}/**" }
   },
   "headers": [
     {
