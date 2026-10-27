@@ -2,7 +2,7 @@ import forms from "@tailwindcss/forms";
 
 /** Warm Architectural palette — see the Stitch export's DESIGN.md. */
 export default {
-  content: ["./index.html", "./admin/**/*.html", "./report/**/*.html", "./src/**/*.js"],
+  content: ["./index.html", "./long-term-rental.html", "./admin/**/*.html", "./report/**/*.html", "./src/**/*.js"],
   theme: {
     extend: {
       fontFamily: {
