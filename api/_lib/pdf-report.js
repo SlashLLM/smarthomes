@@ -465,7 +465,7 @@ function nextStepsPage(doc, lead, a) {
     { icon: "M3 14 L8 9 L11 12 L17 5 M13 5 H17 V9", title: "Dynamic pricing", body: "Nightly rates updated daily for demand, events and season, so you are never under-priced." },
     { icon: "M4 11 V9 A6 6 0 0 1 16 9 V11 M4 11 H6 V15 H4 Z M14 11 H16 V15 H14 Z", title: "24/7 NZ-based support", body: "Guest messages, check-ins and issues handled around the clock by our local team." },
     { icon: "M4 4 H16 V16 H4 Z M4 8 H16 M8 4 V16", title: "Hotel-grade turnovers", body: "Professional cleaning, linen and restocking between every stay, plus quarterly maintenance checks." },
-    { icon: "M4 15 V9 M8 15 V5 M12 15 V11 M16 15 V7", title: "Paid monthly", body: "Payouts on the 5th, a clear statement, a live owner dashboard and a year-end tax pack." },
+    { icon: "M4 15 V9 M8 15 V5 M12 15 V11 M16 15 V7", title: "Paid on your schedule", body: "Fortnightly or monthly payouts, a clear statement, a live owner dashboard and a year-end tax pack." },
   ];
 
   const gap = 14;
@@ -488,7 +488,7 @@ function nextStepsPage(doc, lead, a) {
   const steps = [
     ["Free assessment", "A specialist visits, confirms these numbers and walks you through the proposal."],
     ["Property setup", "Photos, smart lock, linen and a deep clean. Listed on 6+ platforms in 7 days."],
-    ["You get paid", `Monthly payouts on the 5th: about ${money(a.strWeekly)} a week on this appraisal.`],
+    ["You get paid", `Fortnightly or monthly payouts: about ${money(a.strWeekly)} a week on this appraisal.`],
   ];
   const sw = (CW - gap * 2) / 3;
   const sh = 116;
