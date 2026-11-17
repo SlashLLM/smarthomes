@@ -263,7 +263,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <a class="nav-link px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap text-brand-ink hover:text-brand-accentDark hover:bg-brand-white/80 transition-all" href="#process">How it works</a>
       <a class="nav-link px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap text-brand-ink hover:text-brand-accentDark hover:bg-brand-white/80 transition-all" href="#results">Results</a>
       <a class="nav-link px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap text-brand-ink hover:text-brand-accentDark hover:bg-brand-white/80 transition-all" href="#faq">FAQ</a>
-      <a class="nav-link px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap text-brand-ink hover:text-brand-accentDark hover:bg-brand-white/80 transition-all" href="/long-term-rental">Long Term Rental</a>
+      <div class="nav-dd relative">
+        <button class="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap text-brand-ink hover:text-brand-accentDark hover:bg-brand-white/80 transition-all" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="nav-ltr-menu">Long Term Rental <svg class="nav-dd-chevron w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg></button>
+        <div class="nav-dd-menu" id="nav-ltr-menu">
+          <div class="w-72 bg-brand-white border-2 border-brand-apricot rounded-2xl shadow-xl p-2">
+            <a class="nav-dd-item" href="/long-term-rental">Long-term rental management<span>Tenants, rent and upkeep for landlords</span></a>
+            <a class="nav-dd-item" href="/maintenance">Maintenance<span>Report a repair online, by email or text</span></a>
+          </div>
+        </div>
+      </div>
       <a class="nav-link px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap text-brand-ink hover:text-brand-accentDark hover:bg-brand-white/80 transition-all" href="#free-assessment">Contact</a>
     </nav>
 
@@ -281,6 +289,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a class="nav-link px-4 py-3 rounded-2xl font-semibold hover:bg-brand-papaya" href="#results">Results</a>
     <a class="nav-link px-4 py-3 rounded-2xl font-semibold hover:bg-brand-papaya" href="#faq">FAQ</a>
     <a class="nav-link px-4 py-3 rounded-2xl font-semibold hover:bg-brand-papaya" href="/long-term-rental">Long Term Rental</a>
+    <a class="nav-link pl-9 pr-4 py-2.5 rounded-2xl text-sm font-semibold hover:bg-brand-papaya" href="/maintenance"><span aria-hidden="true" class="text-brand-inkSoft">↳</span> Maintenance</a>
     <a class="nav-link px-4 py-3 rounded-2xl font-semibold hover:bg-brand-papaya" href="#free-assessment">Contact</a>
     <a class="btn-primary px-4 py-3 mt-1" href="#free-assessment">Book a free assessment <span aria-hidden="true">→</span></a>
   </nav>
@@ -625,8 +634,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
 <!-- ================= RESULTS =================
-     Case-study photos are CC0 / public-domain stock (no attribution required), not the actual properties:
-       case-mt-maunganui.webp  StockSnap CLD6T4J9VZ (CC0)
+     Featured case study (case-dunedin-*.webp) uses photos of the managed South Dunedin Airbnb listing.
+     The smaller case-study photos are CC0 / public-domain stock (no attribution required), not the actual properties:
        case-queenstown.webp    StockSnap NF6P1OX124 (CC0)
        case-hahei.webp         Wikimedia Commons "Large Bach House In New Zealand.jpg" (public domain)
        case-ponsonby.webp      rawpixel "Two level villa Christchurch" (CC0)
@@ -638,45 +647,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">What the spreadsheet looks like, twelve months in.</h2>
     </div>
 
-    <!-- Featured: Mt Maunganui -->
+    <!-- Featured: South Dunedin (real managed listing). Uplift is computed from data-before/data-after by src/case-study.js. -->
     <article class="bg-brand-white border-2 border-brand-apricot rounded-3xl overflow-hidden shadow-lg mb-12 grid grid-cols-1 lg:grid-cols-12">
-      <div class="lg:col-span-6 relative min-h-[320px] lg:min-h-full">
-        <img src="/assets/img/case-mt-maunganui.webp" width="960" height="640" loading="lazy" decoding="async"
-             alt="Open-plan living room opening onto a covered deck and garden"
-             class="absolute inset-0 w-full h-full object-cover" />
-        <div class="absolute top-4 left-4 bg-brand-white/90 backdrop-blur-md border border-brand-apricot px-3.5 py-1.5 rounded-full text-xs font-extrabold shadow-sm">MT MAUNGANUI • 3BR BEACH HOUSE</div>
-        <ul class="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2 text-xs font-semibold text-brand-white">
+      <div class="lg:col-span-6 relative min-h-[320px] sm:min-h-[400px] lg:min-h-full" data-carousel>
+        <ul class="absolute inset-0 flex overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" data-carousel-track aria-label="Property photos" tabindex="0">
+          <li class="relative shrink-0 w-full h-full snap-start"><img src="/assets/img/case-dunedin-1.webp" width="1200" height="800" loading="lazy" decoding="async" alt="Bright open-plan lounge with sofas, wall-mounted TV and sliding doors" class="absolute inset-0 w-full h-full object-cover" /></li>
+          <li class="relative shrink-0 w-full h-full snap-start"><img src="/assets/img/case-dunedin-2.webp" width="1200" height="800" loading="lazy" decoding="async" alt="Dining table for six beside a white kitchen, with the lounge beyond" class="absolute inset-0 w-full h-full object-cover" /></li>
+          <li class="relative shrink-0 w-full h-full snap-start"><img src="/assets/img/case-dunedin-3.webp" width="1200" height="800" loading="lazy" decoding="async" alt="Modern white kitchen with stainless steel fridge, dishwasher and oven" class="absolute inset-0 w-full h-full object-cover" /></li>
+        </ul>
+        <div class="absolute top-4 left-4 bg-brand-white/90 backdrop-blur-md border border-brand-apricot px-3.5 py-1.5 rounded-full text-xs font-extrabold shadow-sm">SOUTH DUNEDIN • 3BR HOME</div>
+        <div class="absolute top-4 right-4 flex gap-1.5 bg-brand-cardDark/60 backdrop-blur-md px-2.5 py-2 rounded-full">
+          <button type="button" class="w-2 h-2 rounded-full bg-brand-white" data-carousel-dot aria-label="Photo 1 of 3" aria-current="true"></button>
+          <button type="button" class="w-2 h-2 rounded-full bg-brand-white/50" data-carousel-dot aria-label="Photo 2 of 3"></button>
+          <button type="button" class="w-2 h-2 rounded-full bg-brand-white/50" data-carousel-dot aria-label="Photo 3 of 3"></button>
+        </div>
+        <button type="button" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-brand-white/90 border border-brand-apricot shadow flex items-center justify-center text-brand-ink hover:text-brand-accentDark transition-colors" data-carousel-prev aria-label="Previous photo">
+          <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.94 10l3.83 3.71a.75.75 0 11-1.04 1.08l-4.39-4.25a.75.75 0 010-1.08l4.39-4.25a.75.75 0 011.06.02z" clip-rule="evenodd"/></svg>
+        </button>
+        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-brand-white/90 border border-brand-apricot shadow flex items-center justify-center text-brand-ink hover:text-brand-accentDark transition-colors" data-carousel-next aria-label="Next photo">
+          <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.06 10 7.23 6.29a.75.75 0 111.04-1.08l4.39 4.25a.75.75 0 010 1.08l-4.39 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg>
+        </button>
+        <ul class="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2 text-xs font-semibold text-brand-white pointer-events-none">
           <li class="bg-brand-cardDark/85 backdrop-blur-md px-3 py-1 rounded-full">3 bed</li>
           <li class="bg-brand-cardDark/85 backdrop-blur-md px-3 py-1 rounded-full">2 bath</li>
-          <li class="bg-brand-cardDark/85 backdrop-blur-md px-3 py-1 rounded-full">Sleeps 6</li>
-          <li class="bg-brand-cardDark/85 backdrop-blur-md px-3 py-1 rounded-full">Sea view</li>
+          <li class="bg-brand-cardDark/85 backdrop-blur-md px-3 py-1 rounded-full">Sleeps 5</li>
+          <li class="bg-brand-cardDark/85 backdrop-blur-md px-3 py-1 rounded-full">Near the coast</li>
         </ul>
       </div>
       <div class="lg:col-span-6 p-6 sm:p-8 lg:p-12 flex flex-col justify-between bg-gradient-to-b from-brand-white via-brand-cream/40 to-brand-papaya/40">
         <div>
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-peach/50 border border-brand-apricot text-[11px] font-extrabold uppercase tracking-widest text-brand-accentDark">
-            <span class="w-1.5 h-1.5 rounded-full bg-brand-accent" aria-hidden="true"></span> Mount Maunganui • Bay of Plenty
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-accent" aria-hidden="true"></span> South Dunedin • Otago
           </span>
-          <h3 class="text-2xl sm:text-3xl font-extrabold mt-4 mb-5 tracking-tight">“It paid off our mortgage four years early.”</h3>
-          <dl class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-brand-white/90 border-2 border-brand-apricot rounded-2xl p-4 shadow-sm mb-6">
-            <div class="p-2.5 rounded-xl bg-brand-cream/80 border border-brand-apricot/40"><dt class="text-[10px] font-bold uppercase tracking-wider text-brand-inkSoft">Before • LT</dt><dd class="text-lg font-extrabold">$40,560<span class="text-xs font-normal text-brand-inkSoft">/yr</span></dd></div>
-            <div class="p-2.5 rounded-xl bg-brand-papaya/90 border border-brand-apricot"><dt class="text-[10px] font-bold uppercase tracking-wider text-brand-accentDark">After • STR</dt><dd class="text-lg font-extrabold text-brand-accentDark">$118,940<span class="text-xs font-normal">/yr</span></dd></div>
-            <div class="p-2.5 rounded-xl bg-emerald-100/70 border border-emerald-300"><dt class="text-[10px] font-bold uppercase tracking-wider text-emerald-800">Net uplift</dt><dd class="text-lg font-extrabold text-emerald-800">+193%</dd></div>
-            <div class="p-2.5 rounded-xl bg-brand-cream/80 border border-brand-apricot/40"><dt class="text-[10px] font-bold uppercase tracking-wider text-brand-inkSoft">Occupancy</dt><dd class="text-lg font-extrabold">87%</dd></div>
+          <h3 class="text-2xl sm:text-3xl font-extrabold mt-4 mb-5 tracking-tight">Relaxing Dunedin City Escape</h3>
+          <dl class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-brand-white/90 border-2 border-brand-apricot rounded-2xl p-4 shadow-sm mb-6" data-before="33560" data-after="48000">
+            <div class="p-2.5 rounded-xl bg-brand-cream/80 border border-brand-apricot/40"><dt class="text-[10px] font-bold uppercase tracking-wider text-brand-inkSoft">Before • LT</dt><dd class="text-lg font-extrabold"><span data-fmt="before">$33,560</span><span class="text-xs font-normal text-brand-inkSoft">/yr</span></dd></div>
+            <div class="p-2.5 rounded-xl bg-brand-papaya/90 border border-brand-apricot"><dt class="text-[10px] font-bold uppercase tracking-wider text-brand-accentDark">After • STR</dt><dd class="text-lg font-extrabold text-brand-accentDark"><span data-fmt="after">$48,000</span><span class="text-xs font-normal">/yr</span></dd></div>
+            <div class="p-2.5 rounded-xl bg-emerald-100/70 border border-emerald-300"><dt class="text-[10px] font-bold uppercase tracking-wider text-emerald-800">Net uplift</dt><dd class="text-lg font-extrabold text-emerald-800" data-fmt="uplift">+43%</dd></div>
+            <div class="p-2.5 rounded-xl bg-brand-cream/80 border border-brand-apricot/40"><dt class="text-[10px] font-bold uppercase tracking-wider text-brand-inkSoft">Occupancy</dt><dd class="text-lg font-extrabold">60%</dd></div>
           </dl>
-          <blockquote class="pl-4 border-l-2 border-brand-accent/40 mb-6 text-sm sm:text-base text-brand-inkMuted italic leading-relaxed">
-            “We were dreading another tenancy cycle. SmartHomes took it over, sent us photos a week later, and the first payout landed before we'd even told the neighbours. We genuinely forget it's happening.”
-          </blockquote>
-        </div>
-        <div class="flex items-center justify-between bg-brand-white/60 p-3 rounded-2xl border border-brand-apricot/40">
-          <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-brand-peach to-brand-apricot border-2 border-brand-white text-brand-ink flex items-center justify-center font-extrabold text-sm" aria-hidden="true">PT</div>
-            <div>
-              <div class="text-sm font-bold">Pania &amp; Tama H.</div>
-              <div class="text-xs text-brand-inkSoft font-medium">Owners since March 2024</div>
-            </div>
-          </div>
-          <span class="hidden sm:inline-flex text-[11px] font-bold text-brand-accentDark bg-brand-papaya border border-brand-apricot px-2.5 py-1 rounded-full">Managed 14 mos</span>
+          <p class="pl-4 border-l-2 border-brand-accent/40 text-sm sm:text-base text-brand-inkMuted leading-relaxed">
+            A bright three-bedroom, two-bathroom home in South Dunedin, a short walk from Navy Park and close to the beaches, local cafés and the city centre. Open-plan living and dining, a modern fully equipped kitchen, free off-street parking, Wi-Fi and a washing machine make it easy for families, work trips and weekend breaks, with smooth self check-in by smart lock.
+          </p>
         </div>
       </div>
     </article>
@@ -691,16 +703,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div>
             <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-accentDark">Queenstown CBD • Otago</p>
             <h3 class="text-lg font-bold mt-1 mb-3">The ski-season unlock</h3>
-            <dl class="grid grid-cols-3 gap-2 border border-brand-apricot/80 p-2.5 rounded-2xl text-center mb-4">
-              <div class="p-1.5 rounded-xl bg-brand-cream/60"><dt class="text-[9px] uppercase font-bold text-brand-inkSoft">Before</dt><dd class="font-extrabold text-xs">$31,200</dd></div>
-              <div class="p-1.5 rounded-xl bg-brand-papaya/90 border border-brand-apricot"><dt class="text-[9px] uppercase font-bold text-brand-accentDark">After</dt><dd class="font-extrabold text-brand-accentDark text-xs">$94,180</dd></div>
-              <div class="p-1.5 rounded-xl bg-emerald-100/80 border border-emerald-300"><dt class="text-[9px] uppercase font-bold text-emerald-800">Uplift</dt><dd class="font-extrabold text-emerald-800 text-xs">+202%</dd></div>
+            <dl class="grid grid-cols-3 gap-2 border border-brand-apricot/80 p-2.5 rounded-2xl text-center mb-4" data-before="31200" data-after="94180">
+              <div class="p-1.5 rounded-xl bg-brand-cream/60"><dt class="text-[9px] uppercase font-bold text-brand-inkSoft">Before</dt><dd class="font-extrabold text-xs"><span data-fmt="before">$31,200</span></dd></div>
+              <div class="p-1.5 rounded-xl bg-brand-papaya/90 border border-brand-apricot"><dt class="text-[9px] uppercase font-bold text-brand-accentDark">After</dt><dd class="font-extrabold text-brand-accentDark text-xs"><span data-fmt="after">$94,180</span></dd></div>
+              <div class="p-1.5 rounded-xl bg-emerald-100/80 border border-emerald-300"><dt class="text-[9px] uppercase font-bold text-emerald-800">Uplift</dt><dd class="font-extrabold text-emerald-800 text-xs" data-fmt="uplift">+202%</dd></div>
             </dl>
             <blockquote class="pl-3 border-l-2 border-brand-peach mb-4 text-xs text-brand-inkMuted italic leading-relaxed">“July and August now pay for the whole year. We use it ourselves in shoulder season — best of both worlds.”</blockquote>
-          </div>
-          <div class="flex items-center gap-2.5 pt-3 border-t border-brand-apricot/50 text-xs">
-            <div class="w-8 h-8 rounded-full bg-brand-peach border border-brand-apricot font-bold flex items-center justify-center" aria-hidden="true">JM</div>
-            <div><span class="font-bold block">James M.</span><span class="text-brand-inkSoft text-[11px]">Owner • Frankton</span></div>
           </div>
         </div>
       </article>
@@ -714,16 +722,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div>
             <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-accentDark">Hahei • Coromandel</p>
             <h3 class="text-lg font-bold mt-1 mb-3">Family bach, working harder</h3>
-            <dl class="grid grid-cols-3 gap-2 border border-brand-apricot/80 p-2.5 rounded-2xl text-center mb-4">
+            <dl class="grid grid-cols-3 gap-2 border border-brand-apricot/80 p-2.5 rounded-2xl text-center mb-4" data-before="0" data-after="76420">
               <div class="p-1.5 rounded-xl bg-brand-cream/60"><dt class="text-[9px] uppercase font-bold text-brand-inkSoft">Before</dt><dd class="font-extrabold text-xs">$0 (vacant)</dd></div>
-              <div class="p-1.5 rounded-xl bg-brand-papaya/90 border border-brand-apricot"><dt class="text-[9px] uppercase font-bold text-brand-accentDark">After</dt><dd class="font-extrabold text-brand-accentDark text-xs">$76,420</dd></div>
-              <div class="p-1.5 rounded-xl bg-emerald-100/80 border border-emerald-300"><dt class="text-[9px] uppercase font-bold text-emerald-800">Change</dt><dd class="font-extrabold text-emerald-800 text-xs">+$76,420</dd></div>
+              <div class="p-1.5 rounded-xl bg-brand-papaya/90 border border-brand-apricot"><dt class="text-[9px] uppercase font-bold text-brand-accentDark">After</dt><dd class="font-extrabold text-brand-accentDark text-xs"><span data-fmt="after">$76,420</span></dd></div>
+              <div class="p-1.5 rounded-xl bg-emerald-100/80 border border-emerald-300"><dt class="text-[9px] uppercase font-bold text-emerald-800">Change</dt><dd class="font-extrabold text-emerald-800 text-xs" data-fmt="uplift">+$76,420</dd></div>
             </dl>
             <blockquote class="pl-3 border-l-2 border-brand-peach mb-4 text-xs text-brand-inkMuted italic leading-relaxed">“It used to sit empty 40 weeks a year. Now it earns through every shoulder season and we still get our two weeks at Christmas.”</blockquote>
-          </div>
-          <div class="flex items-center gap-2.5 pt-3 border-t border-brand-apricot/50 text-xs">
-            <div class="w-8 h-8 rounded-full bg-brand-apricot font-bold flex items-center justify-center" aria-hidden="true">RW</div>
-            <div><span class="font-bold block">Rachel W.</span><span class="text-brand-inkSoft text-[11px]">Owner • Auckland-based</span></div>
           </div>
         </div>
       </article>
@@ -737,16 +741,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div>
             <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-accentDark">Ponsonby • Tāmaki Makaurau</p>
             <h3 class="text-lg font-bold mt-1 mb-3">From flatmates to four-star</h3>
-            <dl class="grid grid-cols-3 gap-2 border border-brand-apricot/80 p-2.5 rounded-2xl text-center mb-4">
-              <div class="p-1.5 rounded-xl bg-brand-cream/60"><dt class="text-[9px] uppercase font-bold text-brand-inkSoft">Before</dt><dd class="font-extrabold text-xs">$52,000</dd></div>
-              <div class="p-1.5 rounded-xl bg-brand-papaya/90 border border-brand-apricot"><dt class="text-[9px] uppercase font-bold text-brand-accentDark">After</dt><dd class="font-extrabold text-brand-accentDark text-xs">$103,640</dd></div>
-              <div class="p-1.5 rounded-xl bg-emerald-100/80 border border-emerald-300"><dt class="text-[9px] uppercase font-bold text-emerald-800">Uplift</dt><dd class="font-extrabold text-emerald-800 text-xs">+99%</dd></div>
+            <dl class="grid grid-cols-3 gap-2 border border-brand-apricot/80 p-2.5 rounded-2xl text-center mb-4" data-before="52000" data-after="103640">
+              <div class="p-1.5 rounded-xl bg-brand-cream/60"><dt class="text-[9px] uppercase font-bold text-brand-inkSoft">Before</dt><dd class="font-extrabold text-xs"><span data-fmt="before">$52,000</span></dd></div>
+              <div class="p-1.5 rounded-xl bg-brand-papaya/90 border border-brand-apricot"><dt class="text-[9px] uppercase font-bold text-brand-accentDark">After</dt><dd class="font-extrabold text-brand-accentDark text-xs"><span data-fmt="after">$103,640</span></dd></div>
+              <div class="p-1.5 rounded-xl bg-emerald-100/80 border border-emerald-300"><dt class="text-[9px] uppercase font-bold text-emerald-800">Uplift</dt><dd class="font-extrabold text-emerald-800 text-xs" data-fmt="uplift">+99%</dd></div>
             </dl>
             <blockquote class="pl-3 border-l-2 border-brand-peach mb-4 text-xs text-brand-inkMuted italic leading-relaxed">“We sold the idea of a long-term tenancy to ourselves for years. The switch was the easiest financial decision of 2025.”</blockquote>
-          </div>
-          <div class="flex items-center gap-2.5 pt-3 border-t border-brand-apricot/50 text-xs">
-            <div class="w-8 h-8 rounded-full bg-brand-peach border border-brand-apricot font-bold flex items-center justify-center" aria-hidden="true">AK</div>
-            <div><span class="font-bold block">Aroha K.</span><span class="text-brand-inkSoft text-[11px]">Owner • Grey Lynn</span></div>
           </div>
         </div>
       </article>
@@ -901,6 +901,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li><a class="hover:text-brand-accentDark" href="#results">Owner results</a></li>
           <li><a class="hover:text-brand-accentDark" href="#faq">Owner FAQ</a></li>
           <li><a class="hover:text-brand-accentDark" href="/long-term-rental">Long-term rental</a></li>
+          <li><a class="hover:text-brand-accentDark" href="/maintenance">Maintenance</a></li>
           <li><a class="hover:text-brand-accentDark" href="#free-assessment">Free assessment</a></li>
         </ul>
       </nav>

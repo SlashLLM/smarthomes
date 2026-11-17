@@ -122,6 +122,19 @@
 
   /* ---------- mobile nav ---------- */
   #mobileNav { @apply lg:hidden; }
+
+  /* ---------- desktop nav dropdown (hover on pointer devices, click/keyboard via nav.js) ---------- */
+  .nav-dd-menu { @apply absolute left-1/2 top-full pt-2 z-50; transform: translateX(-50%); display: none; }
+  .nav-dd.is-open .nav-dd-menu { display: block; }
+  @media (hover: hover) {
+    .nav-dd:hover .nav-dd-menu { display: block; }
+    .nav-dd:hover .nav-dd-chevron { transform: rotate(180deg); }
+  }
+  .nav-dd-chevron { @apply transition-transform; }
+  .nav-dd.is-open .nav-dd-chevron { transform: rotate(180deg); }
+  .nav-dd-item { @apply flex flex-col px-4 py-2.5 rounded-xl text-sm font-bold text-brand-ink hover:bg-brand-papaya hover:text-brand-accentDark transition-colors; }
+  .nav-dd-item span { @apply text-xs font-medium text-brand-inkSoft; }
+  .nav-dd-item[aria-current="page"] { @apply bg-brand-papaya text-brand-accentDark; }
 }
 
 @layer utilities {

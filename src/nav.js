@@ -33,6 +33,32 @@ export function initNav() {
     });
   }
 
+  // ---------- Desktop dropdowns (e.g. Long Term Rental → Maintenance) ----------
+  $$(".nav-dd").forEach((dd) => {
+    const btn = $("button", dd);
+    if (!btn) return;
+    const setOpen = (open) => {
+      dd.classList.toggle("is-open", open);
+      btn.setAttribute("aria-expanded", String(open));
+    };
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setOpen(!dd.classList.contains("is-open"));
+    });
+    document.addEventListener("click", (e) => {
+      if (!dd.contains(e.target)) setOpen(false);
+    });
+    dd.addEventListener("focusout", (e) => {
+      if (!dd.contains(e.relatedTarget)) setOpen(false);
+    });
+    dd.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && dd.classList.contains("is-open")) {
+        setOpen(false);
+        btn.focus();
+      }
+    });
+  });
+
   // ---------- Solid header once the hero scrolls away ----------
   const header = $("#nav");
   if (header) {

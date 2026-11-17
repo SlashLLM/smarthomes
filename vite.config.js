@@ -14,8 +14,8 @@ export default defineConfig({
         server.middlewares.use((req, res, next) => {
           const [path, qs] = req.url.split('?');
           // Vercel's cleanUrls serves /long-term-rental from the .html file; mirror that.
-          if (path === '/long-term-rental') {
-            req.url = '/long-term-rental.html' + (qs ? '?' + qs : '');
+          if (path === '/long-term-rental' || path === '/maintenance') {
+            req.url = path + '.html' + (qs ? '?' + qs : '');
             return next();
           }
           if (path !== '/admin') return next();
@@ -26,8 +26,9 @@ export default defineConfig({
       },
       configurePreviewServer(server) {
         server.middlewares.use((req, res, next) => {
-          if (req.url.split('?')[0] === '/long-term-rental') {
-            req.url = '/long-term-rental.html';
+          const path = req.url.split('?')[0];
+          if (path === '/long-term-rental' || path === '/maintenance') {
+            req.url = path + '.html';
             return next();
           }
           if (req.url.split('?')[0] !== '/admin') return next();
@@ -41,7 +42,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       // intro-lab is an internal preview page (noindex) for choosing the intro.
-      input: { main: 'index.html', longTerm: 'long-term-rental.html', introLab: 'intro-lab.html', admin: 'admin/index.html' },
+      input: { main: 'index.html', longTerm: 'long-term-rental.html', maintenance: 'maintenance.html', introLab: 'intro-lab.html', admin: 'admin/index.html' },
     },
   },
   server: {

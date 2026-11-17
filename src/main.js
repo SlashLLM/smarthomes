@@ -3,3 +3,4 @@
 import "./intro.js";
 import "./intro-variants.js";
 import "./app.js";
+import "./case-study.js";
